@@ -13894,6 +13894,159 @@ export type Database = {
         }
         Relationships: []
       }
+      services_level_1_public: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          deliverable_name: string | null
+          deliverable_type: string | null
+          description_public: string | null
+          estimated_delivery_seconds: number | null
+          id: string | null
+          price_usd: number | null
+          service_name: string | null
+          service_slug: string | null
+          status: string | null
+          subcategory: string | null
+          updated_at: string | null
+          visibility: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Relationships: []
+      }
+      services_level_2_public: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          deliverable_name: string | null
+          deliverable_type: string | null
+          description_public: string | null
+          estimated_delivery_seconds: number | null
+          id: string | null
+          price_usd: number | null
+          service_name: string | null
+          service_slug: string | null
+          status: string | null
+          subcategory: string | null
+          updated_at: string | null
+          visibility: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Relationships: []
+      }
+      services_level_3_public: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          deliverable_name: string | null
+          deliverable_type: string | null
+          description_public: string | null
+          estimated_delivery_seconds: number | null
+          id: string | null
+          price_usd: number | null
+          service_name: string | null
+          service_slug: string | null
+          status: string | null
+          subcategory: string | null
+          updated_at: string | null
+          visibility: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          deliverable_name?: string | null
+          deliverable_type?: string | null
+          description_public?: string | null
+          estimated_delivery_seconds?: number | null
+          id?: string | null
+          price_usd?: number | null
+          service_name?: string | null
+          service_slug?: string | null
+          status?: string | null
+          subcategory?: string | null
+          updated_at?: string | null
+          visibility?: string | null
+        }
+        Relationships: []
+      }
       user_integrations_safe: {
         Row: {
           connector_id: string | null
