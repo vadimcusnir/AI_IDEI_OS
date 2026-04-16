@@ -10,7 +10,7 @@
  * On mobile or reduced-motion: renders a plain <div> with final styles,
  * skipping all animation overhead.
  */
-import { forwardRef, useMemo, type ComponentProps } from "react";
+import { forwardRef, useMemo, type ComponentProps, type JSX } from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsMobile } from "@/hooks/use-mobile";
