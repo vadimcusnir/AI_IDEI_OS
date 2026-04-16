@@ -5,12 +5,13 @@ import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Navigate } from "react-router-dom";
-import { Loader2, Shield, Box, ScrollText, TrendingUp } from "lucide-react";
+import { Loader2, Shield, Box, ScrollText, TrendingUp, FileCheck } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EntitlementsPanel } from "@/components/governance/EntitlementsPanel";
 import { ModuleRegistryPanel } from "@/components/governance/ModuleRegistryPanel";
 import { CusnirOSLedger } from "@/components/governance/CusnirOSLedger";
 import { TierProgressionPanel } from "@/components/governance/TierProgressionPanel";
+import { PromptVaultApprovals } from "@/components/governance/PromptVaultApprovals";
 
 export default function AdminGovernance() {
   const { loading: authLoading } = useAuth();
@@ -32,11 +33,12 @@ export default function AdminGovernance() {
         </div>
 
         <Tabs defaultValue="entitlements" className="space-y-4">
-          <TabsList className="bg-muted/50">
+          <TabsList className="bg-muted/50 flex-wrap h-auto">
             <TabsTrigger value="entitlements" className="text-xs gap-1"><Shield className="h-3 w-3" /> Entitlements</TabsTrigger>
             <TabsTrigger value="registry" className="text-xs gap-1"><Box className="h-3 w-3" /> Registry</TabsTrigger>
             <TabsTrigger value="ledger" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> Ledger</TabsTrigger>
             <TabsTrigger value="tiers" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Tiers</TabsTrigger>
+            <TabsTrigger value="approvals" className="text-xs gap-1"><FileCheck className="h-3 w-3" /> Approvals</TabsTrigger>
           </TabsList>
 
           <div className="bg-card border border-border rounded-lg p-5">
@@ -44,6 +46,7 @@ export default function AdminGovernance() {
             <TabsContent value="registry"><ModuleRegistryPanel /></TabsContent>
             <TabsContent value="ledger"><CusnirOSLedger /></TabsContent>
             <TabsContent value="tiers"><TierProgressionPanel /></TabsContent>
+            <TabsContent value="approvals"><PromptVaultApprovals /></TabsContent>
           </div>
         </Tabs>
       </div>
