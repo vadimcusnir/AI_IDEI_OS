@@ -101,6 +101,7 @@ export const ROUTES = {
 
   // ═══ Admin Routes ═══
   ADMIN: "/admin",
+  ADMIN_CONTROL_CENTER: "/admin/control-center",
   ADMIN_KERNEL: "/admin/kernel",
   ADMIN_DOMINATION: "/admin/domination",
   ADMIN_INEVITABILITY: "/admin/inevitability",

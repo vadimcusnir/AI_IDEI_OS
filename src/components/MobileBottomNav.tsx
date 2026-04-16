@@ -69,6 +69,7 @@ const MENU_SECTIONS: MenuSection[] = [
   {
     key: "admin", label: "ADMIN", adminOnly: true, items: [
       { path: "/admin", icon: Shield, label: "Dashboard", adminOnly: true },
+      { path: "/admin/control-center", icon: Activity, label: "Control Center", adminOnly: true },
       { path: "/admin/kernel", icon: Cpu, label: "Kernel", adminOnly: true },
       { path: "/runtime", icon: Activity, label: "Runtime", adminOnly: true },
       { path: "/analytics", icon: BarChart3, label: "Analytics", adminOnly: true },
