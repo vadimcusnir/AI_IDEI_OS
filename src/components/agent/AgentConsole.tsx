@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
+import { AgentBubble } from "./AgentBubble";
 import { ExecutionTimeline } from "./ExecutionTimeline";
 import { COMMAND_PACKS, type CommandPack } from "./CommandPacks";
 import { useAgentDecisionEngine, type Suggestion } from "@/hooks/useAgentDecisionEngine";
