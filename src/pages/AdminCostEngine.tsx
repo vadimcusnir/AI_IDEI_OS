@@ -142,14 +142,6 @@ export default function AdminCostEngine() {
         </Card>
       </div>
 
-      <CostEngineAdvisor
-        snapshot={{
-          breakEven: latestBE || null,
-          liability: latestLiab || null,
-          unitEcon: unitEcon.slice(0, 10),
-          totalLedger30d,
-        }}
-      />
 
       <Tabs defaultValue="categories" className="w-full">
         <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full">
