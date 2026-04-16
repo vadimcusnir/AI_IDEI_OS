@@ -3195,6 +3195,36 @@ export type Database = {
           },
         ]
       }
+      demand_signals: {
+        Row: {
+          created_at: string
+          detected_at: string
+          id: string
+          payload: Json | null
+          signal_type: string
+          source: string | null
+          strength: number | null
+        }
+        Insert: {
+          created_at?: string
+          detected_at?: string
+          id?: string
+          payload?: Json | null
+          signal_type: string
+          source?: string | null
+          strength?: number | null
+        }
+        Update: {
+          created_at?: string
+          detected_at?: string
+          id?: string
+          payload?: Json | null
+          signal_type?: string
+          source?: string | null
+          strength?: number | null
+        }
+        Relationships: []
+      }
       distribution_channels: {
         Row: {
           channel_name: string
@@ -4527,6 +4557,42 @@ export type Database = {
           title?: string
           updated_at?: string
           vote_count?: number
+        }
+        Relationships: []
+      }
+      generated_landing_pages: {
+        Row: {
+          content: Json | null
+          created_at: string
+          created_by: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -15414,6 +15480,19 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      admin_user_overview: {
+        Args: never
+        Returns: {
+          balance: number
+          created_at: string
+          email: string
+          neuron_count: number
+          roles: string[]
+          total_earned: number
+          total_spent: number
+          user_id: string
+        }[]
       }
       advance_vip_month: { Args: { _user_id: string }; Returns: Json }
       analytics_summary: { Args: { _days?: number }; Returns: Json }
