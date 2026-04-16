@@ -1049,12 +1049,14 @@ export type Database = {
           content: string
           created_at: string
           execution_id: string | null
+          expires_at: string | null
           format: string
           id: string
           is_locked: boolean | null
           job_id: string | null
           metadata: Json | null
           preview_content: string | null
+          retention_policy: string
           service_key: string | null
           size_bytes: number | null
           status: string
@@ -1071,12 +1073,14 @@ export type Database = {
           content?: string
           created_at?: string
           execution_id?: string | null
+          expires_at?: string | null
           format?: string
           id?: string
           is_locked?: boolean | null
           job_id?: string | null
           metadata?: Json | null
           preview_content?: string | null
+          retention_policy?: string
           service_key?: string | null
           size_bytes?: number | null
           status?: string
@@ -1093,12 +1097,14 @@ export type Database = {
           content?: string
           created_at?: string
           execution_id?: string | null
+          expires_at?: string | null
           format?: string
           id?: string
           is_locked?: boolean | null
           job_id?: string | null
           metadata?: Json | null
           preview_content?: string | null
+          retention_policy?: string
           service_key?: string | null
           size_bytes?: number | null
           status?: string
@@ -9226,6 +9232,9 @@ export type Database = {
           id: string
           input_schema: Json
           is_active: boolean
+          is_locked: boolean
+          locked_at: string | null
+          locked_by: string | null
           output_schema: Json
           purpose: string
           quality_gate: Json
@@ -9242,6 +9251,9 @@ export type Database = {
           id?: string
           input_schema?: Json
           is_active?: boolean
+          is_locked?: boolean
+          locked_at?: string | null
+          locked_by?: string | null
           output_schema?: Json
           purpose: string
           quality_gate?: Json
@@ -9258,6 +9270,9 @@ export type Database = {
           id?: string
           input_schema?: Json
           is_active?: boolean
+          is_locked?: boolean
+          locked_at?: string | null
+          locked_by?: string | null
           output_schema?: Json
           purpose?: string
           quality_gate?: Json
@@ -9280,6 +9295,62 @@ export type Database = {
             columns: ["service_unit_id"]
             isOneToOne: false
             referencedRelation: "service_units_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_vault_change_requests: {
+        Row: {
+          applied_at: string | null
+          change_type: string
+          created_at: string
+          diff_summary: string | null
+          id: string
+          prompt_id: string | null
+          proposed_payload: Json
+          requested_by: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          service_unit_id: string | null
+          status: string
+        }
+        Insert: {
+          applied_at?: string | null
+          change_type: string
+          created_at?: string
+          diff_summary?: string | null
+          id?: string
+          prompt_id?: string | null
+          proposed_payload?: Json
+          requested_by: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_unit_id?: string | null
+          status?: string
+        }
+        Update: {
+          applied_at?: string | null
+          change_type?: string
+          created_at?: string
+          diff_summary?: string | null
+          id?: string
+          prompt_id?: string | null
+          proposed_payload?: Json
+          requested_by?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_unit_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_vault_change_requests_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_vault"
             referencedColumns: ["id"]
           },
         ]
@@ -14255,6 +14326,12 @@ export type Database = {
         Args: { _milestone_id: string; _user_id: string }
         Returns: Json
       }
+      cleanup_expired_artifacts: {
+        Args: never
+        Returns: {
+          deleted_count: number
+        }[]
+      }
       cleanup_rate_limits: { Args: never; Returns: undefined }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       complete_agent_execution: {
@@ -14477,6 +14554,14 @@ export type Database = {
           p_metadata?: Json
           p_severity?: string
           p_user_id: string
+        }
+        Returns: undefined
+      }
+      log_suspicious_export: {
+        Args: {
+          _artifact_count: number
+          _user_id: string
+          _window_minutes?: number
         }
         Returns: undefined
       }
