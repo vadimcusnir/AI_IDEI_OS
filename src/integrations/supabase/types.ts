@@ -15339,10 +15339,12 @@ export type Database = {
         }
         Returns: string
       }
+      mcl_generate_meta_report: { Args: { _window?: string }; Returns: string }
       mcl_override_decision: {
         Args: { _decision_id: string; _new_status: string; _rationale: string }
         Returns: undefined
       }
+      mcl_run_selection_sweep: { Args: never; Returns: number }
       move_to_dlq: {
         Args: {
           dlq_name: string
