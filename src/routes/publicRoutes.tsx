@@ -119,7 +119,7 @@ function publicRouteDefinitions() {
       <Route path="purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed to load"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="personal-os" element={<AppLayout><ErrorBoundary fallbackTitle="Personal OS failed to load"><PersonalOS /></ErrorBoundary></AppLayout>} />
       <Route path="augmentation" element={<AppLayout><ErrorBoundary fallbackTitle="Augmentation failed to load"><AugmentationDashboard /></ErrorBoundary></AppLayout>} />
-      <Route path="workspace" element={<Navigate to="/workspace" replace />} />
+      {/* workspace handled by protectedRoutes */}
       <Route path="p/:username" element={<ErrorBoundary fallbackTitle="Public profile failed"><PublicProfile /></ErrorBoundary>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
@@ -209,7 +209,7 @@ export function publicRoutes() {
       <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
       <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
       <Route path="/tools/vtt-validator" element={<Navigate to="/home" replace />} />
-      <Route path="/workspace" element={<Navigate to="/workspace" replace />} />
+      {/* workspace handled by protectedRoutes */}
       <Route path="/p/:username" element={<ErrorBoundary fallbackTitle="Public profile failed"><PublicProfile /></ErrorBoundary>} />
     </>
   );
