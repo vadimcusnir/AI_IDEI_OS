@@ -80,6 +80,26 @@ export default function AdminControlCenter() {
     }
   }
 
+  async function handleGenerateMetaReport() {
+    const { error } = await supabase.rpc("mcl_generate_meta_report" as any, { _window: "daily" });
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Meta report generated");
+      loadCounts();
+      if (tab === "meta") loadRows();
+    }
+  }
+
+  async function handleSelectionSweep() {
+    const { data, error } = await supabase.rpc("mcl_run_selection_sweep" as any);
+    if (error) toast.error(error.message);
+    else {
+      toast.success(`Selection sweep: ${data} dead assets archived`);
+      loadCounts();
+      if (tab === "selection") loadRows();
+    }
+  }
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <SEOHead title="Control Center — Missing Layers" description="Decision · Priority · Trust · Recovery · Selection · Economics" />
