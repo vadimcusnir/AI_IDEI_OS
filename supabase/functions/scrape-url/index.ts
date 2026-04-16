@@ -98,10 +98,19 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // 5. DNS resolution check — prevent DNS rebinding attacks
+    // 5. DNS resolution check — prevent DNS rebinding attacks (IPv4 + IPv6)
     try {
-      const dnsResult = await Deno.resolveDns(parsedUrl.hostname, "A");
-      for (const ip of dnsResult) {
+      const checks: string[] = [];
+      try { const a = await Deno.resolveDns(parsedUrl.hostname, "A"); checks.push(...a); } catch { /* no A records */ }
+      try { const aaaa = await Deno.resolveDns(parsedUrl.hostname, "AAAA"); checks.push(...aaaa); } catch { /* no AAAA records */ }
+
+      if (checks.length === 0) {
+        return new Response(JSON.stringify({ error: "DNS resolution failed" }), {
+          status: 403, headers: { ...cors, "Content-Type": "application/json" },
+        });
+      }
+
+      for (const ip of checks) {
         if (BLOCKED_HOSTNAME_PATTERNS.some(r => r.test(ip))) {
           return new Response(JSON.stringify({ error: "URL resolves to blocked IP" }), {
             status: 403, headers: { ...cors, "Content-Type": "application/json" },
@@ -109,7 +118,9 @@ Deno.serve(async (req: Request) => {
         }
       }
     } catch {
-      // DNS resolution failed — could be IPv6-only or invalid, allow fetch to handle
+      return new Response(JSON.stringify({ error: "DNS resolution failed" }), {
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
+      });
     }
 
     // 6. Fetch with timeout and no redirect auto-follow (manual check)
