@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Loader2, Calculator, TrendingUp, AlertTriangle, Database, Zap, RefreshCw } from "lucide-react";
+import { CostEngineAdvisor } from "@/components/admin/CostEngineAdvisor";
 
 interface Category { id: string; category_key: string; display_name: string; domain: string; cost_type: string; }
 interface LedgerEntry { id: string; category_key: string; source: string; amount_eur: number; quantity: number; service_key: string | null; occurred_at: string; }
@@ -140,6 +141,15 @@ export default function AdminCostEngine() {
           <CardContent className="text-xs text-muted-foreground">Revenue vs break-even</CardContent>
         </Card>
       </div>
+
+      <CostEngineAdvisor
+        snapshot={{
+          breakEven: latestBE || null,
+          liability: latestLiab || null,
+          unitEcon: unitEcon.slice(0, 10),
+          totalLedger30d,
+        }}
+      />
 
       <Tabs defaultValue="categories" className="w-full">
         <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full">
