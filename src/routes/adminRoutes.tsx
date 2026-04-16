@@ -28,6 +28,7 @@ const AdminPipelineIntelligence = lazyRetry(() => import("@/pages/AdminPipelineI
 const AdminGovernance = lazyRetry(() => import("@/pages/AdminGovernance"));
 const AdminControlCenter = lazyRetry(() => import("@/pages/AdminControlCenter"));
 const AdminCostEngine = lazyRetry(() => import("@/pages/AdminCostEngine"));
+const AdminChat = lazyRetry(() => import("@/pages/AdminChat"));
 
 export function adminRoutes() {
   return (
@@ -48,6 +49,7 @@ export function adminRoutes() {
       <Route path="/admin/governance" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Governance failed"><AdminGovernance /></ErrorBoundary></AppLayout></AdminRoute>} />
       <Route path="/admin/control-center" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Control Center failed"><AdminControlCenter /></ErrorBoundary></AppLayout></AdminRoute>} />
       <Route path="/admin/cost-engine" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Cost Engine failed"><AdminCostEngine /></ErrorBoundary></AppLayout></AdminRoute>} />
+      <Route path="/admin/chat" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Admin Chat failed"><AdminChat /></ErrorBoundary></AppLayout></AdminRoute>} />
     </>
   );
 }

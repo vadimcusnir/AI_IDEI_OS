@@ -22,7 +22,7 @@ import {
   Home, BookOpen, Sparkles, Brain, Network, Store,
   Coins, Plus, Clock, Shield, Cpu, Activity, BarChart3,
   Database, Trophy, Workflow, Gem, Plug, LogIn, Zap, GraduationCap,
-  ChevronsUpDown, Check, Settings, Bell, Terminal,
+  ChevronsUpDown, Check, Settings, Bell, Terminal, MessagesSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -155,6 +155,7 @@ const ADMIN_SECTION: NavSection = {
   adminOnly: true,
   items: [
     { label: "Dashboard", to: "/admin", icon: Shield, adminOnly: true },
+    { label: "Council Chat", to: "/admin/chat", icon: MessagesSquare, adminOnly: true },
     { label: "Control Center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
     { label: "Cost Engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
     { label: "Kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
