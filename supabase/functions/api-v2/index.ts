@@ -100,23 +100,37 @@ Deno.serve(async (req) => {
         if (!hasScope(keyRecord.scopes, "entities:read")) {
           return json({ error: "Scope entities:read required" }, 403, corsHeaders);
         }
+
+        // SECURITY: Scope entities to user's own neurons to prevent cross-tenant IDOR
+        const { data: userNeuronIds } = await supabase
+          .from("neurons" as any)
+          .select("id")
+          .eq("author_id", keyRecord.user_id);
+        const allowedNeuronIds = (userNeuronIds || []).map((n: any) => n.id);
+
         if (resourceId && action !== "list") {
           const { data, error } = await supabase
             .from("entities")
             .select("*, entity_labels(*), entity_relations!entity_relations_source_entity_id_fkey(*)")
             .eq("id", resourceId)
+            .in("neuron_id", allowedNeuronIds)
             .single();
           if (error) throw error;
           return json({ data }, 200, corsHeaders);
         }
         const search = url.searchParams.get("search");
+        // Sanitize search param — strip PostgREST operators to prevent filter injection
+        const sanitizedSearch = search
+          ? search.replace(/[.,()]/g, "").slice(0, 200)
+          : null;
         let query = supabase
           .from("entities")
           .select("id, title, entity_type, idea_rank, slug, description", { count: "exact" })
+          .in("neuron_id", allowedNeuronIds)
           .order("idea_rank", { ascending: false, nullsFirst: false })
           .range(offset, offset + limit - 1);
-        if (search) {
-          query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+        if (sanitizedSearch) {
+          query = query.or(`title.ilike.%${sanitizedSearch}%,description.ilike.%${sanitizedSearch}%`);
         }
         const { data, error, count } = await query;
         if (error) throw error;
