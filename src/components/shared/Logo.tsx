@@ -32,7 +32,7 @@ export function Logo({
       alt={alt}
       loading={loading}
       decoding="async"
-      className={cn("rounded-full", size, className)}
+      className={cn("object-contain", size, className)}
       width={32}
       height={32}
     />
