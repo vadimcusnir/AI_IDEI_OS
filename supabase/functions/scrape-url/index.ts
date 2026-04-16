@@ -98,10 +98,19 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // 5. DNS resolution check — prevent DNS rebinding attacks
+    // 5. DNS resolution check — prevent DNS rebinding attacks (IPv4 + IPv6)
     try {
-      const dnsResult = await Deno.resolveDns(parsedUrl.hostname, "A");
-      for (const ip of dnsResult) {
+      const checks: string[] = [];
+      try { const a = await Deno.resolveDns(parsedUrl.hostname, "A"); checks.push(...a); } catch { /* no A records */ }
+      try { const aaaa = await Deno.resolveDns(parsedUrl.hostname, "AAAA"); checks.push(...aaaa); } catch { /* no AAAA records */ }
+
+      if (checks.length === 0) {
+        return new Response(JSON.stringify({ error: "DNS resolution failed" }), {
+          status: 403, headers: { ...cors, "Content-Type": "application/json" },
+        });
+      }
+
+      for (const ip of checks) {
         if (BLOCKED_HOSTNAME_PATTERNS.some(r => r.test(ip))) {
           return new Response(JSON.stringify({ error: "URL resolves to blocked IP" }), {
             status: 403, headers: { ...cors, "Content-Type": "application/json" },
@@ -109,18 +118,39 @@ Deno.serve(async (req: Request) => {
         }
       }
     } catch {
-      // DNS resolution failed — could be IPv6-only or invalid, allow fetch to handle
+      return new Response(JSON.stringify({ error: "DNS resolution failed" }), {
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
+      });
     }
 
-    // 6. Fetch with timeout and no redirect auto-follow (manual check)
-    const resp = await fetch(parsedUrl.toString(), {
+    // 6. Fetch with timeout — manual redirect to re-validate target
+    let finalUrl = parsedUrl.toString();
+    let resp = await fetch(finalUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; AI-IDEI/1.0; +https://ai-idei.com)",
         "Accept": "text/html,application/xhtml+xml,text/plain,*/*",
       },
-      redirect: "follow",
+      redirect: "manual",
       signal: AbortSignal.timeout(10000),
     });
+
+    // Follow up to 3 redirects, re-checking each target
+    for (let hops = 0; hops < 3 && [301, 302, 303, 307, 308].includes(resp.status); hops++) {
+      const loc = resp.headers.get("location");
+      if (!loc) break;
+      const redirectUrl = new URL(loc, finalUrl);
+      if (isBlockedUrl(redirectUrl)) {
+        return new Response(JSON.stringify({ error: "Redirect target blocked" }), {
+          status: 403, headers: { ...cors, "Content-Type": "application/json" },
+        });
+      }
+      finalUrl = redirectUrl.toString();
+      resp = await fetch(finalUrl, {
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; AI-IDEI/1.0; +https://ai-idei.com)", "Accept": "text/html,*/*" },
+        redirect: "manual",
+        signal: AbortSignal.timeout(10000),
+      });
+    }
 
     if (!resp.ok) {
       return new Response(JSON.stringify({ error: `Failed to fetch: ${resp.status}` }), {

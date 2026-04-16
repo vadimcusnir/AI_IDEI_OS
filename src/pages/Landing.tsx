@@ -48,7 +48,7 @@ const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ defa
 const FAQ_ITEMS = [
   { q: "What is AI-IDEI?", a: "AI-IDEI is a Knowledge Extraction OS that transforms your expertise into structured digital assets." },
   { q: "How does it work?", a: "Upload content, AI extracts atomic knowledge units (neurons), then generates professional outputs automatically." },
-  { q: "Is it free?", a: "Yes, you can start free with 50 neurons. Premium plans unlock unlimited extraction and advanced features." },
+  { q: "Is it free?", a: "Yes, you can start free with 500 neurons. Premium plans unlock unlimited extraction and advanced features." },
 ];
 
 const LANG_OPTIONS = [

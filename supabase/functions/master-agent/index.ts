@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
 import {
   getTierLimits,
   economyPreFlight,
@@ -84,7 +85,8 @@ serve(async (req) => {
   const kernel = createKernelLog();
 
   try {
-    const { source_content, user_goal, monetization_mode = true, execution_depth = "standard" } = await req.json();
+    const { source_content, user_goal: rawGoal, monetization_mode = true, execution_depth = "standard" } = await req.json();
+    const user_goal = sanitizeUserInput(rawGoal || "", 2000);
 
     if (!source_content || source_content.trim().length < 50) {
       return jsonRes({ status: "NO_DATA_AVAILABLE", reason: "Source content too short (min 50 chars)" });

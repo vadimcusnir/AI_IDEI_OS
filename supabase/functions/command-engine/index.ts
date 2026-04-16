@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
 
 /**
  * Phase 8 — Command Engine
@@ -81,12 +82,13 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case "analyze": {
-        const { user_goal, context } = body;
-        if (!user_goal || typeof user_goal !== "string" || user_goal.length < 3) {
+        const { user_goal: rawGoal, context } = body;
+        if (!rawGoal || typeof rawGoal !== "string" || rawGoal.length < 3) {
           return new Response(JSON.stringify({ error: "user_goal required (min 3 chars)" }), {
             status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
+        const user_goal = sanitizeUserInput(rawGoal, 2000);
 
         const result = await runDecisionPipeline(supabase, user.id, user_goal, context || {});
         return new Response(JSON.stringify(result), {
