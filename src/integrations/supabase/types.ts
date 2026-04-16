@@ -6403,6 +6403,63 @@ export type Database = {
         }
         Relationships: []
       }
+      mcl_break_even_state: {
+        Row: {
+          break_even_revenue_eur: number | null
+          break_even_units: number | null
+          computed_at: string | null
+          contribution_margin_pct: number | null
+          contribution_margin_per_unit: number | null
+          current_units_sold: number | null
+          id: string
+          margin_of_safety_pct: number | null
+          metadata: Json | null
+          period_month: string
+          status: string | null
+          total_fixed_cost_eur: number | null
+          total_revenue_eur: number | null
+          total_variable_cost_eur: number | null
+          unit_revenue_eur: number | null
+          unit_variable_cost_eur: number | null
+        }
+        Insert: {
+          break_even_revenue_eur?: number | null
+          break_even_units?: number | null
+          computed_at?: string | null
+          contribution_margin_pct?: number | null
+          contribution_margin_per_unit?: number | null
+          current_units_sold?: number | null
+          id?: string
+          margin_of_safety_pct?: number | null
+          metadata?: Json | null
+          period_month: string
+          status?: string | null
+          total_fixed_cost_eur?: number | null
+          total_revenue_eur?: number | null
+          total_variable_cost_eur?: number | null
+          unit_revenue_eur?: number | null
+          unit_variable_cost_eur?: number | null
+        }
+        Update: {
+          break_even_revenue_eur?: number | null
+          break_even_units?: number | null
+          computed_at?: string | null
+          contribution_margin_pct?: number | null
+          contribution_margin_per_unit?: number | null
+          current_units_sold?: number | null
+          id?: string
+          margin_of_safety_pct?: number | null
+          metadata?: Json | null
+          period_month?: string
+          status?: string | null
+          total_fixed_cost_eur?: number | null
+          total_revenue_eur?: number | null
+          total_variable_cost_eur?: number | null
+          unit_revenue_eur?: number | null
+          unit_variable_cost_eur?: number | null
+        }
+        Relationships: []
+      }
       mcl_control_actions: {
         Row: {
           code: string
@@ -6452,6 +6509,241 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mcl_cost_categories: {
+        Row: {
+          category_key: string
+          cost_type: string
+          created_at: string | null
+          description: string | null
+          display_name: string
+          domain: string
+          id: string
+          is_active: boolean | null
+          unit: string
+        }
+        Insert: {
+          category_key: string
+          cost_type?: string
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          domain: string
+          id?: string
+          is_active?: boolean | null
+          unit?: string
+        }
+        Update: {
+          category_key?: string
+          cost_type?: string
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          domain?: string
+          id?: string
+          is_active?: boolean | null
+          unit?: string
+        }
+        Relationships: []
+      }
+      mcl_cost_inputs: {
+        Row: {
+          category_key: string
+          created_at: string | null
+          expected_volume: number | null
+          fx_rate: number | null
+          id: string
+          notes: string | null
+          period_month: string
+          status: string | null
+          total_budget_eur: number | null
+          unit_cost: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_key: string
+          created_at?: string | null
+          expected_volume?: number | null
+          fx_rate?: number | null
+          id?: string
+          notes?: string | null
+          period_month: string
+          status?: string | null
+          total_budget_eur?: number | null
+          unit_cost?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_key?: string
+          created_at?: string | null
+          expected_volume?: number | null
+          fx_rate?: number | null
+          id?: string
+          notes?: string | null
+          period_month?: string
+          status?: string | null
+          total_budget_eur?: number | null
+          unit_cost?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      mcl_cost_ledger: {
+        Row: {
+          amount_currency: string | null
+          amount_eur: number
+          category_id: string | null
+          category_key: string
+          created_at: string | null
+          fx_rate: number | null
+          id: string
+          is_direct: boolean | null
+          is_economic: boolean | null
+          metadata: Json | null
+          occurred_at: string | null
+          quantity: number | null
+          service_key: string | null
+          source: string
+          source_ref: string | null
+          unit_cost: number | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_currency?: string | null
+          amount_eur?: number
+          category_id?: string | null
+          category_key: string
+          created_at?: string | null
+          fx_rate?: number | null
+          id?: string
+          is_direct?: boolean | null
+          is_economic?: boolean | null
+          metadata?: Json | null
+          occurred_at?: string | null
+          quantity?: number | null
+          service_key?: string | null
+          source: string
+          source_ref?: string | null
+          unit_cost?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_currency?: string | null
+          amount_eur?: number
+          category_id?: string | null
+          category_key?: string
+          created_at?: string | null
+          fx_rate?: number | null
+          id?: string
+          is_direct?: boolean | null
+          is_economic?: boolean | null
+          metadata?: Json | null
+          occurred_at?: string | null
+          quantity?: number | null
+          service_key?: string | null
+          source?: string
+          source_ref?: string | null
+          unit_cost?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mcl_cost_ledger_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "mcl_cost_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mcl_cost_scenario_results: {
+        Row: {
+          break_even_units: number | null
+          computed_at: string | null
+          id: string
+          margin_eur: number | null
+          margin_pct: number | null
+          period_month: string
+          scenario_id: string | null
+          scenario_key: string
+          sensitivity_data: Json | null
+          total_cost_eur: number | null
+          total_revenue_eur: number | null
+          triggered_by: string | null
+        }
+        Insert: {
+          break_even_units?: number | null
+          computed_at?: string | null
+          id?: string
+          margin_eur?: number | null
+          margin_pct?: number | null
+          period_month: string
+          scenario_id?: string | null
+          scenario_key: string
+          sensitivity_data?: Json | null
+          total_cost_eur?: number | null
+          total_revenue_eur?: number | null
+          triggered_by?: string | null
+        }
+        Update: {
+          break_even_units?: number | null
+          computed_at?: string | null
+          id?: string
+          margin_eur?: number | null
+          margin_pct?: number | null
+          period_month?: string
+          scenario_id?: string | null
+          scenario_key?: string
+          sensitivity_data?: Json | null
+          total_cost_eur?: number | null
+          total_revenue_eur?: number | null
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mcl_cost_scenario_results_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "mcl_cost_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mcl_cost_scenarios: {
+        Row: {
+          assumptions: Json
+          created_at: string | null
+          description: string | null
+          display_name: string
+          id: string
+          is_active: boolean | null
+          scenario_key: string
+          scenario_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_active?: boolean | null
+          scenario_key: string
+          scenario_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_active?: boolean | null
+          scenario_key?: string
+          scenario_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       mcl_decisions: {
         Row: {
@@ -6558,6 +6850,45 @@ export type Database = {
           scope_reference?: string
           scope_type?: string
           time_estimate_seconds?: number
+        }
+        Relationships: []
+      }
+      mcl_internal_liability: {
+        Row: {
+          created_at: string | null
+          credits_outstanding: number | null
+          days_to_full_burn: number | null
+          estimated_redemption_cost_eur: number | null
+          expected_burn_rate_per_day: number | null
+          id: string
+          liability_per_credit_eur: number | null
+          metadata: Json | null
+          redemption_rate_30d: number | null
+          snapshot_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          credits_outstanding?: number | null
+          days_to_full_burn?: number | null
+          estimated_redemption_cost_eur?: number | null
+          expected_burn_rate_per_day?: number | null
+          id?: string
+          liability_per_credit_eur?: number | null
+          metadata?: Json | null
+          redemption_rate_30d?: number | null
+          snapshot_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          credits_outstanding?: number | null
+          days_to_full_burn?: number | null
+          estimated_redemption_cost_eur?: number | null
+          expected_burn_rate_per_day?: number | null
+          id?: string
+          liability_per_credit_eur?: number | null
+          metadata?: Json | null
+          redemption_rate_30d?: number | null
+          snapshot_at?: string | null
         }
         Relationships: []
       }
@@ -6945,6 +7276,63 @@ export type Database = {
           target_entity_reference?: string | null
           target_entity_type?: string
           trust_level?: string
+        }
+        Relationships: []
+      }
+      mcl_unit_economics: {
+        Row: {
+          allocated_cost_eur: number | null
+          computed_at: string | null
+          contribution_margin_eur: number | null
+          contribution_margin_pct: number | null
+          cost_per_unit_eur: number | null
+          direct_cost_eur: number | null
+          id: string
+          margin_per_unit_eur: number | null
+          metadata: Json | null
+          period_month: string
+          revenue_eur: number | null
+          revenue_per_unit_eur: number | null
+          service_key: string
+          status: string | null
+          total_cost_eur: number | null
+          units_sold: number | null
+        }
+        Insert: {
+          allocated_cost_eur?: number | null
+          computed_at?: string | null
+          contribution_margin_eur?: number | null
+          contribution_margin_pct?: number | null
+          cost_per_unit_eur?: number | null
+          direct_cost_eur?: number | null
+          id?: string
+          margin_per_unit_eur?: number | null
+          metadata?: Json | null
+          period_month: string
+          revenue_eur?: number | null
+          revenue_per_unit_eur?: number | null
+          service_key: string
+          status?: string | null
+          total_cost_eur?: number | null
+          units_sold?: number | null
+        }
+        Update: {
+          allocated_cost_eur?: number | null
+          computed_at?: string | null
+          contribution_margin_eur?: number | null
+          contribution_margin_pct?: number | null
+          cost_per_unit_eur?: number | null
+          direct_cost_eur?: number | null
+          id?: string
+          margin_per_unit_eur?: number | null
+          metadata?: Json | null
+          period_month?: string
+          revenue_eur?: number | null
+          revenue_per_unit_eur?: number | null
+          service_key?: string
+          status?: string | null
+          total_cost_eur?: number | null
+          units_sold?: number | null
         }
         Relationships: []
       }
@@ -15314,6 +15702,8 @@ export type Database = {
           similarity: number
         }[]
       }
+      mcl_compute_break_even: { Args: { _period?: string }; Returns: string }
+      mcl_compute_liability: { Args: never; Returns: string }
       mcl_compute_priority: {
         Args: {
           _effort: number
@@ -15323,6 +15713,10 @@ export type Database = {
           _strategic_value: number
           _urgency: number
         }
+        Returns: number
+      }
+      mcl_compute_unit_economics: {
+        Args: { _period?: string }
         Returns: number
       }
       mcl_create_decision: {
@@ -15346,6 +15740,10 @@ export type Database = {
       mcl_override_decision: {
         Args: { _decision_id: string; _new_status: string; _rationale: string }
         Returns: undefined
+      }
+      mcl_run_scenario: {
+        Args: { _period?: string; _scenario_key: string }
+        Returns: string
       }
       mcl_run_selection_sweep: { Args: never; Returns: number }
       move_to_dlq: {
