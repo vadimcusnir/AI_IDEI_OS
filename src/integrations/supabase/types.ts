@@ -15735,16 +15735,14 @@ export type Database = {
         }
         Returns: number
       }
-      mcl_compute_unit_economics:
-        | {
-            Args: never
-            Returns: {
-              services_computed: number
-              total_cost_eur: number
-              total_revenue_eur: number
-            }[]
-          }
-        | { Args: { _period?: string }; Returns: number }
+      mcl_compute_unit_economics: {
+        Args: never
+        Returns: {
+          services_computed: number
+          total_cost_eur: number
+          total_revenue_eur: number
+        }[]
+      }
       mcl_create_decision: {
         Args: {
           _confidence: number
