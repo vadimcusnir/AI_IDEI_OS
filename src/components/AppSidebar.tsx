@@ -156,6 +156,7 @@ const ADMIN_SECTION: NavSection = {
   items: [
     { label: "Dashboard", to: "/admin", icon: Shield, adminOnly: true },
     { label: "Control Center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
+    { label: "Cost Engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
     { label: "Kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
     { label: "Runtime", to: "/runtime", icon: Activity, adminOnly: true },
     { label: "Analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
