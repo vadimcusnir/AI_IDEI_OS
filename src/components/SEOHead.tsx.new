@@ -1,0 +1,30 @@
+import { useEffect } from "react";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
+import Head from "next/head";
+
+interface SEOHeadProps {
+  title: string;
+  description: string;
+  canonical?: string;
+  jsonLd?: object;
+}
+
+export const SEOHead = ({ title, description, canonical, jsonLd }: SEOHeadProps) => {
+  useEffect(() => {
+    console.log("SEO Head mounted for:", title);
+  }, [title]);
+
+  return (
+    <Head>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      {canonical && <link rel="canonical" href={canonical} />}
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(safeJsonLd(jsonLd)) }}
+        />
+      )}
+    </Head>
+  );
+};
