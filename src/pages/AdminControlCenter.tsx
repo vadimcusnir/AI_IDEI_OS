@@ -109,6 +109,14 @@ export default function AdminControlCenter() {
         <p className="text-muted-foreground">
           Sistemul de control paralel: 12 layers care decid, prioritizează, supraviețuiesc și se optimizează.
         </p>
+        <div className="flex gap-2 pt-2">
+          <Button size="sm" variant="outline" onClick={handleGenerateMetaReport}>
+            Generate Meta Report
+          </Button>
+          <Button size="sm" variant="outline" onClick={handleSelectionSweep}>
+            Run Selection Sweep
+          </Button>
+        </div>
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
