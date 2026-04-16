@@ -50,8 +50,8 @@ export function useWalletState(): WalletData {
     if (creditsRes.error && walletRes.error) {
       setError(creditsRes.error.message || walletRes.error?.message || "Failed to load wallet");
     } else {
-      const credits = creditsRes.data as any;
-      const w = walletRes.data as any;
+      const credits = creditsRes.data as { balance?: number; updated_at?: string } | null;
+      const w = walletRes.data as { available?: number; staked?: number; locked?: number; snapshot_ts?: string; chain_metadata?: Record<string, unknown> } | null;
 
       // Use user_credits.balance as the canonical "available" amount
       // Fall back to wallet_state.available if user_credits doesn't exist
@@ -69,12 +69,12 @@ export function useWalletState(): WalletData {
     }
 
     if (accessRes.data) {
-      const a = accessRes.data as any;
+      const a = accessRes.data as { window_status: string; entitlement_lock: boolean; policy_version: string; tier: string; last_verified_at: string };
       setAccess({
-        windowStatus: a.window_status,
+        windowStatus: a.window_status as AccessWindow["windowStatus"],
         entitlementLock: a.entitlement_lock,
         policyVersion: a.policy_version,
-        tier: a.tier,
+        tier: a.tier as AccessWindow["tier"],
         lastVerifiedAt: a.last_verified_at,
       });
     }

@@ -2,7 +2,7 @@ import { useState, useEffect, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { MobileMotion } from "@/components/motion/MobileMotion";
 
 interface PublicFeedback {
   id: string;
@@ -92,7 +92,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
 
   return (
     <section ref={ref} className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-      <motion.div
+      <MobileMotion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -111,11 +111,11 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           Profesioniști care și-au transformat expertiza în active digitale
         </p>
-      </motion.div>
+      </MobileMotion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item, i) => (
-          <motion.div
+          <MobileMotion.div
             key={item.id}
             initial="hidden"
             whileInView="visible"
@@ -142,7 +142,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
               </div>
             )}
             <p className="text-dense font-medium text-muted-foreground">— {item.title}</p>
-          </motion.div>
+          </MobileMotion.div>
         ))}
       </div>
     </section>
