@@ -15822,6 +15822,7 @@ export type Database = {
         }
         Returns: string
       }
+      mcl_cron_daily_metrics: { Args: never; Returns: undefined }
       mcl_cron_memory_decay: { Args: never; Returns: undefined }
       mcl_cron_meta_report: { Args: never; Returns: undefined }
       mcl_cron_selection_sweep: { Args: never; Returns: undefined }
