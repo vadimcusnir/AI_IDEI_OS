@@ -26,6 +26,7 @@ const SecurityDocs = lazyRetry(() => import("@/pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("@/pages/DatabaseRelations"));
 const AdminPipelineIntelligence = lazyRetry(() => import("@/pages/AdminPipelineIntelligence"));
 const AdminGovernance = lazyRetry(() => import("@/pages/AdminGovernance"));
+const AdminControlCenter = lazyRetry(() => import("@/pages/AdminControlCenter"));
 
 export function adminRoutes() {
   return (
@@ -44,6 +45,7 @@ export function adminRoutes() {
       <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><ErrorBoundary fallbackTitle="Audit log failed to load"><AdminAuditLog /></ErrorBoundary></AdminRoute></AppLayout>} />
       <Route path="/admin/pipeline-intelligence" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline Intelligence failed"><AdminPipelineIntelligence /></ErrorBoundary></AppLayout></AdminRoute>} />
       <Route path="/admin/governance" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Governance failed"><AdminGovernance /></ErrorBoundary></AppLayout></AdminRoute>} />
+      <Route path="/admin/control-center" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Control Center failed"><AdminControlCenter /></ErrorBoundary></AppLayout></AdminRoute>} />
     </>
   );
 }
