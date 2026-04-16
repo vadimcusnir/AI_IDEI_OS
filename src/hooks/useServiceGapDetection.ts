@@ -65,9 +65,9 @@ export function useServiceGapDetection() {
 
       // Fetch all active services across levels
       const [l3Res, l2Res, l1Res] = await Promise.all([
-        supabase.from("services_level_3").select("id, service_name, service_slug, category, price_usd, internal_credit_cost, deliverable_type").eq("status", "active").eq("visibility", "public"),
-        supabase.from("services_level_2").select("id, service_name, service_slug, category, price_usd, internal_credit_cost, deliverable_type, component_l3_ids").eq("status", "active").eq("visibility", "public"),
-        supabase.from("services_level_1").select("id, service_name, service_slug, category, price_usd, internal_credit_cost, deliverable_type, component_l2_ids").eq("status", "active").eq("visibility", "public"),
+        supabase.from("services_level_3_public" as any).select("id, service_name, service_slug, category, price_usd, deliverable_type").eq("status", "active").eq("visibility", "public"),
+        supabase.from("services_level_2_public" as any).select("id, service_name, service_slug, category, price_usd, deliverable_type").eq("status", "active").eq("visibility", "public"),
+        supabase.from("services_level_1_public" as any).select("id, service_name, service_slug, category, price_usd, deliverable_type").eq("status", "active").eq("visibility", "public"),
       ]);
 
       const l3Services = (l3Res.data || []) as any[];

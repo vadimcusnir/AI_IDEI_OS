@@ -49,24 +49,24 @@ export function ServiceCompositionTree({
 
       // Resolve L2 components (for L1)
       if (componentL2Ids.length > 0) {
-        const { data } = await (supabase.from("services_level_2") as any)
-          .select("id, service_name, service_slug, category, price_usd, internal_credit_cost, estimated_delivery_seconds, deliverable_name")
+        const { data } = await (supabase.from("services_level_2_public") as any)
+          .select("id, service_name, service_slug, category, price_usd, estimated_delivery_seconds, deliverable_name")
           .in("id", componentL2Ids);
         if (data) results.push(...data.map((d: any) => ({ ...d, level: "L2" as const, price_usd: Number(d.price_usd) })));
       }
 
       // Resolve L3 components (for L2, or required L3 in L1)
       if (componentL3Ids.length > 0) {
-        const { data } = await (supabase.from("services_level_3") as any)
-          .select("id, service_name, service_slug, category, price_usd, internal_credit_cost, estimated_delivery_seconds, deliverable_name")
+        const { data } = await (supabase.from("services_level_3_public") as any)
+          .select("id, service_name, service_slug, category, price_usd, estimated_delivery_seconds, deliverable_name")
           .in("id", componentL3Ids);
         if (data) results.push(...data.map((d: any) => ({ ...d, level: "L3" as const, price_usd: Number(d.price_usd) })));
       }
 
       // Resolve optional L3 (for L1)
       if (componentL3IdsOptional.length > 0) {
-        const { data } = await (supabase.from("services_level_3") as any)
-          .select("id, service_name, service_slug, category, price_usd, internal_credit_cost, estimated_delivery_seconds, deliverable_name")
+        const { data } = await (supabase.from("services_level_3_public") as any)
+          .select("id, service_name, service_slug, category, price_usd, estimated_delivery_seconds, deliverable_name")
           .in("id", componentL3IdsOptional);
         if (data) optional.push(...data.map((d: any) => ({ ...d, level: "L3" as const, price_usd: Number(d.price_usd) })));
       }

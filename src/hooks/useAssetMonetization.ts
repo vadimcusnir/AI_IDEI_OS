@@ -77,13 +77,13 @@ export function useAssetMonetization() {
     try {
       // Fetch platform services to check for overlap
       const [l3Res, l2Res] = await Promise.all([
-        supabase.from("services_level_3").select("service_name, category, deliverable_type").eq("status", "active"),
-        supabase.from("services_level_2").select("service_name, category, deliverable_type").eq("status", "active"),
+        supabase.from("services_level_3_public" as any).select("service_name, category, deliverable_type").eq("status", "active"),
+        supabase.from("services_level_2_public" as any).select("service_name, category, deliverable_type").eq("status", "active"),
       ]);
 
       const services = [
-        ...(l3Res.data || []).map(s => ({ ...s, level: "L3" })),
-        ...(l2Res.data || []).map(s => ({ ...s, level: "L2" })),
+        ...(l3Res.data || []).map((s: any) => ({ ...s, level: "L3" })),
+        ...(l2Res.data || []).map((s: any) => ({ ...s, level: "L2" })),
       ];
 
       // Simple keyword-based overlap detection
