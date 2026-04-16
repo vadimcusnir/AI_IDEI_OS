@@ -15339,6 +15339,9 @@ export type Database = {
         }
         Returns: string
       }
+      mcl_cron_memory_decay: { Args: never; Returns: undefined }
+      mcl_cron_meta_report: { Args: never; Returns: undefined }
+      mcl_cron_selection_sweep: { Args: never; Returns: undefined }
       mcl_generate_meta_report: { Args: { _window?: string }; Returns: string }
       mcl_override_decision: {
         Args: { _decision_id: string; _new_status: string; _rationale: string }
