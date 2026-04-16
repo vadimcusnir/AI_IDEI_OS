@@ -82,7 +82,12 @@ export default function ProductSurfacePage() {
       {page.schema_json && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(page.schema_json) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(page.schema_json)
+              .replace(/</g, "\\u003c")
+              .replace(/>/g, "\\u003e")
+              .replace(/&/g, "\\u0026"),
+          }}
         />
       )}
 

@@ -220,8 +220,19 @@ Structure your output in three sections:
     if (!llmResponse.ok) {
       const errText = await llmResponse.text();
       console.error("LLM error:", llmResponse.status, errText);
-      // TODO: Release neurons back on LLM failure (compensating transaction)
-      return new Response(JSON.stringify({ error: "LLM execution failed", detail: errText }), {
+
+      // ═══ COMPENSATING TRANSACTION — refund neurons on LLM failure ═══
+      const { error: refundErr } = await supabase.rpc("add_credits", {
+        _user_id: user_id,
+        _amount: neuronsCost,
+        _description: `Refund: ${unit.name} — LLM failure (${llmResponse.status})`,
+        _type: "refund",
+      });
+      if (refundErr) {
+        console.error("CRITICAL: Refund failed for user", user_id, "amount", neuronsCost, refundErr);
+      }
+
+      return new Response(JSON.stringify({ error: "LLM execution failed", refunded: !refundErr }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

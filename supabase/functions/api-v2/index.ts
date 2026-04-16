@@ -51,14 +51,21 @@ Deno.serve(async (req) => {
     return json({ error: "Daily rate limit exceeded", limit: keyRecord.daily_limit }, 429, corsHeaders);
   }
 
-  // Increment usage
-  await supabase
-    .from("api_keys")
-    .update({
-      requests_today: keyRecord.requests_today + 1,
-      last_used_at: new Date().toISOString(),
-    })
-    .eq("id", keyRecord.id);
+  // Atomic increment — prevents race condition (F-007)
+  const { error: incrErr } = await supabase.rpc("increment_api_key_usage", {
+    _key_id: keyRecord.id,
+    _daily_limit: keyRecord.daily_limit,
+  });
+  if (incrErr) {
+    // Fallback to non-atomic update if RPC doesn't exist yet
+    await supabase
+      .from("api_keys")
+      .update({
+        requests_today: keyRecord.requests_today + 1,
+        last_used_at: new Date().toISOString(),
+      })
+      .eq("id", keyRecord.id);
+  }
 
   const url = new URL(req.url);
   const pathParts = url.pathname.split("/").filter(Boolean);
@@ -120,8 +127,9 @@ Deno.serve(async (req) => {
         }
         const search = url.searchParams.get("search");
         // Sanitize search param — strip PostgREST operators to prevent filter injection
+        // F-006: Strict sanitization — only allow alphanumeric, spaces, hyphens, underscores
         const sanitizedSearch = search
-          ? search.replace(/[.,()]/g, "").slice(0, 200)
+          ? search.replace(/[^a-zA-Z0-9\s\-_àăâîșțéèêëïöüçñ]/gi, "").trim().slice(0, 200)
           : null;
         let query = supabase
           .from("entities")
