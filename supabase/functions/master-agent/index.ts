@@ -85,7 +85,8 @@ serve(async (req) => {
   const kernel = createKernelLog();
 
   try {
-    const { source_content, user_goal, monetization_mode = true, execution_depth = "standard" } = await req.json();
+    const { source_content, user_goal: rawGoal, monetization_mode = true, execution_depth = "standard" } = await req.json();
+    const user_goal = sanitizeUserInput(rawGoal || "", 2000);
 
     if (!source_content || source_content.trim().length < 50) {
       return jsonRes({ status: "NO_DATA_AVAILABLE", reason: "Source content too short (min 50 chars)" });
