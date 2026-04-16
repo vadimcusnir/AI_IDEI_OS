@@ -1,10 +1,10 @@
 /**
- * prompt-broker — AIAS-Enhanced (Phase 10)
- * Loads prompt from vault, validates input against schema,
- * enforces Context/Execution/Verdict output structure,
- * saves artifact with AIAS metadata, settles neurons.
+ * prompt-broker — AIAS-Enhanced (Phase 10) + P0 Security Fix
  * 
- * Input: { service_unit_id: UUID, user_inputs: object, user_id: UUID }
+ * SECURITY: JWT auth required. user_id extracted from token, NOT from client.
+ * BILLING: Atomic deduction via atomic_deduct_neurons() — no race condition.
+ * 
+ * Input: { service_unit_id: UUID, user_inputs: object }
  * Output: { artifact_id, content_preview, neurons_spent, aias_compliance, status }
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
@@ -24,19 +24,46 @@ Deno.serve(async (req) => {
     const rateLimited = await rateLimitGuard(clientIp + ":prompt-broker", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
-    const { service_unit_id, user_inputs, user_id } = await req.json();
-
-    if (!service_unit_id || !user_id) {
-      return new Response(JSON.stringify({ error: "Missing service_unit_id or user_id" }), {
-        status: 400,
+    // ═══ JWT AUTH — extract user_id from token, never trust client ═══
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Missing or invalid Authorization header" }), {
+        status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+    // Verify JWT via user-scoped client
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user }, error: authError } = await userClient.auth.getUser();
+
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Authentication failed" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const user_id = user.id; // Server-verified, not client-supplied
+
+    // Service role client for privileged operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const body = await req.json();
+    const { service_unit_id, user_inputs } = body;
+
+    if (!service_unit_id) {
+      return new Response(JSON.stringify({ error: "Missing service_unit_id" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // 1. Load service unit
     const { data: unit, error: unitErr } = await supabase
@@ -66,7 +93,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 2b. AIAS: Validate input against prompt_vault.input_schema (T10.2)
+    // 2b. AIAS: Validate input against prompt_vault.input_schema
     const inputSchema = prompt.input_schema as Record<string, any> || {};
     const inputValidation = validateInputSchema(user_inputs, inputSchema);
     if (!inputValidation.valid) {
@@ -80,22 +107,32 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 3. Check wallet balance
+    // 3. Calculate cost
     const costJson = unit.cost_json as any || {};
     const neuronsCost = costJson.neurons_cost || (unit.pricing_json as any)?.root2_price || 29;
 
-    const { data: wallet } = await supabase
-      .from("wallet_state")
-      .select("available")
-      .eq("user_id", user_id)
-      .maybeSingle();
+    // ═══ ATOMIC DEDUCTION — prevents race condition ═══
+    const { data: deductResult, error: deductErr } = await supabase
+      .rpc("atomic_deduct_neurons", {
+        p_user_id: user_id,
+        p_amount: neuronsCost,
+        p_description: `prompt-broker: ${unit.name}`,
+      });
 
-    const balance = wallet?.available || 0;
-    if (balance < neuronsCost) {
+    if (deductErr) {
+      console.error("Atomic deduct error:", deductErr);
+      return new Response(JSON.stringify({ error: "Billing system error" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const deduction = deductResult?.[0];
+    if (!deduction?.success) {
       return new Response(JSON.stringify({
-        error: "INSUFFICIENT_BALANCE",
+        error: deduction?.error_message === "Insufficient balance" ? "INSUFFICIENT_BALANCE" : "BILLING_ERROR",
         required: neuronsCost,
-        available: balance,
+        available: deduction?.new_balance || 0,
       }), {
         status: 402,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -128,7 +165,6 @@ Deno.serve(async (req) => {
       ? user_inputs
       : JSON.stringify(user_inputs || {});
 
-    // AIAS output enforcement: require Context/Execution/Verdict structure
     const aiasOutputDirective = outputContract
       ? `\n## OUTPUT STRUCTURE (MANDATORY — AIAS Level 1):
 You MUST structure your output in exactly three sections:
@@ -183,6 +219,7 @@ Structure your output in three sections:
     if (!llmResponse.ok) {
       const errText = await llmResponse.text();
       console.error("LLM error:", llmResponse.status, errText);
+      // TODO: Release neurons back on LLM failure (compensating transaction)
       return new Response(JSON.stringify({ error: "LLM execution failed", detail: errText }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -227,20 +264,7 @@ Structure your output in three sections:
       });
     }
 
-    // 9. Settle neurons
-    await supabase.from("credit_transactions").insert({
-      user_id,
-      amount: -neuronsCost,
-      type: "service_execution",
-      description: `prompt-broker: ${unit.name}`,
-    });
-
-    await supabase
-      .from("wallet_state")
-      .update({ available: balance - neuronsCost })
-      .eq("user_id", user_id);
-
-    // 10. Update AIAS agent stats if profile exists
+    // 9. Update AIAS agent stats if profile exists
     if (aiasProfile?.id) {
       await supabase.from("aias_agent_profiles").update({
         total_executions: (aiasProfile as any).total_executions + 1,
@@ -298,7 +322,6 @@ function validateOutputCompliance(content: string): {
   sections_found: string[];
   score: number;
 } {
-  const lower = content.toLowerCase();
   const has_context = /###?\s*context/i.test(content);
   const has_execution = /###?\s*execution/i.test(content);
   const has_verdict = /###?\s*verdict/i.test(content);
