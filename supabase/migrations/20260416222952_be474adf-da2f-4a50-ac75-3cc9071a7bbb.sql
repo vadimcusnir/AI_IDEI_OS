@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.mcl_compute_break_even(date);

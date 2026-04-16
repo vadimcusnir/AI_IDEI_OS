@@ -15702,21 +15702,19 @@ export type Database = {
           similarity: number
         }[]
       }
-      mcl_compute_break_even:
-        | {
-            Args: never
-            Returns: {
-              avg_cost_per_credit_eur: number
-              avg_revenue_per_credit_eur: number
-              break_even_credits: number
-              break_even_revenue_eur: number
-              contribution_margin_per_credit: number
-              current_30d_credits: number
-              margin_of_safety_pct: number
-              monthly_fixed_cost_eur: number
-            }[]
-          }
-        | { Args: { _period?: string }; Returns: string }
+      mcl_compute_break_even: {
+        Args: never
+        Returns: {
+          avg_cost_per_credit_eur: number
+          avg_revenue_per_credit_eur: number
+          break_even_credits: number
+          break_even_revenue_eur: number
+          contribution_margin_per_credit: number
+          current_30d_credits: number
+          margin_of_safety_pct: number
+          monthly_fixed_cost_eur: number
+        }[]
+      }
       mcl_compute_liability: {
         Args: never
         Returns: {
