@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 const BASE_URL = "https://ai-idei.com";
 
@@ -123,7 +124,7 @@ export function SEOHead({ title, description, canonical, ogImage, jsonLd }: SEOH
         ldScript.setAttribute("data-seo-jsonld", "true");
         document.head.appendChild(ldScript);
       }
-      ldScript.textContent = JSON.stringify(jsonLd);
+      ldScript.textContent = safeJsonLd(jsonLd as Record<string, unknown>);
     } else if (ldScript) {
       ldScript.remove();
     }
