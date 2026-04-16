@@ -37,20 +37,21 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify JWT via user-scoped client
+    // Verify JWT via getClaims() — lightweight, no server round-trip
     const userClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: authError } = await userClient.auth.getClaims(token);
 
-    if (authError || !user) {
+    if (authError || !claimsData?.claims) {
       return new Response(JSON.stringify({ error: "Authentication failed" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const user_id = user.id; // Server-verified, not client-supplied
+    const user_id = claimsData.claims.sub as string; // Server-verified, not client-supplied
 
     // Service role client for privileged operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
