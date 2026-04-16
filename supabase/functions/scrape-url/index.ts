@@ -123,15 +123,34 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // 6. Fetch with timeout and no redirect auto-follow (manual check)
-    const resp = await fetch(parsedUrl.toString(), {
+    // 6. Fetch with timeout — manual redirect to re-validate target
+    let finalUrl = parsedUrl.toString();
+    let resp = await fetch(finalUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; AI-IDEI/1.0; +https://ai-idei.com)",
         "Accept": "text/html,application/xhtml+xml,text/plain,*/*",
       },
-      redirect: "follow",
+      redirect: "manual",
       signal: AbortSignal.timeout(10000),
     });
+
+    // Follow up to 3 redirects, re-checking each target
+    for (let hops = 0; hops < 3 && [301, 302, 303, 307, 308].includes(resp.status); hops++) {
+      const loc = resp.headers.get("location");
+      if (!loc) break;
+      const redirectUrl = new URL(loc, finalUrl);
+      if (isBlockedUrl(redirectUrl)) {
+        return new Response(JSON.stringify({ error: "Redirect target blocked" }), {
+          status: 403, headers: { ...cors, "Content-Type": "application/json" },
+        });
+      }
+      finalUrl = redirectUrl.toString();
+      resp = await fetch(finalUrl, {
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; AI-IDEI/1.0; +https://ai-idei.com)", "Accept": "text/html,*/*" },
+        redirect: "manual",
+        signal: AbortSignal.timeout(10000),
+      });
+    }
 
     if (!resp.ok) {
       return new Response(JSON.stringify({ error: `Failed to fetch: ${resp.status}` }), {
