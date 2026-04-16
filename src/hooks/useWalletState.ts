@@ -71,10 +71,10 @@ export function useWalletState(): WalletData {
     if (accessRes.data) {
       const a = accessRes.data as { window_status: string; entitlement_lock: boolean; policy_version: string; tier: string; last_verified_at: string };
       setAccess({
-        windowStatus: a.window_status,
+        windowStatus: a.window_status as AccessWindow["windowStatus"],
         entitlementLock: a.entitlement_lock,
         policyVersion: a.policy_version,
-        tier: a.tier,
+        tier: a.tier as AccessWindow["tier"],
         lastVerifiedAt: a.last_verified_at,
       });
     }
