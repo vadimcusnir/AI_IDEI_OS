@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
@@ -130,7 +131,7 @@ serve(async (req) => {
     }
 
     const systemPrompt = AGENT_PROMPTS[agent.role] || DEFAULT_PROMPT;
-    const userPrompt = input?.prompt || input?.content || `Execute ${agent.role} analysis with standard parameters. Context: ${JSON.stringify(input || {})}`;
+    const userPrompt = sanitizeUserInput(input?.prompt || input?.content || `Execute ${agent.role} analysis with standard parameters. Context: ${JSON.stringify(input || {})}`, 4000);
 
     // Call Lovable AI
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
