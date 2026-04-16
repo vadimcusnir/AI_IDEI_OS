@@ -82,8 +82,8 @@ export function useAssetMonetization() {
       ]);
 
       const services = [
-        ...(l3Res.data || []).map(s => ({ ...s, level: "L3" })),
-        ...(l2Res.data || []).map(s => ({ ...s, level: "L2" })),
+        ...(l3Res.data || []).map((s: any) => ({ ...s, level: "L3" })),
+        ...(l2Res.data || []).map((s: any) => ({ ...s, level: "L2" })),
       ];
 
       // Simple keyword-based overlap detection
