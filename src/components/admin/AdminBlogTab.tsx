@@ -13,8 +13,10 @@ import { toast } from "sonner";
 import {
   Plus, Eye, Edit2, Trash2, Send, Clock, FileText,
   Loader2, RefreshCw, Image, BookOpen, AlertTriangle,
-  CheckCircle, XCircle, RotateCcw,
+  CheckCircle, XCircle, RotateCcw, Crown, Unlock,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const CATEGORIES = [
   "knowledge-extraction", "ai-strategy", "content-intelligence",
@@ -89,7 +91,7 @@ export function AdminBlogTab() {
 
   // ═══ UPDATE MUTATION ═══
   const updateMutation = useMutation({
-    mutationFn: async (post: { id: string; title?: string; excerpt?: string; content?: string; status?: string; category?: string }) => {
+    mutationFn: async (post: { id: string; title?: string; excerpt?: string; content?: string; status?: string; category?: string; is_premium?: boolean }) => {
       const updateData: any = { ...post };
       delete updateData.id;
       if (post.status === "published" && !updateData.published_at) {
@@ -278,6 +280,11 @@ export function AdminBlogTab() {
                           {statusIcon(post.status)}
                           <Badge variant={statusColor(post.status)}>{post.status}</Badge>
                           <Badge variant="outline" className="text-xs">{post.category}</Badge>
+                          {post.is_premium && (
+                            <Badge variant="secondary" className="text-xs gap-1">
+                              <Crown className="w-3 h-3" /> Premium
+                            </Badge>
+                          )}
                           {post.inline_images && Array.isArray(post.inline_images) && (
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <Image className="w-3 h-3" /> {(post.inline_images as any[]).length} images
@@ -315,6 +322,15 @@ export function AdminBlogTab() {
                         )}
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
+                        <Button
+                          variant="ghost" size="sm"
+                          onClick={() => updateMutation.mutate({ id: post.id, is_premium: !post.is_premium })}
+                          title={post.is_premium ? "Mark as Free" : "Mark as Premium"}
+                        >
+                          {post.is_premium
+                            ? <Unlock className="w-4 h-4 text-muted-foreground" />
+                            : <Crown className="w-4 h-4 text-primary" />}
+                        </Button>
                         {post.status === "draft" && (
                           <Button
                             variant="ghost" size="sm"
@@ -385,8 +401,23 @@ export function AdminBlogTab() {
                                       ))}
                                     </SelectContent>
                                   </Select>
-                                </div>
-                                {/* Image previews in editor */}
+                                 </div>
+                                 {/* Premium toggle */}
+                                 <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/30">
+                                   <div className="flex items-center gap-2">
+                                     <Crown className="w-4 h-4 text-primary" />
+                                     <div>
+                                       <Label htmlFor="is_premium" className="text-sm font-medium cursor-pointer">Premium content</Label>
+                                       <p className="text-xs text-muted-foreground">Restricted to authenticated users (soft paywall)</p>
+                                     </div>
+                                   </div>
+                                   <Switch
+                                     id="is_premium"
+                                     checked={!!editingPost.is_premium}
+                                     onCheckedChange={(v) => setEditingPost({ ...editingPost, is_premium: v })}
+                                   />
+                                 </div>
+                                 {/* Image previews in editor */}
                                 {editingPost.thumbnail_url && (
                                   <div>
                                     <p className="text-xs text-muted-foreground mb-1">Thumbnail</p>
@@ -412,15 +443,16 @@ export function AdminBlogTab() {
                                   rows={15}
                                   className="font-mono text-xs"
                                 />
-                                <Button
-                                  onClick={() => updateMutation.mutate({
-                                    id: editingPost.id,
-                                    title: editingPost.title,
-                                    excerpt: editingPost.excerpt,
-                                    content: editingPost.content,
-                                    status: editingPost.status,
-                                    category: editingPost.category,
-                                  })}
+                                 <Button
+                                   onClick={() => updateMutation.mutate({
+                                     id: editingPost.id,
+                                     title: editingPost.title,
+                                     excerpt: editingPost.excerpt,
+                                     content: editingPost.content,
+                                     status: editingPost.status,
+                                     category: editingPost.category,
+                                     is_premium: editingPost.is_premium,
+                                   })}
                                   disabled={updateMutation.isPending}
                                 >
                                   Save Changes

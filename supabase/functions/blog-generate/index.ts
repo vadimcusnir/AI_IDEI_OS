@@ -421,6 +421,18 @@ Deno.serve(async (req) => {
       ? new Date(Date.now() + scheduleHours * 3600000).toISOString()
       : null;
 
+    // ═══ AUTO-PREMIUM RULES ═══
+    // Marchează ca premium dacă: long-form (≥1800 words) SAU categorie strategică SAU depth score ridicat
+    const PREMIUM_CATEGORIES = new Set(["cognitive-frameworks", "digital-economics", "ai-strategy"]);
+    const depthScore = Number((pipelineScores as any)?.depth_score ?? (pipelineScores as any)?.depth ?? 0);
+    const isPremiumAuto =
+      wordCount >= 1800 ||
+      PREMIUM_CATEGORIES.has(category) ||
+      depthScore >= 0.8;
+    const premiumReason = isPremiumAuto
+      ? (wordCount >= 1800 ? "long_form" : PREMIUM_CATEGORIES.has(category) ? "premium_category" : "high_depth_score")
+      : null;
+
     const { data: post, error: insertErr } = await supabase
       .from("blog_posts")
       .insert({
@@ -442,7 +454,10 @@ Deno.serve(async (req) => {
         pipeline_stage: pipelineMode,
         pipeline_scores: pipelineScores,
         related_post_ids: relatedPostIds,
+        is_premium: isPremiumAuto,
         metadata: {
+          premium_auto: isPremiumAuto,
+          premium_reason: premiumReason,
           generated_at: new Date().toISOString(),
           topic_seed: topicHint,
           topic_id: topicId,
