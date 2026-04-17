@@ -172,11 +172,9 @@ export function YouTubeTranscriber() {
 
       if (!isFree) {
         try {
-          await supabase.rpc("add_credits", {
-            _user_id: user.id,
-            _amount: TRANSCRIPT_COST,
-            _description: "Refund — transcript download failed",
-            _type: "refund",
+          // Server-side refund. Client cannot grant credits directly anymore (F-014 fix).
+          await supabase.functions.invoke("transcript-refund", {
+            body: { amount: TRANSCRIPT_COST, reason: "Refund — transcript download failed" },
           });
           toast.info(t("toast_credits_returned"));
         } catch { /* silent */ }
