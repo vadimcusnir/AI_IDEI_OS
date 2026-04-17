@@ -34,8 +34,35 @@ Deno.serve(async (req: Request) => {
 
     const { messages, sources, mode } = await req.json();
 
+    // ── Billing constants ──
+    // notebook-chat uses Gemini 3 Flash with multi-source context — slightly heavier than neuron-chat.
+    const CHAT_COST_NEURONS = 7;
+
+    // ── Atomic credit deduction (fail-closed: no AI without payment) ──
+    const adminClient = createClient(
+      supabaseUrl,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { data: deductData, error: deductErr } = await adminClient.rpc("atomic_deduct_neurons", {
+      p_user_id: user.id,
+      p_amount: CHAT_COST_NEURONS,
+      p_description: "notebook_chat",
+    });
+    const deductRow = Array.isArray(deductData) ? deductData[0] : deductData;
+    if (deductErr || !deductRow?.success) {
+      const errMsg = deductRow?.error === "Insufficient balance"
+        ? "AI credits exhausted. Add credits."
+        : (deductRow?.error || "Billing failed");
+      return new Response(JSON.stringify({ error: errMsg, code: "INSUFFICIENT_CREDITS", required: CHAT_COST_NEURONS }), {
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    if (!LOVABLE_API_KEY) {
+      await adminClient.rpc("add_credits", { p_user_id: user.id, p_amount: CHAT_COST_NEURONS });
+      throw new Error("LOVABLE_API_KEY not configured");
+    }
 
     // Build context from selected sources
     const sourceContext = (sources || [])
@@ -74,6 +101,8 @@ ${sourceContext || "Nicio sursă selectată. Cere utilizatorului să adauge surs
     });
 
     if (!response.ok) {
+      // Refund on AI gateway failure
+      await adminClient.rpc("add_credits", { p_user_id: user.id, p_amount: CHAT_COST_NEURONS });
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
           status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },

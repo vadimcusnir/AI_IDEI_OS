@@ -65,8 +65,36 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Billing constants ──
+    // 1 NEURON ≈ $0.002. neuron-chat ≈ ~5 NEURONS per message (Gemini Flash, ~3-5k tokens avg).
+    const CHAT_COST_NEURONS = 5;
+
+    // ── Atomic credit deduction (fail-closed: no AI without payment) ──
+    const adminClient = createClient(
+      supabaseUrl,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { data: deductData, error: deductErr } = await adminClient.rpc("atomic_deduct_neurons", {
+      p_user_id: user.id,
+      p_amount: CHAT_COST_NEURONS,
+      p_description: "neuron_chat",
+    });
+    const deductRow = Array.isArray(deductData) ? deductData[0] : deductData;
+    if (deductErr || !deductRow?.success) {
+      const errMsg = deductRow?.error === "Insufficient balance"
+        ? "AI credits exhausted. Add credits in Settings → Workspace → Usage."
+        : (deductRow?.error || "Billing failed");
+      return new Response(JSON.stringify({ error: errMsg, code: "INSUFFICIENT_CREDITS", required: CHAT_COST_NEURONS }), {
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) {
+      // Refund — we charged but can't serve
+      await adminClient.rpc("add_credits", { p_user_id: user.id, p_amount: CHAT_COST_NEURONS });
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
 
     const MessageSchema = z.object({
       role: z.enum(["user", "assistant", "system"]),
@@ -85,6 +113,8 @@ Deno.serve(async (req) => {
 
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
+      // Refund — bad input is our validation, not user's compute
+      await adminClient.rpc("add_credits", { p_user_id: user.id, p_amount: CHAT_COST_NEURONS });
       return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
         status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
@@ -126,6 +156,8 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
+      // Refund on AI gateway failure
+      await adminClient.rpc("add_credits", { p_user_id: user.id, p_amount: CHAT_COST_NEURONS });
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
           status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
