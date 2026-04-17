@@ -230,9 +230,10 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
+                  {/* Outputs flow inline as the assistant's reply — auto-shown when execution completes */}
                   <AnimatePresence>
-                    {cc.showOutputs && cc.outputs.length > 0 && (
-                      <OutputPanel outputs={cc.outputs} visible={cc.showOutputs} onRerun={cc.handleRerun}
+                    {cc.execState.phase === "completed" && cc.outputs.length > 0 && (
+                      <OutputPanel outputs={cc.outputs} visible={true} onRerun={cc.handleRerun}
                         onClose={() => cc.setShowOutputs(false)} onSaveAll={cc.handleSaveAllOutputs} savingAll={cc.savingAllOutputs} />
                     )}
                   </AnimatePresence>
