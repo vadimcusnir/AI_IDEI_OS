@@ -38,6 +38,13 @@ export function useOnboardingState() {
     setLoading(true);
 
     let cancelled = false;
+    // Watchdog: dacă DB nu răspunde în 5s, deblochează UI cu DEFAULTS
+    const watchdog = setTimeout(() => {
+      if (!cancelled) {
+        console.warn("[onboarding] Watchdog triggered — using defaults after 5s");
+        setLoading(false);
+      }
+    }, 5000);
     const load = async () => {
       try {
         const { data, error } = await supabase
@@ -57,15 +64,21 @@ export function useOnboardingState() {
             tutorial_skipped: data.tutorial_skipped ?? false,
             tutorial_completed: data.tutorial_completed ?? false,
           });
+        } else {
+          // Self-heal: trigger-ul DB a eșuat → creează rândul lipsă
+          await supabase
+            .from("onboarding_progress")
+            .upsert({ user_id: user.id } as any, { onConflict: "user_id" });
         }
       } catch (e) {
         if (!cancelled) console.warn("[onboarding] Unexpected error:", e);
       } finally {
         if (!cancelled) setLoading(false);
+        clearTimeout(watchdog);
       }
     };
     load();
-    return () => { cancelled = true; };
+    return () => { cancelled = true; clearTimeout(watchdog); };
   }, [user]);
 
   const updateFlag = useCallback(async (key: keyof OnboardingFlags, value: boolean) => {
