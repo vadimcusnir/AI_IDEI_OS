@@ -5,16 +5,18 @@ import { Button } from "@/components/ui/button";
 interface ContentGateProps {
   children: React.ReactNode;
   isAuthenticated: boolean;
+  /** When false, content is fully visible to everyone (free article). */
+  isPremium?: boolean;
   /** Number of characters to show before blurring */
   previewLength?: number;
 }
 
 /**
  * Visual content gate — shows blurred content with a CTA to sign up.
- * Does NOT require email unlock — just authentication.
+ * Soft paywall: only triggers when isPremium === true AND user is anonymous.
  */
-export function ContentGate({ children, isAuthenticated, previewLength = 1500 }: ContentGateProps) {
-  if (isAuthenticated) {
+export function ContentGate({ children, isAuthenticated, isPremium = false, previewLength = 1500 }: ContentGateProps) {
+  if (isAuthenticated || !isPremium) {
     return <>{children}</>;
   }
 
