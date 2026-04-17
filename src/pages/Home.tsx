@@ -161,9 +161,7 @@ export default function Home() {
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
-                        <span className="text-xs text-muted-foreground ml-1">
-                          {cc.execState.phase === "planning" ? "Planning..." : "Thinking..."}
-                        </span>
+                        <span className="text-xs text-muted-foreground ml-1">Thinking...</span>
                       </div>
                     </div>
                   )}
