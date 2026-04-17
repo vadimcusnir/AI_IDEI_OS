@@ -13,8 +13,10 @@ import { toast } from "sonner";
 import {
   Plus, Eye, Edit2, Trash2, Send, Clock, FileText,
   Loader2, RefreshCw, Image, BookOpen, AlertTriangle,
-  CheckCircle, XCircle, RotateCcw,
+  CheckCircle, XCircle, RotateCcw, Crown, Unlock,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const CATEGORIES = [
   "knowledge-extraction", "ai-strategy", "content-intelligence",
@@ -89,7 +91,7 @@ export function AdminBlogTab() {
 
   // ═══ UPDATE MUTATION ═══
   const updateMutation = useMutation({
-    mutationFn: async (post: { id: string; title?: string; excerpt?: string; content?: string; status?: string; category?: string }) => {
+    mutationFn: async (post: { id: string; title?: string; excerpt?: string; content?: string; status?: string; category?: string; is_premium?: boolean }) => {
       const updateData: any = { ...post };
       delete updateData.id;
       if (post.status === "published" && !updateData.published_at) {
