@@ -10263,6 +10263,75 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_db_registry: {
+        Row: {
+          cluster: string
+          complexity: string
+          created_at: string
+          domain: string
+          function: string
+          id: string
+          input_type: string
+          language: string
+          metadata: Json
+          monetizable: boolean
+          name: string
+          output_type: string
+          prompt_id: string
+          revenue_score: number
+          service_key: string
+          status: string
+          total_score: number | null
+          updated_at: string
+          utility_score: number
+          version: string
+        }
+        Insert: {
+          cluster?: string
+          complexity?: string
+          created_at?: string
+          domain?: string
+          function?: string
+          id?: string
+          input_type?: string
+          language?: string
+          metadata?: Json
+          monetizable?: boolean
+          name: string
+          output_type?: string
+          prompt_id: string
+          revenue_score?: number
+          service_key: string
+          status?: string
+          total_score?: number | null
+          updated_at?: string
+          utility_score?: number
+          version?: string
+        }
+        Update: {
+          cluster?: string
+          complexity?: string
+          created_at?: string
+          domain?: string
+          function?: string
+          id?: string
+          input_type?: string
+          language?: string
+          metadata?: Json
+          monetizable?: boolean
+          name?: string
+          output_type?: string
+          prompt_id?: string
+          revenue_score?: number
+          service_key?: string
+          status?: string
+          total_score?: number | null
+          updated_at?: string
+          utility_score?: number
+          version?: string
+        }
+        Relationships: []
+      }
       prompt_generation_jobs: {
         Row: {
           completed_at: string | null
@@ -16110,6 +16179,7 @@ export type Database = {
         Returns: string
       }
       mcl_run_selection_sweep: { Args: never; Returns: number }
+      mint_prompt_db_id: { Args: never; Returns: string }
       move_to_dlq: {
         Args: {
           dlq_name: string
