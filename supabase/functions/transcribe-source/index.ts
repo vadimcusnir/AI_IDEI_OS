@@ -277,11 +277,112 @@ function classifyCobaltFailure(
 }
 
 // ═══════════════════════════════════════
-// Audio Extraction — YouTube via cobalt.tools
+// Audio Extraction — RapidAPI youtube-mp36 (PRIMARY)
+// ═══════════════════════════════════════
+async function extractYouTubeAudioRapidAPI(videoId: string): Promise<AudioExtractResult> {
+  const rapidKey = Deno.env.get("RAPIDAPI_KEY")?.trim();
+  if (!rapidKey) {
+    return {
+      ok: false,
+      failureClass: "no_backend_configured",
+      message: "RAPIDAPI_KEY not configured",
+      retryable: false,
+    };
+  }
+
+  try {
+    console.log(`[audio-extract] Trying RapidAPI youtube-mp36 for ${videoId}`);
+    const resp = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
+      headers: {
+        "x-rapidapi-key": rapidKey,
+        "x-rapidapi-host": "youtube-mp36.p.rapidapi.com",
+      },
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      console.warn(`[audio-extract] RapidAPI ${resp.status}: ${errText.slice(0, 200)}`);
+      const lower = errText.toLowerCase();
+      if (resp.status === 401 || resp.status === 403) {
+        return {
+          ok: false,
+          failureClass: "no_backend_configured",
+          message: "RapidAPI rejected the key. Subscribe to youtube-mp36 on RapidAPI and verify RAPIDAPI_KEY.",
+          retryable: false,
+        };
+      }
+      if (resp.status === 429 || lower.includes("rate")) {
+        return { ok: false, failureClass: "media_fetch_failed", message: "RapidAPI rate-limited. Try again shortly.", retryable: true };
+      }
+      return { ok: false, failureClass: "media_fetch_failed", message: `RapidAPI HTTP ${resp.status}`, retryable: resp.status >= 500 };
+    }
+
+    const data = await resp.json();
+    // Status can be: ok | processing | fail
+    if (data.status === "ok" && data.link) {
+      console.log(`[audio-extract] ✓ RapidAPI returned mp3 link (duration=${data.duration ?? "?"}s)`);
+      return {
+        ok: true,
+        audioUrl: data.link,
+        filename: `yt_${videoId}.mp3`,
+      };
+    }
+
+    if (data.status === "processing") {
+      // Poll up to ~25s
+      for (let attempt = 0; attempt < 5; attempt++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const retry = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
+          headers: {
+            "x-rapidapi-key": rapidKey,
+            "x-rapidapi-host": "youtube-mp36.p.rapidapi.com",
+          },
+        });
+        if (!retry.ok) continue;
+        const retryData = await retry.json();
+        if (retryData.status === "ok" && retryData.link) {
+          console.log(`[audio-extract] ✓ RapidAPI ready after ${(attempt + 1) * 5}s`);
+          return { ok: true, audioUrl: retryData.link, filename: `yt_${videoId}.mp3` };
+        }
+        if (retryData.status === "fail") break;
+      }
+      return { ok: false, failureClass: "media_fetch_failed", message: "RapidAPI conversion still processing after 25s.", retryable: true };
+    }
+
+    const msg = data.msg || `RapidAPI returned status=${data.status}`;
+    const lower = String(msg).toLowerCase();
+    if (lower.includes("private") || lower.includes("unavailable") || lower.includes("removed")) {
+      return { ok: false, failureClass: "video_private_or_blocked", message: msg, retryable: false };
+    }
+    return { ok: false, failureClass: "media_fetch_failed", message: msg, retryable: false };
+  } catch (e) {
+    console.warn("[audio-extract] RapidAPI error:", e);
+    return {
+      ok: false,
+      failureClass: "media_fetch_failed",
+      message: e instanceof Error ? e.message : "RapidAPI request failed",
+      retryable: true,
+    };
+  }
+}
+
+// ═══════════════════════════════════════
+// Audio Extraction — YouTube (RapidAPI primary, Cobalt fallback)
 // ═══════════════════════════════════════
 async function extractYouTubeAudio(videoId: string): Promise<AudioExtractResult> {
-  const config = getCobaltConfig();
+  // 1. Try RapidAPI first
+  const rapidResult = await extractYouTubeAudioRapidAPI(videoId);
+  if (rapidResult.ok) return rapidResult;
 
+  // Hard-stop for non-retryable content errors (private/blocked) — Cobalt won't fix these
+  if (rapidResult.failureClass === "video_private_or_blocked") {
+    return rapidResult;
+  }
+
+  console.log(`[audio-extract] RapidAPI failed (${rapidResult.failureClass}), falling back to Cobalt`);
+
+  // 2. Fallback: Cobalt
+  const config = getCobaltConfig();
   try {
     console.log(`[audio-extract] Trying cobalt: ${config.url}`);
     const resp = await fetch(`${config.url}/`, {
