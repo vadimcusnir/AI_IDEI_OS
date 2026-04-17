@@ -47,6 +47,13 @@ export default function Home() {
   const cc = useCommandCenter();
   const feedRef = useRef<HTMLDivElement>(null);
 
+  // Always start with a blank chat on mount — previous sessions are still
+  // accessible via the SessionList in the empty-state.
+  useEffect(() => {
+    cc.clearChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (feedRef.current) {
