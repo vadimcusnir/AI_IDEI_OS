@@ -1,3 +1,7 @@
+# Security Hardening — WAVE 0 + WAVE 1
+
+> Cumulative log. WAVE 1 section appended at the bottom.
+
 # Security Hardening — WAVE 0 (F-002, F-004, F-010)
 
 ## ✅ F-002 — Free unlimited AI via chat endpoints (FIXED)
