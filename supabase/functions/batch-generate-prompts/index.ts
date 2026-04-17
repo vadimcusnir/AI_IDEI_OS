@@ -208,6 +208,34 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Mint PRM id + upsert registry row for each service (idempotent on service_key)
+    const prmIds = new Map<string, string>();
+    for (const svc of todo) {
+      const { data: existing } = await admin
+        .from("prompt_db_registry")
+        .select("prompt_id")
+        .eq("service_key", svc.service_key)
+        .maybeSingle();
+      let prm = (existing as any)?.prompt_id as string | undefined;
+      if (!prm) {
+        const { data: minted } = await admin.rpc("mint_prompt_db_id" as any);
+        prm = minted as string;
+        const c = classify(svc);
+        await admin.from("prompt_db_registry").insert({
+          prompt_id: prm,
+          service_key: svc.service_key,
+          name: svc.name,
+          domain: c.domain,
+          function: c.function,
+          input_type: c.input_type,
+          output_type: c.output_type,
+          cluster: c.cluster,
+          metadata: { service_class: svc.service_class, credits_cost: svc.credits_cost },
+        });
+      }
+      prmIds.set(svc.service_key, prm!);
+    }
+
     // Mark all as generating up-front
     await admin.from("prompt_registry").upsert(
       todo.map((svc: any) => ({
@@ -225,7 +253,7 @@ Deno.serve(async (req) => {
     // Process in PARALLEL — Lovable AI Gateway handles concurrency
     let pauseReason: string | null = null;
     const results = await Promise.allSettled(todo.map(async (svc: any) => {
-      const yaml = await generateYaml(svc, job.model);
+      const yaml = await generateYaml(svc, job.model, prmIds.get(svc.service_key)!);
       return { svc, yaml };
     }));
 
