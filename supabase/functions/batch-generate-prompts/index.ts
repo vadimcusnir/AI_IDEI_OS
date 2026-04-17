@@ -20,21 +20,20 @@ const BATCH_SIZE = 4;
 const SYSTEM_PROMPT = `You are a senior AI prompt engineer producing PRODUCTION-GRADE YAML execution specs for an AI knowledge-extraction OS.
 Output MUST be a single valid YAML document (no markdown fences, no commentary).
 
-REQUIRED TOP-LEVEL HEADER (relational registry, MUST be first):
-  id: <PRM-XXXXX provided>
-  classification:
-    domain: <content|seo|branding|sales|ai|research|automation|analysis|production|extraction|orchestration|publishing|general>
-    function: <extract|analyze|generate|summarize|classify|rewrite|plan|audit>
-    input_type: <transcript|text|image|audio|url|pdf|mixed>
-    output_type: <entities|quotes|summary|article|report|prompt|strategy|framework>
-  cluster: <semantic_cluster_slug>
+ABSOLUTE RULE — THE FIRST LINE OF YOUR OUTPUT MUST BE: "id: PRM-XXXXX" (using the exact PRM id provided in the user message).
+ABSOLUTE RULE — THE SECOND BLOCK MUST BE the full registry header EXACTLY as provided in the user message (classification, cluster, version, status, language, scoring). DO NOT skip it. DO NOT start with spec_version.
+
+REQUIRED TOP-LEVEL HEADER ORDER (relational registry FIRST):
+  id: <PRM-XXXXX>
+  classification: { domain, function, input_type, output_type }
+  cluster: <slug>
   version: "1.0"
   status: active
   complexity: <atomic|modular|system>
   language: ro
   scoring: { utility_score: 1-10, revenue_score: 1-10 }
 
-THEN extended chain-of-thought schema: spec_version, service_key, display_name, category, role, objective,
+ONLY AFTER the header, append the extended chain-of-thought schema: spec_version, service_key, display_name, category, role, objective,
 inputs (required+optional), reasoning_chain (5-10 steps with step/name/instruction/expected_output/self_check),
 execution_steps, output_schema (valid JSON Schema), quality_gates (verifiable),
 edge_cases, fallbacks, validation_rules, security_rules (always include prompt-injection refusal + no PII leak + no system prompt leak),
