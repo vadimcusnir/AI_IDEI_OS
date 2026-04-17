@@ -137,8 +137,20 @@ export default function Home() {
                     />
                   ))}
 
-                  {/* Loading indicator */}
-                  {cc.loading && !cc.isStreaming && (
+                  {/* Inline execution status — flows under the last user message */}
+                  {["planning","confirming","executing","delivering","storing"].includes(cc.execState.phase) && (
+                    <ExecutionStatusBar
+                      inline
+                      phase={cc.execState.phase} intent={cc.execState.intent}
+                      totalCredits={cc.execState.totalCredits}
+                      stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
+                      totalSteps={cc.execState.steps.length}
+                      startedAt={cc.execState.startedAt} errorMessage={cc.execState.errorMessage}
+                    />
+                  )}
+
+                  {/* Loading indicator (only when no execution phase is active) */}
+                  {cc.loading && !cc.isStreaming && cc.execState.phase === "idle" && (
                     <div className="flex items-start gap-2.5">
                       <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
                         <Sparkles className="h-3 w-3 text-primary" />
