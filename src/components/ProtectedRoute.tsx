@@ -30,10 +30,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  // Enforce onboarding for new users (skip exempt routes)
+  // Enforce onboarding for new users (skip exempt routes) — propagă target original
   const isExempt = ONBOARDING_EXEMPT.some(p => location.pathname.startsWith(p));
   if (!isExempt && !flags.checklist_completed) {
-    return <Navigate to="/onboarding" replace />;
+    const target = location.pathname + location.search + location.hash;
+    const onboardingUrl = `/onboarding?redirect=${encodeURIComponent(target)}`;
+    return <Navigate to={onboardingUrl} replace />;
   }
 
   return <>{children}</>;

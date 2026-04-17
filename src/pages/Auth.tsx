@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { getRedirectTarget, storeRedirect } from "@/lib/authRedirect";
@@ -103,7 +103,13 @@ export default function Auth() {
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
 
-  if (user) { navigate(redirectTarget || "/home", { replace: true }); return null; }
+  // Redirect post-auth — în useEffect pentru a evita race conditions cu PostAuthRedirector
+  useEffect(() => {
+    if (user) {
+      navigate(redirectTarget || "/home", { replace: true });
+    }
+  }, [user, redirectTarget, navigate]);
+  if (user) return null;
 
   const logSecurityEvent = async (eventType: string, metadata: Record<string, unknown> = {}) => {
     try {
@@ -377,7 +383,9 @@ export default function Auth() {
               <button
                 type="button"
                 onClick={async () => {
-                  const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/home` });
+                  // Persist redirect target before OAuth redirect (sessionStorage backup for callback)
+                  if (redirectTarget) storeRedirect(redirectTarget);
+                  const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
                   if (error) toast.error(t("common:google_signin_error", { message: error.message }));
                 }}
                 className="w-full h-12 flex items-center justify-center gap-2.5 rounded-xl border border-border/50 bg-background/60 hover:bg-muted/40 hover:border-[hsl(var(--gold-oxide)/0.25)] transition-all duration-200 text-sm font-medium"
