@@ -78,14 +78,7 @@ export default function Home() {
         {/* ═══ CENTER COLUMN: flex column, the chat surface ═══ */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
 
-          {/* ── Status bar (shrink, no scroll) ── */}
-          <ExecutionStatusBar
-            phase={cc.execState.phase} intent={cc.execState.intent}
-            totalCredits={cc.execState.totalCredits}
-            stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
-            totalSteps={cc.execState.steps.length}
-            startedAt={cc.execState.startedAt} errorMessage={cc.execState.errorMessage}
-          />
+          {/* Status bar moved inline into the feed (below the user message) */}
 
           {/* ── Permission gate overlay ── */}
           <AnimatePresence>
