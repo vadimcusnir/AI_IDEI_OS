@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, Clock, ArrowLeft, Tag, ArrowRight, BookOpen, User } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Tag, ArrowRight, BookOpen, User, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -9,6 +9,11 @@ import { SEOHead } from "@/components/SEOHead";
 import ReactMarkdown from "react-markdown";
 import { useAutoInterlink } from "@/hooks/useAutoInterlink";
 import { ContentGate } from "@/components/blog/ContentGate";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ShareButtons } from "@/components/blog/ShareButtons";
+import { ReactionBar } from "@/components/blog/ReactionBar";
+import { CommentsSection } from "@/components/blog/CommentsSection";
+import { NewsletterCTA } from "@/components/blog/NewsletterCTA";
 import { useEffect, useState, type ReactNode } from "react";
 
 /* ── Utility: extract first paragraph as lead/summary ── */
@@ -220,15 +225,24 @@ export default function BlogPost() {
     enabled: !!slug,
   });
 
+  // Increment view count once per page load
+  useEffect(() => {
+    if (!slug || !post) return;
+    const key = `blog_view_${slug}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    supabase.rpc("increment_blog_view", { _slug: slug });
+  }, [slug, post]);
+
   const { data: allPosts } = useQuery({
     queryKey: ["blog-posts-interlink"],
     queryFn: async () => {
       const { data } = await supabase
         .from("blog_posts")
-        .select("id, title, slug, tags, category")
+        .select("id, title, slug, tags, category, thumbnail_url, excerpt, reading_time_min, published_at")
         .eq("status", "published")
         .limit(200);
-      return (data || []) as Array<{ id: string; title: string; slug: string; tags: string[]; category: string }>;
+      return (data || []) as Array<{ id: string; title: string; slug: string; tags: string[]; category: string; thumbnail_url: string | null; excerpt: string; reading_time_min: number; published_at: string }>;
     },
   });
 
@@ -280,27 +294,41 @@ export default function BlogPost() {
     : "";
 
   const { lead, rest } = extractLead(post.content);
+  const isPremium = (post as { is_premium?: boolean }).is_premium === true;
+  const viewCount = (post as { view_count?: number }).view_count ?? 0;
+  const articleUrl = `https://ai-idei.com/blog/${post.slug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.seo_title || post.title,
     description: post.seo_description || post.excerpt,
-    image: post.thumbnail_url || undefined,
+    image: post.thumbnail_url ? [post.thumbnail_url] : undefined,
     datePublished: post.published_at,
     dateModified: post.updated_at,
-    author: { "@type": "Organization", name: "AI-IDEI" },
+    author: { "@type": "Organization", name: "AI-IDEI", url: "https://ai-idei.com" },
     publisher: {
       "@type": "Organization",
       name: "AI-IDEI",
       url: "https://ai-idei.com",
+      logo: { "@type": "ImageObject", url: "https://ai-idei.com/og/og-default.png" },
     },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `https://ai-idei.com/blog/${post.slug}`,
-    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    articleSection: (post.category as string).replace(/-/g, " "),
     wordCount: post.word_count,
     keywords: (post.tags as string[])?.join(", "),
+    isAccessibleForFree: !isPremium,
+    inLanguage: "en",
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AI-IDEI", item: "https://ai-idei.com" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://ai-idei.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: articleUrl },
+    ],
   };
 
   const markdownComponents = createMarkdownComponents();
@@ -311,151 +339,177 @@ export default function BlogPost() {
       <SEOHead
         title={`${post.seo_title || post.title} — AI-IDEI Blog`}
         description={post.seo_description || post.excerpt}
-        canonical={`https://ai-idei.com/blog/${post.slug}`}
+        canonical={articleUrl}
         ogImage={post.thumbnail_url || undefined}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
 
       <div className="min-h-screen bg-background">
-        <article className="container mx-auto px-4 md:px-6 py-10 md:py-16 max-w-[720px]">
+        {/* Three-column editorial layout: TOC | Article | (reserved for share rail on wider screens) */}
+        <div className="container mx-auto px-4 md:px-6 py-10 md:py-16">
+          <div className="grid grid-cols-1 xl:grid-cols-[220px_minmax(0,720px)_220px] xl:gap-10 justify-center">
 
-          {/* ── Back link ── */}
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors mb-10 uppercase tracking-widest"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Blog
-          </Link>
+            {/* ── Left: Sticky TOC ── */}
+            <aside className="order-2 xl:order-1 pt-10 xl:pt-32">
+              <TableOfContents />
+            </aside>
 
-          {/* ── Thumbnail ── */}
-          {post.thumbnail_url && (
-            <div className="rounded-2xl overflow-hidden mb-10 border border-border/60 shadow-sm">
-              <img
-                src={post.thumbnail_url}
-                alt={post.title}
-                className="w-full h-auto object-cover"
-              />
-            </div>
-          )}
+            {/* ── Center: Article ── */}
+            <article className="order-1 xl:order-2 max-w-[720px] mx-auto w-full">
+              {/* Back link */}
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors mb-10 uppercase tracking-widest"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Blog
+              </Link>
 
-          {/* ── Article Header ── */}
-          <header className="mb-10">
-            {/* Category badge */}
-            <Badge
-              variant="outline"
-              className="mb-5 text-[0.6875rem] uppercase tracking-widest font-semibold border-primary/30 text-primary"
-            >
-              {(post.category as string).replace(/-/g, " ")}
-            </Badge>
-
-            {/* Title */}
-            <h1 className="text-3xl md:text-[2.75rem] lg:text-5xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">
-              {post.title}
-            </h1>
-
-            {/* Excerpt / subtitle */}
-            {post.excerpt && (
-              <p className="text-lg md:text-xl text-muted-foreground/80 leading-relaxed mb-6 max-w-[60ch]">
-                {post.excerpt}
-              </p>
-            )}
-
-            {/* Meta row */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5" />
-                AI-IDEI
-              </span>
-              {publishedDate && (
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5" />
-                  {publishedDate}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                {post.reading_time_min} min read
-              </span>
-              <span className="flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5" />
-                {post.word_count?.toLocaleString()} words
-              </span>
-            </div>
-          </header>
-
-          {/* ── Gold divider before content ── */}
-          <div className="gold-divider mb-10" />
-
-          {/* ── Lead paragraph (always visible, larger text) ── */}
-          {lead && (
-            <div className="mb-10">
-              <div className="text-base md:text-lg leading-[1.85] text-foreground/80 [&>p]:mb-4 [&>p:last-child]:mb-0">
-                <ReactMarkdown components={markdownComponents}>{lead}</ReactMarkdown>
-              </div>
-            </div>
-          )}
-
-          {/* ── Main content — gated for non-authenticated ── */}
-          <ContentGate isAuthenticated={isAuthenticated}>
-            <div className="article-body">
-              <ReactMarkdown components={markdownComponents}>
-                {rest || post.content}
-              </ReactMarkdown>
-            </div>
-
-            {/* ── Tags footer ── */}
-            {(post.tags as string[])?.length > 0 && (
-              <footer className="mt-16">
-                <div className="gold-divider mb-8" />
-                <div className="flex items-start gap-3 flex-wrap">
-                  <Tag className="w-3.5 h-3.5 text-muted-foreground mt-0.5" />
-                  {(post.tags as string[]).map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="text-xs font-medium"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
+              {/* Thumbnail */}
+              {post.thumbnail_url && (
+                <div className="rounded-2xl overflow-hidden mb-10 border border-border/60 shadow-sm">
+                  <img
+                    src={post.thumbnail_url}
+                    alt={post.title}
+                    className="w-full h-auto object-cover"
+                  />
                 </div>
-              </footer>
-            )}
-          </ContentGate>
+              )}
 
-          {/* ── Related Posts ── */}
-          {relatedPosts.length > 0 && (
-            <section className="mt-16">
-              <div className="gold-divider mb-8" />
-              <h2 className="text-lg font-semibold text-foreground mb-6 tracking-tight">
-                Continue Reading
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {relatedPosts.slice(0, 4).map((rp) => (
-                  <Link
-                    key={rp.id}
-                    to={`/blog/${rp.slug}`}
-                    className="group flex items-center gap-3 p-4 rounded-xl border border-border/60 hover:border-primary/40 transition-all bg-card/60 hover:bg-card"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-                        {rp.title}
-                      </p>
+              {/* Article Header */}
+              <header className="mb-10">
+                <div className="flex items-center gap-2 mb-5 flex-wrap">
+                  <Badge variant="outline" className="text-[0.6875rem] uppercase tracking-widest font-semibold border-primary/30 text-primary">
+                    {(post.category as string).replace(/-/g, " ")}
+                  </Badge>
+                  {isPremium && (
+                    <Badge className="text-[0.6875rem] uppercase tracking-widest font-semibold bg-primary text-primary-foreground">
+                      Premium
+                    </Badge>
+                  )}
+                </div>
+
+                <h1 className="text-3xl md:text-[2.75rem] lg:text-5xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">
+                  {post.title}
+                </h1>
+
+                {post.excerpt && (
+                  <p className="text-lg md:text-xl text-muted-foreground/80 leading-relaxed mb-6 max-w-[60ch]">
+                    {post.excerpt}
+                  </p>
+                )}
+
+                {/* Author + meta */}
+                <div className="flex items-center justify-between gap-4 flex-wrap pt-5 border-t border-border/60">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/40 flex items-center justify-center text-primary-foreground font-bold text-sm">
+                      AI
                     </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors" />
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">AI-IDEI</p>
+                      <p className="text-xs text-muted-foreground leading-tight">Knowledge Extraction OS</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+                    {publishedDate && (
+                      <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{publishedDate}</span>
+                    )}
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{post.reading_time_min} min</span>
+                    {viewCount > 0 && (
+                      <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" />{viewCount.toLocaleString()}</span>
+                    )}
+                  </div>
+                </div>
+              </header>
 
-          {/* ── Bottom spacer (accounts for mobile bottom nav) ── */}
-          <div className="h-20 md:h-16" />
-        </article>
+              {/* Share + Reactions bar (sticky inline on mobile) */}
+              <div className="flex items-center justify-between gap-4 flex-wrap mb-10 py-4 border-y border-border/40">
+                <ReactionBar postId={post.id} isAuthenticated={isAuthenticated} />
+                <ShareButtons title={post.title} url={articleUrl} />
+              </div>
+
+              {/* Lead paragraph (always visible) */}
+              {lead && (
+                <div className="mb-10">
+                  <div className="text-base md:text-lg leading-[1.85] text-foreground/85 first-letter:text-5xl first-letter:font-bold first-letter:text-primary first-letter:mr-2 first-letter:float-left first-letter:leading-[0.9] [&>p]:mb-4 [&>p:last-child]:mb-0">
+                    <ReactMarkdown components={markdownComponents}>{lead}</ReactMarkdown>
+                  </div>
+                </div>
+              )}
+
+              {/* Main content — gated only if premium */}
+              <ContentGate isAuthenticated={isAuthenticated} isPremium={isPremium}>
+                <div className="article-body">
+                  <ReactMarkdown components={markdownComponents}>
+                    {rest || post.content}
+                  </ReactMarkdown>
+                </div>
+
+                {(post.tags as string[])?.length > 0 && (
+                  <footer className="mt-16">
+                    <div className="gold-divider mb-8" />
+                    <div className="flex items-start gap-3 flex-wrap">
+                      <Tag className="w-3.5 h-3.5 text-muted-foreground mt-0.5" />
+                      {(post.tags as string[]).map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs font-medium">{tag}</Badge>
+                      ))}
+                    </div>
+                  </footer>
+                )}
+              </ContentGate>
+
+              {/* Bottom: share + reactions again */}
+              <div className="flex items-center justify-between gap-4 flex-wrap mt-12 pt-6 border-t border-border/40">
+                <ReactionBar postId={post.id} isAuthenticated={isAuthenticated} />
+                <ShareButtons title={post.title} url={articleUrl} />
+              </div>
+
+              {/* Newsletter CTA */}
+              <div className="mt-14">
+                <NewsletterCTA />
+              </div>
+
+              {/* Comments */}
+              <CommentsSection postId={post.id} isAuthenticated={isAuthenticated} />
+
+              {/* Related Posts */}
+              {relatedPosts.length > 0 && (
+                <section className="mt-16">
+                  <div className="gold-divider mb-8" />
+                  <h2 className="text-lg font-semibold text-foreground mb-6 tracking-tight">Continue Reading</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {relatedPosts.slice(0, 4).map((rp) => (
+                      <Link
+                        key={rp.id}
+                        to={`/blog/${rp.slug}`}
+                        className="group flex items-center gap-3 p-4 rounded-xl border border-border/60 hover:border-primary/40 transition-all bg-card/60 hover:bg-card"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                            {rp.title}
+                          </p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors" />
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              <div className="h-20 md:h-16" />
+            </article>
+
+            {/* ── Right: empty rail (reserved for future) ── */}
+            <aside className="hidden xl:block order-3" aria-hidden="true" />
+          </div>
+        </div>
       </div>
     </>
   );

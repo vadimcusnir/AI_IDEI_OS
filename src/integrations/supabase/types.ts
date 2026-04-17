@@ -1747,6 +1747,54 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_hidden: boolean
+          parent_id: string | null
+          post_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          parent_id?: string | null
+          post_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          parent_id?: string | null
+          post_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "blog_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -1756,6 +1804,7 @@ export type Database = {
           excerpt: string
           id: string
           inline_images: Json | null
+          is_premium: boolean
           metadata: Json | null
           pipeline_scores: Json | null
           pipeline_stage: string | null
@@ -1771,6 +1820,7 @@ export type Database = {
           thumbnail_url: string | null
           title: string
           updated_at: string
+          view_count: number
           word_count: number | null
         }
         Insert: {
@@ -1781,6 +1831,7 @@ export type Database = {
           excerpt?: string
           id?: string
           inline_images?: Json | null
+          is_premium?: boolean
           metadata?: Json | null
           pipeline_scores?: Json | null
           pipeline_stage?: string | null
@@ -1796,6 +1847,7 @@ export type Database = {
           thumbnail_url?: string | null
           title: string
           updated_at?: string
+          view_count?: number
           word_count?: number | null
         }
         Update: {
@@ -1806,6 +1858,7 @@ export type Database = {
           excerpt?: string
           id?: string
           inline_images?: Json | null
+          is_premium?: boolean
           metadata?: Json | null
           pipeline_scores?: Json | null
           pipeline_stage?: string | null
@@ -1821,9 +1874,42 @@ export type Database = {
           thumbnail_url?: string | null
           title?: string
           updated_at?: string
+          view_count?: number
           word_count?: number | null
         }
         Relationships: []
+      }
+      blog_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          reaction_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       blog_topics: {
         Row: {
@@ -8337,6 +8423,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          confirmed: boolean
+          created_at: string
+          email: string
+          id: string
+          metadata: Json
+          source: string
+          unsubscribed_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          confirmed?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          metadata?: Json
+          source?: string
+          unsubscribed_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          confirmed?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          metadata?: Json
+          source?: string
+          unsubscribed_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       notebook_artifacts: {
         Row: {
@@ -15788,6 +15907,7 @@ export type Database = {
         Args: { _daily_limit: number; _key_id: string }
         Returns: boolean
       }
+      increment_blog_view: { Args: { _slug: string }; Returns: undefined }
       is_feature_enabled: {
         Args: { _key: string; _user_id?: string }
         Returns: boolean
