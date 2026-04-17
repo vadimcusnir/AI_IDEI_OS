@@ -10,6 +10,7 @@ import {
   X, Paperclip, RotateCcw, History, ChevronLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   id: string;
@@ -33,7 +34,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const { user } = useAuth();
   const { t } = useTranslation("common");
   const { saveMessage, sessions, loadSession, newSession } = useChatHistory();
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<Message[]>(() => [
     {
       id: "welcome",
       role: "assistant",
@@ -46,14 +47,32 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isStreamingRef = useRef(false);
+  const userScrolledUpRef = useRef(false);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = useCallback((smooth = false) => {
+    if (userScrolledUpRef.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "end" });
   }, []);
 
-  useEffect(scrollToBottom, [messages, scrollToBottom]);
+  useEffect(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      userScrolledUpRef.current = distance > 80;
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Smooth scroll on new message — not on every streaming token
+  useEffect(() => {
+    if (!isStreamingRef.current) scrollToBottom(true);
+  }, [messages.length, scrollToBottom]);
 
   const handleSend = async () => {
     if (!input.trim() && files.length === 0) return;
@@ -72,8 +91,9 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
     setInput("");
     setFiles([]);
     setLoading(true);
+    isStreamingRef.current = true;
+    userScrolledUpRef.current = false;
 
-    // Persist user message
     saveMessage(userMessage);
 
     try {
@@ -154,6 +174,8 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
                     { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() },
                   ];
                 });
+                // Discrete auto-scroll during streaming (no smooth → no jitter)
+                scrollToBottom(false);
               }
             } catch { /* partial */ }
           }
@@ -179,6 +201,8 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       ]);
     } finally {
       setLoading(false);
+      isStreamingRef.current = false;
+      scrollToBottom(true);
     }
   };
 
@@ -263,7 +287,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((msg) => (
           <ChatBubble key={msg.id} msg={msg} />
         ))}
@@ -345,7 +369,13 @@ function ChatBubble({ msg }: { msg: Message }) {
           ? "bg-primary text-primary-foreground rounded-br-md"
           : "bg-muted text-foreground rounded-bl-md"
       )}>
-        <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
+        <div className="text-xs leading-relaxed prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-pre:my-1 prose-headings:my-1 break-words">
+          {msg.role === "user" ? (
+            <p className="whitespace-pre-wrap">{msg.content}</p>
+          ) : (
+            <ReactMarkdown>{msg.content}</ReactMarkdown>
+          )}
+        </div>
         <p className={cn(
           "text-nano mt-1",
           msg.role === "user" ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"
