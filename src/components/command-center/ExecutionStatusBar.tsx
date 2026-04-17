@@ -19,6 +19,8 @@ interface ExecutionStatusBarProps {
   totalSteps: number;
   startedAt: string | null;
   errorMessage: string | null;
+  /** When true, renders as inline chat status (no border/bg, fits inside feed) */
+  inline?: boolean;
 }
 
 const PHASE_CONFIG: Record<CommandPhase, {
@@ -40,6 +42,7 @@ const PHASE_CONFIG: Record<CommandPhase, {
 
 export function ExecutionStatusBar({
   phase, intent, totalCredits, stepsCompleted, totalSteps, startedAt, errorMessage,
+  inline = false,
 }: ExecutionStatusBarProps) {
   if (phase === "idle") return null;
 
@@ -54,9 +57,17 @@ export function ExecutionStatusBar({
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "auto", opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}
-        className={cn("border-b border-border/30 overflow-hidden backdrop-blur-sm", config.bg)}
+        className={cn(
+          "overflow-hidden",
+          inline
+            ? cn("rounded-lg border border-border/40", config.bg)
+            : cn("border-b border-border/30 backdrop-blur-sm", config.bg)
+        )}
       >
-        <div className="px-4 sm:px-6 py-2 flex items-center gap-3">
+        <div className={cn(
+          "flex items-center gap-3",
+          inline ? "px-3 py-1.5" : "px-4 sm:px-6 py-2"
+        )}>
           {/* Phase indicator */}
           <div className="flex items-center gap-2">
             <Icon className={cn("h-3.5 w-3.5", config.color, config.animate && "animate-spin")} />
