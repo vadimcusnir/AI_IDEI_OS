@@ -280,6 +280,11 @@ export function AdminBlogTab() {
                           {statusIcon(post.status)}
                           <Badge variant={statusColor(post.status)}>{post.status}</Badge>
                           <Badge variant="outline" className="text-xs">{post.category}</Badge>
+                          {post.is_premium && (
+                            <Badge variant="default" className="text-xs gap-1 bg-amber-500/15 text-amber-600 border-amber-500/30 hover:bg-amber-500/20">
+                              <Crown className="w-3 h-3" /> Premium
+                            </Badge>
+                          )}
                           {post.inline_images && Array.isArray(post.inline_images) && (
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <Image className="w-3 h-3" /> {(post.inline_images as any[]).length} images
@@ -317,6 +322,15 @@ export function AdminBlogTab() {
                         )}
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
+                        <Button
+                          variant="ghost" size="sm"
+                          onClick={() => updateMutation.mutate({ id: post.id, is_premium: !post.is_premium })}
+                          title={post.is_premium ? "Mark as Free" : "Mark as Premium"}
+                        >
+                          {post.is_premium
+                            ? <Unlock className="w-4 h-4 text-muted-foreground" />
+                            : <Crown className="w-4 h-4 text-amber-500" />}
+                        </Button>
                         {post.status === "draft" && (
                           <Button
                             variant="ghost" size="sm"
