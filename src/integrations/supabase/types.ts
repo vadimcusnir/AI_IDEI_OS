@@ -15737,10 +15737,10 @@ export type Database = {
       }
       add_credits: {
         Args: {
-          _amount: number
-          _description: string
-          _type?: string
-          _user_id: string
+          p_amount: number
+          p_description?: string
+          p_type?: string
+          p_user_id: string
         }
         Returns: boolean
       }
