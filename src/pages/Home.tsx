@@ -41,6 +41,7 @@ import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
 import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
 import { ComposerChips, type ComposerIntent } from "@/components/command-center/ComposerChips";
+import { GlobalDropZone } from "@/components/command-center/GlobalDropZone";
 
 export default function Home() {
   const cc = useCommandCenter();
@@ -62,6 +63,14 @@ export default function Home() {
       <SEOHead title={`${cc.t("pages:home.cockpit")} — AI-IDEI`} description={cc.t("pages:home.cockpit_desc")} />
       <KeyboardShortcutsOverlay />
       <OfflineBanner />
+      <GlobalDropZone
+        disabled={!!cc.permissionBlock || cc.showEconomicGate || cc.showLowBalance}
+        onDrop={(files) => {
+          const synthetic = { target: { files: Object.assign(files, { item: (i: number) => files[i], length: files.length }) } } as unknown as React.ChangeEvent<HTMLInputElement>;
+          cc.handleFileSelect(synthetic);
+          cc.inputZoneRef.current?.focus();
+        }}
+      />
 
       {/* ═══ MAIN SHELL: fills AppLayout's <main> via flex-1. No hardcoded height. ═══ */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
