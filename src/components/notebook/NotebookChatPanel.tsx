@@ -242,7 +242,7 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
             </div>
           </motion.div>
         ) : (
-          <div className="space-y-3 max-w-2xl mx-auto">
+          <div className="space-y-6 max-w-2xl mx-auto">
             <AnimatePresence>
               {messages.map((msg, idx) => {
                 const isUser = msg.role === "user";
@@ -252,48 +252,55 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={cn("flex gap-2.5 group", isUser ? "flex-row-reverse" : "flex-row")}
+                    className={cn("flex group", isUser ? "justify-end" : "justify-start")}
                   >
-                    {/* Avatar */}
-                    <div className={cn(
-                      "h-7 w-7 rounded-full flex items-center justify-center shrink-0 mt-0.5",
-                      isUser ? "bg-primary/10" : "bg-muted"
-                    )}>
-                      {isUser
-                        ? <User className="h-3.5 w-3.5 text-primary" />
-                        : <Bot className="h-3.5 w-3.5 text-muted-foreground" />
-                      }
-                    </div>
-
-                    {/* Bubble */}
-                    <div className={cn(
-                      "rounded-2xl px-4 py-2.5 text-sm max-w-[85%] relative",
-                      isUser
-                        ? "bg-primary/10 text-foreground rounded-br-md"
-                        : "bg-muted/40 text-foreground rounded-bl-md"
-                    )}>
-                      {isUser ? (
-                        <div className="whitespace-pre-wrap">{msg.content}</div>
-                      ) : (
-                        <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-                          <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    {isUser ? (
+                      /* User — chip dreapta */
+                      <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[75%]">
+                        <div className="relative">
+                          <div className="bg-muted/80 text-foreground border border-border/30 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap">
+                            {msg.content}
+                          </div>
+                          <button
+                            onClick={() => copyMessage(msg.content, idx)}
+                            className="absolute -bottom-6 right-0 p-1 rounded-md text-muted-foreground/50 hover:text-foreground hover:bg-muted opacity-0 group-hover:opacity-100 transition-all"
+                            title="Copy"
+                          >
+                            {copiedIdx === idx ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
+                          </button>
                         </div>
-                      )}
-
-                      {/* Copy button */}
-                      <button
-                        onClick={() => copyMessage(msg.content, idx)}
-                        className={cn(
-                          "absolute -bottom-1 right-2 opacity-0 group-hover:opacity-100 transition-opacity",
-                          "text-muted-foreground hover:text-foreground p-1 bg-background border border-border rounded-md shadow-sm"
-                        )}
-                      >
-                        {copiedIdx === idx
-                          ? <Check className="h-2.5 w-2.5 text-primary" />
-                          : <Copy className="h-2.5 w-2.5" />
-                        }
-                      </button>
-                    </div>
+                        <div className="h-7 w-7 rounded-full bg-foreground/[0.08] flex items-center justify-center shrink-0 mt-0.5">
+                          <User className="h-3.5 w-3.5 text-muted-foreground" />
+                        </div>
+                      </div>
+                    ) : (
+                      /* Assistant — prose generos, fără bubble */
+                      <div className="flex items-start gap-2.5 max-w-[90%] sm:max-w-[85%] min-w-0">
+                        <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 border border-primary/15">
+                          <Bot className="h-3.5 w-3.5 text-primary" />
+                        </div>
+                        <div className="relative min-w-0 flex-1">
+                          <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-[1.7] text-foreground
+                            [&_p]:mb-3 [&_p]:last:mb-0
+                            [&_ul]:mb-3 [&_ol]:mb-3
+                            [&_li]:mb-1
+                            [&_code]:text-compact [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:border [&_code]:border-border/30
+                            [&_pre]:bg-card/80 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-border/50 [&_pre]:p-3
+                            [&_strong]:font-semibold [&_strong]:text-foreground">
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                          </div>
+                          <div className="flex items-center gap-0.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                            <button
+                              onClick={() => copyMessage(msg.content, idx)}
+                              className="p-1 rounded-md text-muted-foreground/40 hover:text-foreground hover:bg-muted transition-colors"
+                              title="Copy"
+                            >
+                              {copiedIdx === idx ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}
@@ -303,12 +310,12 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex items-center gap-2.5"
+                className="flex items-start gap-2.5"
               >
-                <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center shrink-0">
-                  <Bot className="h-3.5 w-3.5 text-muted-foreground" />
+                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/15">
+                  <Bot className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <div className="flex items-center gap-1.5 text-muted-foreground text-xs bg-muted/40 rounded-2xl rounded-bl-md px-4 py-2.5">
+                <div className="flex items-center gap-1.5 text-muted-foreground text-xs pt-2">
                   <span className="flex gap-0.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-primary/40 animate-pulse" />
                     <span className="h-1.5 w-1.5 rounded-full bg-primary/40 animate-pulse" style={{ animationDelay: "150ms" }} />
