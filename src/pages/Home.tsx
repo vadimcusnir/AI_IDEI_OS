@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
 import { executionActions } from "@/stores/executionStore";
-import { ModeChipBar } from "@/components/command-center/ModeChipBar";
-import { ExtractPanel, GeneratePanel, StructurePanel, AnalyzePanel } from "@/components/command-center/mode-panels";
+// PR1: ModeChipBar + 4 mode panels removed — sugestiile din WelcomeScreen
+// + slash menu acoperă același rol fără 8 surfețe condiționale concurente.
 
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
@@ -254,16 +254,7 @@ export default function Home() {
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
           <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(3.75rem,calc(3.5rem+env(safe-area-inset-bottom)))] md:pb-1">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
-              {/* Mode Panels — contextual actions above input */}
-              <AnimatePresence mode="wait">
-                {cc.activeMode === "extract" && <ExtractPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
-                {cc.activeMode === "generate" && <GeneratePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "analyze" && <AnalyzePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "structure" && <StructurePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-              </AnimatePresence>
-
-              {/* Mode Chip Bar */}
-              <ModeChipBar activeMode={cc.activeMode} onModeChange={cc.setActiveMode} />
+              {/* PR1: Mode panels & ModeChipBar removed — single composer surface. */}
 
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
