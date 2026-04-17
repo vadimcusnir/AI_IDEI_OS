@@ -40,6 +40,7 @@ import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
 import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
+import { ComposerChips, type ComposerIntent } from "@/components/command-center/ComposerChips";
 
 export default function Home() {
   const cc = useCommandCenter();
@@ -123,8 +124,8 @@ export default function Home() {
                   <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
                 </div>
               ) : (
-                /* ── Conversation feed ── */
-                <div className="pt-3 pb-3 space-y-3" role="log" aria-live="polite" aria-label="Conversation">
+                /* ── Conversation feed (ChatGPT-style: generous spacing, centered) ── */
+                <div className="pt-6 pb-6 space-y-6" role="log" aria-live="polite" aria-label="Conversation">
                   {cc.messages.map((msg) => (
                     <CommandBubble
                       key={msg.id}
@@ -252,9 +253,15 @@ export default function Home() {
           </div>
 
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
-          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(3.75rem,calc(3.5rem+env(safe-area-inset-bottom)))] md:pb-1">
+          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 pt-2 pb-[max(3.75rem,calc(3.5rem+env(safe-area-inset-bottom)))] md:pb-2">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
-              {/* PR1: Mode panels & ModeChipBar removed — single composer surface. */}
+              {/* PR2: 3 persistent intent chips above composer (Extract · Analyze · Generate) */}
+              <ComposerChips
+                onSelect={(_intent: ComposerIntent, template: string) => {
+                  cc.setInput(template);
+                  cc.inputZoneRef.current?.focus();
+                }}
+              />
 
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
