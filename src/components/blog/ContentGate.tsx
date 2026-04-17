@@ -41,10 +41,10 @@ export function ContentGate({ children, isAuthenticated, isPremium = false, prev
           <Lock className="w-6 h-6 text-primary" />
         </div>
         <h3 className="text-xl font-semibold text-foreground">
-          Continue Reading
+          Premium article
         </h3>
         <p className="text-sm text-muted-foreground max-w-md">
-          Create a free account to unlock the full article, access all blog posts, and explore AI-powered knowledge extraction tools.
+          Create a free account to unlock the full premium article and access all of AI-IDEI.
         </p>
         <div className="flex gap-3">
           <Button asChild>
