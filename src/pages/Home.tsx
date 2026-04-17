@@ -269,6 +269,7 @@ export default function Home() {
                 isSubmitting={cc.isSubmitting}
                 files={cc.files} onFileSelect={cc.handleFileSelect}
                 onRemoveFile={cc.handleRemoveFile}
+                commands={cc.commands} onRemoveCommand={cc.handleRemoveCommand}
                 showSlashMenu={cc.showSlashMenu} onShowSlashMenuChange={cc.setShowSlashMenu}
                 onSlashSelect={cc.onSlashSelect}
                 onAttachAction={cc.handleAttachAction}

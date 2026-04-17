@@ -4,7 +4,7 @@
 
 import { useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, X, Square, ArrowUp } from "lucide-react";
+import { Paperclip, X, Square, ArrowUp, Terminal } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { InputAttachMenu } from "./InputAttachMenu";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,9 @@ interface CommandInputZoneProps {
   files: File[];
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (idx: number) => void;
+  /** Non-editable command tags (set via slash menu / chips) */
+  commands?: string[];
+  onRemoveCommand?: (idx: number) => void;
   showSlashMenu: boolean;
   onShowSlashMenuChange: (show: boolean) => void;
   onSlashSelect: (cmd: string) => void;
@@ -34,6 +37,7 @@ interface CommandInputZoneProps {
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
+      commands = [], onRemoveCommand,
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
     ref,
   ) {
@@ -121,14 +125,33 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
         </AnimatePresence>
 
         <div className="max-w-3xl mx-auto px-2 sm:px-4 pb-1 sm:pb-2 pt-1 sm:pt-2">
-          {/* Attached files */}
-          {files.length > 0 && (
+          {/* Attached commands (non-editable tags) + files */}
+          {(commands.length > 0 || files.length > 0) && (
             <div className="flex gap-1.5 flex-wrap pb-2">
+              {commands.map((cmd, i) => (
+                <div
+                  key={`cmd-${i}`}
+                  className="flex items-center gap-1.5 bg-gold/[0.08] border border-gold/30 rounded-lg px-2.5 py-1.5 text-xs shadow-sm select-none"
+                >
+                  <Terminal className="h-3 w-3 text-gold" />
+                  <span className="font-mono font-semibold text-gold-bright truncate max-w-[140px]">{cmd}</span>
+                  {onRemoveCommand && (
+                    <button
+                      type="button"
+                      onClick={() => onRemoveCommand(i)}
+                      className="text-gold/60 hover:text-gold-bright transition-colors ml-0.5"
+                      aria-label={`Remove ${cmd}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              ))}
               {files.map((f, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-card border border-border/40 rounded-lg px-2.5 py-1.5 text-xs shadow-sm">
+                <div key={`file-${i}`} className="flex items-center gap-1.5 bg-card border border-border/40 rounded-lg px-2.5 py-1.5 text-xs shadow-sm">
                   <Paperclip className="h-3 w-3 text-muted-foreground/60" />
                   <span className="truncate max-w-[120px] text-foreground">{f.name}</span>
-                  <button onClick={() => onRemoveFile(i)} className="text-muted-foreground hover:text-foreground transition-colors ml-0.5">
+                  <button onClick={() => onRemoveFile(i)} className="text-muted-foreground hover:text-foreground transition-colors ml-0.5" aria-label={`Remove ${f.name}`}>
                     <X className="h-3 w-3" />
                   </button>
                 </div>
@@ -185,7 +208,9 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   input={input}
                   visible={showSlashMenu}
                   onSelect={(cmd) => {
-                    onSlashSelect(cmd + " ");
+                    // Add as non-editable tag, clear the "/" trigger from textarea
+                    onSlashSelect(cmd);
+                    onInputChange("");
                     onShowSlashMenuChange(false);
                   }}
                   onClose={() => onShowSlashMenuChange(false)}

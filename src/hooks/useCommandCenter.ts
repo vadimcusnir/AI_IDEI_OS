@@ -169,7 +169,7 @@ export function useCommandCenter() {
 
   // ═══ SUBMIT ═══
   const handleSubmit = useCallback(async (autoExec = false) => {
-    if (!cmd.input.trim() && cmd.files.length === 0) return;
+    if (!cmd.input.trim() && cmd.files.length === 0 && cmd.commands.length === 0) return;
     if (!user || isSubmitting) return;
     if (!isOnline) {
       toast.error("You're offline. Please check your connection.");
@@ -394,6 +394,7 @@ export function useCommandCenter() {
     execState, messages, outputs, loading, isStreaming,
     // UI state
     input: cmd.input, setInput: cmd.setInput, files: cmd.files,
+    commands: cmd.commands, handleRemoveCommand: cmd.handleRemoveCommand,
     showSlashMenu: cmd.showSlashMenu, setShowSlashMenu: cmd.setShowSlashMenu,
     showOutputs, setShowOutputs, showPostExecution, setShowPostExecution,
     showEconomicGate, permissionBlock, setPermissionBlock,
