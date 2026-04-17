@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
       }).eq("id", job.id);
     }
 
-    // Pick services that don't have a done prompt yet
+    // Pick pending services using set-difference (avoid huge overfetch)
     const { data: existing } = await admin
       .from("prompt_registry")
       .select("linked_service_key")
@@ -111,13 +111,22 @@ Deno.serve(async (req) => {
       .not("linked_service_key", "is", null);
     const doneKeys = new Set((existing ?? []).map((r: any) => r.linked_service_key));
 
-    let q = admin.from("service_catalog")
-      .select("service_key, name, description, category, service_class, credits_cost, input_schema, deliverables_schema")
-      .eq("is_active", true)
-      .order("created_at", { ascending: true })
-      .limit(limit + doneKeys.size); // overfetch then filter
-    const { data: candidates } = await q;
-    const todo = (candidates ?? []).filter((s: any) => !doneKeys.has(s.service_key)).slice(0, limit);
+    // Fetch a small window and filter; if all done, advance the window
+    let todo: any[] = [];
+    let offset = 0;
+    while (todo.length < limit && offset < 500) {
+      const { data: candidates } = await admin.from("service_catalog")
+        .select("service_key, name, description, category, service_class, credits_cost, input_schema, deliverables_schema")
+        .eq("is_active", true)
+        .order("created_at", { ascending: true })
+        .range(offset, offset + 49);
+      if (!candidates || candidates.length === 0) break;
+      for (const c of candidates) {
+        if (!doneKeys.has(c.service_key)) todo.push(c);
+        if (todo.length >= limit) break;
+      }
+      offset += 50;
+    }
 
     if (todo.length === 0) {
       await admin.from("prompt_generation_jobs").update({
@@ -128,53 +137,65 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Mark all as generating up-front
+    await admin.from("prompt_registry").upsert(
+      todo.map((svc: any) => ({
+        id: `svc:${svc.service_key}`,
+        purpose: `Execution spec for ${svc.name}`,
+        category: svc.category || "general",
+        core_prompt: "(generating...)",
+        generation_status: "generating",
+        linked_service_key: svc.service_key,
+        generation_model: job.model,
+      })),
+      { onConflict: "id" }
+    );
+
+    // Process in PARALLEL — Lovable AI Gateway handles concurrency
+    let pauseReason: string | null = null;
+    const results = await Promise.allSettled(todo.map(async (svc: any) => {
+      const yaml = await generateYaml(svc, job.model);
+      return { svc, yaml };
+    }));
+
     let success = 0, failed = 0, lastKey = job.last_processed_service_key;
-    for (const svc of todo) {
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      const svc = todo[i];
       const promptId = `svc:${svc.service_key}`;
-      try {
-        await admin.from("prompt_registry").upsert({
-          id: promptId,
-          purpose: `Execution spec for ${svc.name}`,
-          category: svc.category || "general",
-          core_prompt: "(generating...)",
-          generation_status: "generating",
-          linked_service_key: svc.service_key,
-          generation_model: job.model,
-        }, { onConflict: "id" });
-
-        const yaml = await generateYaml(svc, job.model);
-
+      if (r.status === "fulfilled") {
         await admin.from("prompt_registry").update({
-          core_prompt: yaml,
-          yaml_spec: yaml,
+          core_prompt: r.value.yaml,
+          yaml_spec: r.value.yaml,
           generation_status: "done",
           generated_at: new Date().toISOString(),
           generation_error: null,
         }).eq("id", promptId);
         success++;
         lastKey = svc.service_key;
-      } catch (e) {
-        const msg = (e as Error).message;
+      } else {
+        const msg = (r.reason as Error)?.message || "unknown";
         failed++;
         await admin.from("prompt_registry").update({
           generation_status: "failed",
           generation_error: msg.slice(0, 500),
         }).eq("id", promptId);
-        // If rate limited / billing issue, stop the batch and pause job
-        if (msg === "RATE_LIMIT" || msg === "PAYMENT_REQUIRED") {
-          await admin.from("prompt_generation_jobs").update({
-            status: "paused",
-            processed_count: job.processed_count + success + failed,
-            success_count: job.success_count + success,
-            failed_count: job.failed_count + failed,
-            last_processed_service_key: lastKey,
-            metadata: { ...(job.metadata ?? {}), pause_reason: msg, paused_at: new Date().toISOString() },
-          }).eq("id", job.id);
-          return new Response(JSON.stringify({ ok: false, paused: true, reason: msg, success, failed }), {
-            status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
+        if (msg === "RATE_LIMIT" || msg === "PAYMENT_REQUIRED") pauseReason = msg;
       }
+    }
+
+    if (pauseReason) {
+      await admin.from("prompt_generation_jobs").update({
+        status: "paused",
+        processed_count: job.processed_count + success + failed,
+        success_count: job.success_count + success,
+        failed_count: job.failed_count + failed,
+        last_processed_service_key: lastKey,
+        metadata: { ...(job.metadata ?? {}), pause_reason: pauseReason, paused_at: new Date().toISOString() },
+      }).eq("id", job.id);
+      return new Response(JSON.stringify({ ok: false, paused: true, reason: pauseReason, success, failed }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     await admin.from("prompt_generation_jobs").update({
