@@ -401,8 +401,23 @@ export function AdminBlogTab() {
                                       ))}
                                     </SelectContent>
                                   </Select>
-                                </div>
-                                {/* Image previews in editor */}
+                                 </div>
+                                 {/* Premium toggle */}
+                                 <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/30">
+                                   <div className="flex items-center gap-2">
+                                     <Crown className="w-4 h-4 text-primary" />
+                                     <div>
+                                       <Label htmlFor="is_premium" className="text-sm font-medium cursor-pointer">Premium content</Label>
+                                       <p className="text-xs text-muted-foreground">Restricted to authenticated users (soft paywall)</p>
+                                     </div>
+                                   </div>
+                                   <Switch
+                                     id="is_premium"
+                                     checked={!!editingPost.is_premium}
+                                     onCheckedChange={(v) => setEditingPost({ ...editingPost, is_premium: v })}
+                                   />
+                                 </div>
+                                 {/* Image previews in editor */}
                                 {editingPost.thumbnail_url && (
                                   <div>
                                     <p className="text-xs text-muted-foreground mb-1">Thumbnail</p>
@@ -428,15 +443,16 @@ export function AdminBlogTab() {
                                   rows={15}
                                   className="font-mono text-xs"
                                 />
-                                <Button
-                                  onClick={() => updateMutation.mutate({
-                                    id: editingPost.id,
-                                    title: editingPost.title,
-                                    excerpt: editingPost.excerpt,
-                                    content: editingPost.content,
-                                    status: editingPost.status,
-                                    category: editingPost.category,
-                                  })}
+                                 <Button
+                                   onClick={() => updateMutation.mutate({
+                                     id: editingPost.id,
+                                     title: editingPost.title,
+                                     excerpt: editingPost.excerpt,
+                                     content: editingPost.content,
+                                     status: editingPost.status,
+                                     category: editingPost.category,
+                                     is_premium: editingPost.is_premium,
+                                   })}
                                   disabled={updateMutation.isPending}
                                 >
                                   Save Changes
