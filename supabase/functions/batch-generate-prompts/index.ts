@@ -14,7 +14,7 @@ const corsHeaders = {
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
-const BATCH_SIZE = 8;
+const BATCH_SIZE = 4;
 
 // Reuse the same system prompt as generate-service-prompt (kept inline for isolation)
 const SYSTEM_PROMPT = `You are a senior AI prompt engineer producing PRODUCTION-GRADE YAML execution specs for an AI knowledge-extraction OS.
