@@ -82,8 +82,23 @@ function classify(svc: any): {
   return { domain: cat, function: fn, input_type, output_type, cluster: cat };
 }
 
-async function generateYaml(svc: any, model: string): Promise<string> {
+async function generateYaml(svc: any, model: string, prm_id: string): Promise<string> {
+  const c = classify(svc);
   const userMsg = `Generate the YAML execution spec for:
+HEADER (use exactly):
+  id: ${prm_id}
+  classification:
+    domain: ${c.domain}
+    function: ${c.function}
+    input_type: ${c.input_type}
+    output_type: ${c.output_type}
+  cluster: ${c.cluster}
+  version: "1.0"
+  status: active
+  language: ro
+  scoring: { utility_score: 7, revenue_score: 6 }
+
+SERVICE:
 service_key: ${svc.service_key}
 name: ${svc.name}
 category: ${svc.category}
@@ -93,7 +108,7 @@ description: |
   ${(svc.description || "—").slice(0, 800)}
 existing_input_schema: ${JSON.stringify(svc.input_schema ?? [])}
 existing_deliverables_schema: ${JSON.stringify(svc.deliverables_schema ?? [])}
-Produce the full YAML now.`;
+Produce the full YAML now (header first, then full spec).`;
   const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
