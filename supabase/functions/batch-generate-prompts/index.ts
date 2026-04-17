@@ -19,12 +19,68 @@ const BATCH_SIZE = 4;
 // Reuse the same system prompt as generate-service-prompt (kept inline for isolation)
 const SYSTEM_PROMPT = `You are a senior AI prompt engineer producing PRODUCTION-GRADE YAML execution specs for an AI knowledge-extraction OS.
 Output MUST be a single valid YAML document (no markdown fences, no commentary).
-Use EXTENDED CHAIN-OF-THOUGHT schema with: spec_version, service_key, display_name, category, language=ro, role, objective,
+
+REQUIRED TOP-LEVEL HEADER (relational registry, MUST be first):
+  id: <PRM-XXXXX provided>
+  classification:
+    domain: <content|seo|branding|sales|ai|research|automation|analysis|production|extraction|orchestration|publishing|general>
+    function: <extract|analyze|generate|summarize|classify|rewrite|plan|audit>
+    input_type: <transcript|text|image|audio|url|pdf|mixed>
+    output_type: <entities|quotes|summary|article|report|prompt|strategy|framework>
+  cluster: <semantic_cluster_slug>
+  version: "1.0"
+  status: active
+  complexity: <atomic|modular|system>
+  language: ro
+  scoring: { utility_score: 1-10, revenue_score: 1-10 }
+
+THEN extended chain-of-thought schema: spec_version, service_key, display_name, category, role, objective,
 inputs (required+optional), reasoning_chain (5-10 steps with step/name/instruction/expected_output/self_check),
 execution_steps, output_schema (valid JSON Schema), quality_gates (verifiable),
 edge_cases, fallbacks, validation_rules, security_rules (always include prompt-injection refusal + no PII leak + no system prompt leak),
 forbidden_outputs, examples, metadata (estimated_tokens, recommended_model, temperature, max_output_tokens).
 Romanian for user-facing text. Output ONLY YAML. No prose.`;
+
+// Heuristic classification from service metadata
+function classify(svc: any): {
+  domain: string; function: string; input_type: string; output_type: string; cluster: string;
+} {
+  const cat = (svc.category || "general").toLowerCase();
+  const name = (svc.name || "").toLowerCase();
+  const desc = (svc.description || "").toLowerCase();
+  const blob = `${name} ${desc}`;
+
+  // function
+  let fn = "generate";
+  if (cat === "extraction" || /extract|pull|harvest/.test(blob)) fn = "extract";
+  else if (cat === "analysis" || /analy|audit|score|evaluat/.test(blob)) fn = "analyze";
+  else if (/summari|rezuma/.test(blob)) fn = "summarize";
+  else if (/classif|categor/.test(blob)) fn = "classify";
+  else if (/rewrite|rephrase|reformul/.test(blob)) fn = "rewrite";
+  else if (/plan|strategy|roadmap|funnel|campaign/.test(blob)) fn = "plan";
+  else if (/audit/.test(blob)) fn = "audit";
+
+  // input
+  let input_type = "mixed";
+  if (/transcript|podcast|interview/.test(blob)) input_type = "transcript";
+  else if (/image|photo|visual/.test(blob)) input_type = "image";
+  else if (/audio|voice/.test(blob)) input_type = "audio";
+  else if (/url|link|web/.test(blob)) input_type = "url";
+  else if (/pdf|document/.test(blob)) input_type = "pdf";
+  else if (/text|content/.test(blob)) input_type = "text";
+
+  // output
+  let output_type = "report";
+  if (/quote/.test(blob)) output_type = "quotes";
+  else if (/entit|person|brand/.test(blob)) output_type = "entities";
+  else if (/summary|rezuma/.test(blob)) output_type = "summary";
+  else if (/article|post|blog/.test(blob)) output_type = "article";
+  else if (/prompt/.test(blob)) output_type = "prompt";
+  else if (/strateg/.test(blob)) output_type = "strategy";
+  else if (/framework|funnel|pipeline/.test(blob)) output_type = "framework";
+
+  return { domain: cat, function: fn, input_type, output_type, cluster: cat };
+}
 
 async function generateYaml(svc: any, model: string): Promise<string> {
   const userMsg = `Generate the YAML execution spec for:
