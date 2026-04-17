@@ -91,8 +91,9 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
     setInput("");
     setFiles([]);
     setLoading(true);
+    isStreamingRef.current = true;
+    userScrolledUpRef.current = false;
 
-    // Persist user message
     saveMessage(userMessage);
 
     try {
@@ -173,6 +174,8 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
                     { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() },
                   ];
                 });
+                // Discrete auto-scroll during streaming (no smooth → no jitter)
+                scrollToBottom(false);
               }
             } catch { /* partial */ }
           }
@@ -198,6 +201,8 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       ]);
     } finally {
       setLoading(false);
+      isStreamingRef.current = false;
+      scrollToBottom(true);
     }
   };
 
@@ -282,7 +287,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((msg) => (
           <ChatBubble key={msg.id} msg={msg} />
         ))}
@@ -364,7 +369,13 @@ function ChatBubble({ msg }: { msg: Message }) {
           ? "bg-primary text-primary-foreground rounded-br-md"
           : "bg-muted text-foreground rounded-bl-md"
       )}>
-        <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
+        <div className="text-xs leading-relaxed prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-pre:my-1 prose-headings:my-1 break-words">
+          {msg.role === "user" ? (
+            <p className="whitespace-pre-wrap">{msg.content}</p>
+          ) : (
+            <ReactMarkdown>{msg.content}</ReactMarkdown>
+          )}
+        </div>
         <p className={cn(
           "text-nano mt-1",
           msg.role === "user" ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"
