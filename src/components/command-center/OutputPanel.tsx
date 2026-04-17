@@ -125,9 +125,7 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
               Re-run
             </Button>
           )}
-          <button onClick={onClose} className="p-1 text-muted-foreground hover:text-foreground">
-            <X className="h-3.5 w-3.5" />
-          </button>
+          {/* Close button removed — outputs are part of the chat flow now */}
         </div>
       </div>
 
