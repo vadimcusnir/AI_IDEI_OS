@@ -40,6 +40,7 @@ import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
 import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
+import { ComposerChips, type ComposerIntent } from "@/components/command-center/ComposerChips";
 
 export default function Home() {
   const cc = useCommandCenter();
