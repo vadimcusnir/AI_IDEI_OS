@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, Clock, ArrowLeft, Tag, ArrowRight, BookOpen, User } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Tag, ArrowRight, BookOpen, User, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -9,6 +9,11 @@ import { SEOHead } from "@/components/SEOHead";
 import ReactMarkdown from "react-markdown";
 import { useAutoInterlink } from "@/hooks/useAutoInterlink";
 import { ContentGate } from "@/components/blog/ContentGate";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ShareButtons } from "@/components/blog/ShareButtons";
+import { ReactionBar } from "@/components/blog/ReactionBar";
+import { CommentsSection } from "@/components/blog/CommentsSection";
+import { NewsletterCTA } from "@/components/blog/NewsletterCTA";
 import { useEffect, useState, type ReactNode } from "react";
 
 /* ── Utility: extract first paragraph as lead/summary ── */
