@@ -65,10 +65,10 @@ Deno.serve(async (req) => {
 
     // Add credits atomically via SECURITY DEFINER function
     const { data: added } = await supabaseAdmin.rpc("add_credits", {
-      _user_id: user.id,
-      _amount: neurons,
-      _description: `STRIPE TOPUP: +${neurons} NEURONS (${session_id})`,
-      _type: "topup",
+      p_user_id: user.id,
+      p_amount: neurons,
+      p_description: `STRIPE TOPUP: +${neurons} NEURONS (${session_id})`,
+      p_type: "topup",
     });
 
     if (!added) {

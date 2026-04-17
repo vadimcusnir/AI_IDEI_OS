@@ -149,10 +149,10 @@ Deno.serve(async (req) => {
 
           if (!dupTx) {
             await db.rpc("add_credits", {
-              _user_id: resolvedUserId,
-              _amount: tierConfig.neurons,
-              _description: description,
-              _type: "subscription",
+              p_user_id: resolvedUserId,
+              p_amount: tierConfig.neurons,
+              p_description: description,
+              p_type: "subscription",
             });
             log(`✅ Credited ${tierConfig.neurons} NEURONS for new subscription`);
 
