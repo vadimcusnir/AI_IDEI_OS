@@ -58,7 +58,10 @@ export default defineConfig(({ mode }) => ({
     },
     target: "esnext",
     cssCodeSplit: true,
-    sourcemap: false,
+    // Hidden sourcemaps: generated for Sentry symbolication but NOT referenced
+    // by built JS, so they don't leak in the browser. Upload step (Sentry CLI)
+    // happens in CI when SENTRY_AUTH_TOKEN is configured. F-017.
+    sourcemap: "hidden",
     chunkSizeWarningLimit: 600,
   },
 }));
