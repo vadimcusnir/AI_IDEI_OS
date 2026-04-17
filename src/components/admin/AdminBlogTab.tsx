@@ -281,7 +281,7 @@ export function AdminBlogTab() {
                           <Badge variant={statusColor(post.status)}>{post.status}</Badge>
                           <Badge variant="outline" className="text-xs">{post.category}</Badge>
                           {post.is_premium && (
-                            <Badge variant="default" className="text-xs gap-1 bg-amber-500/15 text-amber-600 border-amber-500/30 hover:bg-amber-500/20">
+                            <Badge variant="secondary" className="text-xs gap-1">
                               <Crown className="w-3 h-3" /> Premium
                             </Badge>
                           )}
@@ -329,7 +329,7 @@ export function AdminBlogTab() {
                         >
                           {post.is_premium
                             ? <Unlock className="w-4 h-4 text-muted-foreground" />
-                            : <Crown className="w-4 h-4 text-amber-500" />}
+                            : <Crown className="w-4 h-4 text-primary" />}
                         </Button>
                         {post.status === "draft" && (
                           <Button
