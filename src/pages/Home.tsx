@@ -78,14 +78,7 @@ export default function Home() {
         {/* ═══ CENTER COLUMN: flex column, the chat surface ═══ */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
 
-          {/* ── Status bar (shrink, no scroll) ── */}
-          <ExecutionStatusBar
-            phase={cc.execState.phase} intent={cc.execState.intent}
-            totalCredits={cc.execState.totalCredits}
-            stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
-            totalSteps={cc.execState.steps.length}
-            startedAt={cc.execState.startedAt} errorMessage={cc.execState.errorMessage}
-          />
+          {/* Status bar moved inline into the feed (below the user message) */}
 
           {/* ── Permission gate overlay ── */}
           <AnimatePresence>
@@ -144,8 +137,20 @@ export default function Home() {
                     />
                   ))}
 
-                  {/* Loading indicator */}
-                  {cc.loading && !cc.isStreaming && (
+                  {/* Inline execution status — flows under the last user message */}
+                  {["planning","confirming","executing","delivering","storing"].includes(cc.execState.phase) && (
+                    <ExecutionStatusBar
+                      inline
+                      phase={cc.execState.phase} intent={cc.execState.intent}
+                      totalCredits={cc.execState.totalCredits}
+                      stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
+                      totalSteps={cc.execState.steps.length}
+                      startedAt={cc.execState.startedAt} errorMessage={cc.execState.errorMessage}
+                    />
+                  )}
+
+                  {/* Loading indicator (only when no execution phase is active) */}
+                  {cc.loading && !cc.isStreaming && cc.execState.phase === "idle" && (
                     <div className="flex items-start gap-2.5">
                       <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
                         <Sparkles className="h-3 w-3 text-primary" />
@@ -156,9 +161,7 @@ export default function Home() {
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
-                        <span className="text-xs text-muted-foreground ml-1">
-                          {cc.execState.phase === "planning" ? "Planning..." : "Thinking..."}
-                        </span>
+                        <span className="text-xs text-muted-foreground ml-1">Thinking...</span>
                       </div>
                     </div>
                   )}
