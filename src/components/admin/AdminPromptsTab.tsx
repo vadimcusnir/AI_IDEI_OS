@@ -16,8 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
-  RefreshCw, Loader2, Plus, Pencil, Save, Search, FileKey, Blocks,
+  RefreshCw, Loader2, Plus, Pencil, Save, Search, FileKey, Blocks, Sparkles,
 } from "lucide-react";
+import { PromptYamlGenerator } from "./PromptYamlGenerator";
 
 interface PromptRow {
   id: string;
@@ -52,11 +53,15 @@ export function AdminPromptsTab() {
             <FileKey className="h-3.5 w-3.5 text-primary" /> Execution Prompts
           </TabsTrigger>
           <TabsTrigger value="frameworks" className="text-xs gap-1.5 h-7">
-            <Blocks className="h-3.5 w-3.5 text-amber-500" /> Formation Frameworks
+            <Blocks className="h-3.5 w-3.5 text-primary" /> Formation Frameworks
+          </TabsTrigger>
+          <TabsTrigger value="yaml-gen" className="text-xs gap-1.5 h-7">
+            <Sparkles className="h-3.5 w-3.5 text-primary" /> YAML Generator
           </TabsTrigger>
         </TabsList>
         <TabsContent value="prompts"><PromptsTable /></TabsContent>
         <TabsContent value="frameworks"><FrameworksTable /></TabsContent>
+        <TabsContent value="yaml-gen"><PromptYamlGenerator /></TabsContent>
       </Tabs>
     </div>
   );

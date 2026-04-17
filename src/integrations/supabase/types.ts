@@ -10263,6 +10263,63 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_generation_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          failed_count: number
+          filter_scope: string
+          id: string
+          last_processed_service_key: string | null
+          metadata: Json
+          model: string
+          processed_count: number
+          schema_variant: string
+          started_at: string | null
+          status: string
+          success_count: number
+          total_services: number
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number
+          filter_scope?: string
+          id?: string
+          last_processed_service_key?: string | null
+          metadata?: Json
+          model?: string
+          processed_count?: number
+          schema_variant?: string
+          started_at?: string | null
+          status?: string
+          success_count?: number
+          total_services?: number
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number
+          filter_scope?: string
+          id?: string
+          last_processed_service_key?: string | null
+          metadata?: Json
+          model?: string
+          processed_count?: number
+          schema_variant?: string
+          started_at?: string | null
+          status?: string
+          success_count?: number
+          total_services?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prompt_history: {
         Row: {
           chain_parent_id: string | null
@@ -10340,10 +10397,15 @@ export type Database = {
           created_at: string
           editable: boolean
           execution_mode: Database["public"]["Enums"]["execution_regime"]
+          generated_at: string | null
+          generation_error: string | null
+          generation_model: string | null
+          generation_status: string
           id: string
           input_schema: Json | null
           is_active: boolean
           last_modified_by: string | null
+          linked_service_key: string | null
           metadata: Json | null
           modifiers: Json | null
           output_schema: Json | null
@@ -10353,6 +10415,7 @@ export type Database = {
           scope: Database["public"]["Enums"]["control_scope"]
           updated_at: string
           version: number
+          yaml_spec: string | null
         }
         Insert: {
           category?: string
@@ -10361,10 +10424,15 @@ export type Database = {
           created_at?: string
           editable?: boolean
           execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          generated_at?: string | null
+          generation_error?: string | null
+          generation_model?: string | null
+          generation_status?: string
           id: string
           input_schema?: Json | null
           is_active?: boolean
           last_modified_by?: string | null
+          linked_service_key?: string | null
           metadata?: Json | null
           modifiers?: Json | null
           output_schema?: Json | null
@@ -10374,6 +10442,7 @@ export type Database = {
           scope?: Database["public"]["Enums"]["control_scope"]
           updated_at?: string
           version?: number
+          yaml_spec?: string | null
         }
         Update: {
           category?: string
@@ -10382,10 +10451,15 @@ export type Database = {
           created_at?: string
           editable?: boolean
           execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          generated_at?: string | null
+          generation_error?: string | null
+          generation_model?: string | null
+          generation_status?: string
           id?: string
           input_schema?: Json | null
           is_active?: boolean
           last_modified_by?: string | null
+          linked_service_key?: string | null
           metadata?: Json | null
           modifiers?: Json | null
           output_schema?: Json | null
@@ -10395,6 +10469,7 @@ export type Database = {
           scope?: Database["public"]["Enums"]["control_scope"]
           updated_at?: string
           version?: number
+          yaml_spec?: string | null
         }
         Relationships: []
       }
