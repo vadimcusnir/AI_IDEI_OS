@@ -19,6 +19,8 @@ interface ExecutionStatusBarProps {
   totalSteps: number;
   startedAt: string | null;
   errorMessage: string | null;
+  /** Optional: label of the currently running step (live update) */
+  currentStepLabel?: string;
   /** When true, renders as inline chat status (no border/bg, fits inside feed) */
   inline?: boolean;
 }
