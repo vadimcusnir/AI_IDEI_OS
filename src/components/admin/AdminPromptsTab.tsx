@@ -16,8 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
-  RefreshCw, Loader2, Plus, Pencil, Save, Search, FileKey, Blocks,
+  RefreshCw, Loader2, Plus, Pencil, Save, Search, FileKey, Blocks, Sparkles,
 } from "lucide-react";
+import { PromptYamlGenerator } from "./PromptYamlGenerator";
 
 interface PromptRow {
   id: string;
