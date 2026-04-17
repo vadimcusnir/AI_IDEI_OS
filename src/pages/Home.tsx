@@ -146,6 +146,7 @@ export default function Home() {
                       stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
                       totalSteps={cc.execState.steps.length}
                       startedAt={cc.execState.startedAt} errorMessage={cc.execState.errorMessage}
+                      currentStepLabel={cc.execState.steps.find(s => s.status === "running")?.label}
                     />
                   )}
 
@@ -267,13 +268,16 @@ export default function Home() {
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
           <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 pt-2 pb-[max(3.75rem,calc(3.5rem+env(safe-area-inset-bottom)))] md:pb-2">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
-              {/* PR2: 3 persistent intent chips above composer (Extract · Analyze · Generate) */}
-              <ComposerChips
-                onSelect={(_intent: ComposerIntent, template: string) => {
-                  cc.setInput(template);
-                  cc.inputZoneRef.current?.focus();
-                }}
-              />
+              {/* Intent chips — only when conversation is empty AND user isn't typing.
+                  Once a chat exists, the chips become noise; the slash menu covers discovery. */}
+              {cc.isEmptyState && !cc.input.trim() && (
+                <ComposerChips
+                  onSelect={(_intent: ComposerIntent, template: string) => {
+                    cc.setInput(template);
+                    cc.inputZoneRef.current?.focus();
+                  }}
+                />
+              )}
 
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
