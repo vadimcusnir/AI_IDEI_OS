@@ -10,6 +10,7 @@ import {
   X, Paperclip, RotateCcw, History, ChevronLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   id: string;
@@ -33,7 +34,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const { user } = useAuth();
   const { t } = useTranslation("common");
   const { saveMessage, sessions, loadSession, newSession } = useChatHistory();
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<Message[]>(() => [
     {
       id: "welcome",
       role: "assistant",
@@ -46,14 +47,32 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isStreamingRef = useRef(false);
+  const userScrolledUpRef = useRef(false);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = useCallback((smooth = false) => {
+    if (userScrolledUpRef.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "end" });
   }, []);
 
-  useEffect(scrollToBottom, [messages, scrollToBottom]);
+  useEffect(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      userScrolledUpRef.current = distance > 80;
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Smooth scroll on new message — not on every streaming token
+  useEffect(() => {
+    if (!isStreamingRef.current) scrollToBottom(true);
+  }, [messages.length, scrollToBottom]);
 
   const handleSend = async () => {
     if (!input.trim() && files.length === 0) return;
