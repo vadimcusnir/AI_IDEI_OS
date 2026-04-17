@@ -49,13 +49,13 @@ export default function Home() {
 
   // Always start with a blank chat when landing on /home — previous sessions
   // remain accessible via the SessionList in the empty-state.
-  // We wait for sessionLoaded so the auto-restore in useCommandSession finishes
-  // first, then we wipe; otherwise the restore overwrites our reset (race).
+  // We delay the reset slightly so the auto-restore in useCommandSession
+  // finishes first; otherwise the restore overwrites our reset (race).
   useEffect(() => {
-    if (!cc.sessionLoaded) return;
-    cc.clearChat();
+    const t = setTimeout(() => { cc.clearChat(); }, 100);
+    return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cc.sessionLoaded]);
+  }, []);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
