@@ -19,6 +19,8 @@ interface ExecutionStatusBarProps {
   totalSteps: number;
   startedAt: string | null;
   errorMessage: string | null;
+  /** Optional: label of the currently running step (live update) */
+  currentStepLabel?: string;
   /** When true, renders as inline chat status (no border/bg, fits inside feed) */
   inline?: boolean;
 }
@@ -42,7 +44,7 @@ const PHASE_CONFIG: Record<CommandPhase, {
 
 export function ExecutionStatusBar({
   phase, intent, totalCredits, stepsCompleted, totalSteps, startedAt, errorMessage,
-  inline = false,
+  currentStepLabel, inline = false,
 }: ExecutionStatusBarProps) {
   if (phase === "idle") return null;
 
@@ -50,6 +52,8 @@ export function ExecutionStatusBar({
   const Icon = config.icon;
   const elapsed = startedAt ? Math.round((Date.now() - new Date(startedAt).getTime()) / 1000) : 0;
   const progress = totalSteps > 0 ? (stepsCompleted / totalSteps) * 100 : 0;
+  // In inline mode, prefer the live current-step label over the static phase label.
+  const primaryLabel = inline && currentStepLabel ? currentStepLabel : config.label;
 
   return (
     <AnimatePresence>
@@ -69,16 +73,19 @@ export function ExecutionStatusBar({
           inline ? "px-3 py-1.5" : "px-4 sm:px-6 py-2"
         )}>
           {/* Phase indicator */}
-          <div className="flex items-center gap-2">
-            <Icon className={cn("h-3.5 w-3.5", config.color, config.animate && "animate-spin")} />
-            <span className={cn("text-xs font-medium", config.color)}>
-              {config.label}
+          <div className="flex items-center gap-2 min-w-0">
+            <Icon className={cn("h-3.5 w-3.5 shrink-0", config.color, config.animate && "animate-spin")} />
+            <span className={cn("text-xs font-medium truncate", config.color)}>
+              {primaryLabel}
             </span>
           </div>
 
-          {/* Intent */}
+          {/* Intent — hidden on inline+mobile to save space */}
           {intent && (
-            <span className="text-micro font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-muted/50 border border-border/30">
+            <span className={cn(
+              "text-micro font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-muted/50 border border-border/30 shrink-0",
+              inline && "hidden sm:inline-block"
+            )}>
               {intent.replace(/_/g, " ")}
             </span>
           )}
