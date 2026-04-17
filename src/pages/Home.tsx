@@ -47,10 +47,13 @@ export default function Home() {
   const cc = useCommandCenter();
   const feedRef = useRef<HTMLDivElement>(null);
 
-  // Always start with a blank chat on mount — previous sessions are still
-  // accessible via the SessionList in the empty-state.
+  // Always start with a blank chat when landing on /home — previous sessions
+  // remain accessible via the SessionList in the empty-state.
+  // We delay the reset slightly so the auto-restore in useCommandSession
+  // finishes first; otherwise the restore overwrites our reset (race).
   useEffect(() => {
-    cc.clearChat();
+    const t = setTimeout(() => { cc.clearChat(); }, 100);
+    return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
