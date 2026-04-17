@@ -185,13 +185,8 @@ export default function Auth() {
         // Reset client tracker on success
         loginAttemptTracker.delete(trimmedEmail);
         await logSecurityEvent("login_success", { email: trimmedEmail });
-        // Redirect to original destination or fallback
-        if (redirectTarget) {
-          navigate(redirectTarget, { replace: true });
-        } else {
-          const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
-          navigate(count && count > 0 ? "/home" : "/onboarding", { replace: true });
-        }
+        // Redirect to original destination or straight to /home
+        navigate(redirectTarget || "/home", { replace: true });
       }
     }
     setLoading(false);
@@ -382,7 +377,7 @@ export default function Auth() {
               <button
                 type="button"
                 onClick={async () => {
-                  const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+                  const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/home` });
                   if (error) toast.error(t("common:google_signin_error", { message: error.message }));
                 }}
                 className="w-full h-12 flex items-center justify-center gap-2.5 rounded-xl border border-border/50 bg-background/60 hover:bg-muted/40 hover:border-[hsl(var(--gold-oxide)/0.25)] transition-all duration-200 text-sm font-medium"
