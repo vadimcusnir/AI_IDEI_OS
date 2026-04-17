@@ -4,7 +4,7 @@
 
 import { useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, X, Square, ArrowUp } from "lucide-react";
+import { Paperclip, X, Square, ArrowUp, Terminal } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { InputAttachMenu } from "./InputAttachMenu";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,9 @@ interface CommandInputZoneProps {
   files: File[];
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (idx: number) => void;
+  /** Non-editable command tags (set via slash menu / chips) */
+  commands?: string[];
+  onRemoveCommand?: (idx: number) => void;
   showSlashMenu: boolean;
   onShowSlashMenuChange: (show: boolean) => void;
   onSlashSelect: (cmd: string) => void;
@@ -34,6 +37,7 @@ interface CommandInputZoneProps {
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
+      commands = [], onRemoveCommand,
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
     ref,
   ) {
