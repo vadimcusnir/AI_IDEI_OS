@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Lock, Crown, Zap, CheckCircle2, ArrowRight, Coins } from "lucide-react";
+import { Lock, Crown, Zap, CheckCircle2, ArrowRight, Coins, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface PremiumPaywallProps {
   open: boolean;
@@ -57,7 +60,7 @@ const PRO_BENEFITS = [
 ];
 
 const TOPUP_BENEFITS = [
-  "2,000 NEURONS instant",
+  "5,500 NEURONS instant",
   "Fără abonament recurent",
   "Acces la serviciile de bază",
 ];
@@ -65,23 +68,38 @@ const TOPUP_BENEFITS = [
 export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", serviceName }: PremiumPaywallProps) {
   const navigate = useNavigate();
   const { subscribe } = useSubscription();
+  const [loadingAction, setLoadingAction] = useState<"subscribe" | "topup" | null>(null);
 
   const handleSubscribePro = async () => {
+    setLoadingAction("subscribe");
     try {
       await subscribe(SUBSCRIPTION_TIERS.pro_monthly.price_id);
     } catch {
       navigate("/credits");
+    } finally {
+      setLoadingAction(null);
+      onOpenChange(false);
     }
-    onOpenChange(false);
   };
 
   const handleBuyNeurons = async () => {
+    setLoadingAction("topup");
     try {
-      await subscribe(SUBSCRIPTION_TIERS.pro_monthly.price_id);
-    } catch {
+      const { data, error } = await supabase.functions.invoke("create-topup-checkout", {
+        body: { package_key: "starter" }, // 5,500 NEURONS — closest to "2,000+" promise
+      });
+      if (error) throw error;
+      const url = (data as { url?: string } | null)?.url;
+      if (!url) throw new Error("No checkout URL returned");
+      window.open(url, "_blank", "noopener,noreferrer");
+      onOpenChange(false);
+    } catch (e) {
+      toast.error("Nu am putut deschide checkout-ul. Mergi la pagina Credits.");
       navigate("/credits");
+      onOpenChange(false);
+    } finally {
+      setLoadingAction(null);
     }
-    onOpenChange(false);
   };
 
   return (
@@ -127,9 +145,20 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
                 </li>
               ))}
             </ul>
-            <Button size="sm" className="w-full gap-1.5 text-xs" onClick={handleSubscribePro}>
-              Upgrade to Pro
-              <ArrowRight className="h-3 w-3" />
+            <Button
+              size="sm"
+              className="w-full gap-1.5 text-xs"
+              onClick={handleSubscribePro}
+              disabled={loadingAction !== null}
+            >
+              {loadingAction === "subscribe" ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <>
+                  Upgrade to Pro
+                  <ArrowRight className="h-3 w-3" />
+                </>
+              )}
             </Button>
           </div>
 
@@ -140,7 +169,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
               <h3 className="text-sm font-bold">Cumpără NEURONS</h3>
             </div>
             <div className="flex items-baseline gap-1 mb-3">
-              <span className="text-2xl font-bold font-mono text-foreground">$11</span>
+              <span className="text-2xl font-bold font-mono text-foreground">$22</span>
               <span className="text-xs text-muted-foreground">o singură dată</span>
             </div>
             <ul className="space-y-1.5 mb-4 flex-1">
@@ -151,9 +180,21 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
                 </li>
               ))}
             </ul>
-            <Button size="sm" variant="outline" className="w-full gap-1.5 text-xs" onClick={handleBuyNeurons}>
-              Buy 2,000 NEURONS
-              <Coins className="h-3 w-3" />
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full gap-1.5 text-xs"
+              onClick={handleBuyNeurons}
+              disabled={loadingAction !== null}
+            >
+              {loadingAction === "topup" ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <>
+                  Buy 5,500 NEURONS
+                  <Coins className="h-3 w-3" />
+                </>
+              )}
             </Button>
           </div>
         </div>
