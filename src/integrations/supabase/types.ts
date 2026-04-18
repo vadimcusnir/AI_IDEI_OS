@@ -15855,6 +15855,7 @@ export type Database = {
         }[]
       }
       cleanup_rate_limits: { Args: never; Returns: undefined }
+      cleanup_resolved_admin_alerts: { Args: never; Returns: number }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       complete_agent_execution: {
         Args: {

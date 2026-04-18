@@ -84,7 +84,7 @@ export function useFinOps() {
     const [statsRes, healthRes, alertsRes, costsRes] = await Promise.all([
       supabase.rpc("finops_dashboard_stats"),
       supabase.from("provider_health_checks").select("*").order("checked_at", { ascending: false }),
-      supabase.from("admin_alerts").select("*").is("resolved_at", null).order("severity").order("last_seen", { ascending: false }),
+      supabase.from("admin_alerts").select("*").is("resolved_at", null).order("last_seen", { ascending: false }),
       supabase.from("platform_cost_ledger").select("*").order("created_at", { ascending: false }).limit(100),
     ]);
 
@@ -100,7 +100,18 @@ export function useFinOps() {
       setProviders(unique);
     }
     
-    if (alertsRes.data) setAlerts(alertsRes.data as unknown as AdminAlert[]);
+    if (alertsRes.data) {
+      const SEVERITY_RANK: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 };
+      const sorted = (alertsRes.data as unknown as AdminAlert[]).slice().sort((a, b) => {
+        const r = (SEVERITY_RANK[b.severity] ?? 0) - (SEVERITY_RANK[a.severity] ?? 0);
+        if (r !== 0) return r;
+        // Unacknowledged first within same severity
+        if (!a.acknowledged_at && b.acknowledged_at) return -1;
+        if (a.acknowledged_at && !b.acknowledged_at) return 1;
+        return new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime();
+      });
+      setAlerts(sorted);
+    }
     if (costsRes.data) setCosts(costsRes.data as unknown as CostEntry[]);
     setLoading(false);
   }, [user]);
