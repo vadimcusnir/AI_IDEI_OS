@@ -4,6 +4,7 @@ import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
 import { reportError } from "../_shared/error-reporter.ts";
+import { buildBoundedMessages } from "../_shared/prompt-boundary.ts";
 import {
   getTierLimits,
   economyPreFlight,
@@ -18,16 +19,20 @@ import {
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-async function callAI(system: string, prompt: string, json = true): Promise<any> {
+async function callAI(system: string, prompt: string, json = true, userId?: string): Promise<any> {
   const key = Deno.env.get("LOVABLE_API_KEY");
   if (!key) throw new Error("LOVABLE_API_KEY not configured");
 
+  const { messages } = buildBoundedMessages({
+    system,
+    userParts: [{ label: "task_input", content: prompt, maxLen: 20000 }],
+    alertSourceFn: "master-agent",
+    userId,
+  });
+
   const body: any = {
     model: "google/gemini-2.5-flash",
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: prompt },
-    ],
+    messages,
   };
   if (json) body.response_format = { type: "json_object" };
 
