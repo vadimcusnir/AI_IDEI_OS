@@ -342,10 +342,15 @@ Deno.serve(async (req) => {
       }
     } catch (e) { console.error("[blog-generate] Thumbnail failed:", e); }
 
-    // ═══ GENERATE INLINE IMAGES ═══
+    // ═══ GENERATE INLINE IMAGES (F-007: capped to MAX_INLINE_IMAGES to prevent unbounded cost) ═══
+    const MAX_INLINE_IMAGES = 6; // Audit: prevent N-image cost leak
     console.log("[blog-generate] Generating inline images...");
     const inlineImages: Array<{ key: string; url: string; prompt: string }> = [];
-    const imagePrompts = articleData.image_prompts || [];
+    const imagePromptsRaw = articleData.image_prompts || [];
+    if (imagePromptsRaw.length > MAX_INLINE_IMAGES) {
+      console.warn(`[blog-generate] F-007 cap: requested ${imagePromptsRaw.length} images, capped to ${MAX_INLINE_IMAGES}`);
+    }
+    const imagePrompts = imagePromptsRaw.slice(0, MAX_INLINE_IMAGES);
 
     for (let i = 0; i < imagePrompts.length; i += 2) {
       const batch = imagePrompts.slice(i, i + 2);

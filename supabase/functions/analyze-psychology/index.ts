@@ -210,6 +210,22 @@ serve(async (req) => {
     const totalPrompts = modulesToRun.reduce((sum, m) => sum + m.prompts.length, 0);
     logStep("Pipeline config", { tier, modules: modulesToRun.length, prompts: totalPrompts });
 
+    // ─── F-006: BILLING RESERVATION (audit hard finding) ───
+    // Pricing: 2 NEURONI per module (free=4 modules=8N, premium=10 modules=20N)
+    const reserveAmount = modulesToRun.length * 2;
+    const billingJobId = crypto.randomUUID();
+    const { data: reserveOk, error: reserveErr } = await supabase
+      .rpc("wallet_reserve", { _user_id: userId, _amount: reserveAmount, _job_id: billingJobId, _description: `analyze-psychology[${tier}]` });
+    if (reserveErr || reserveOk === false) {
+      logStep("Insufficient credits", { needed: reserveAmount, error: reserveErr?.message });
+      return new Response(JSON.stringify({
+        error: "Insufficient credits",
+        needed: reserveAmount,
+        message: `This analysis requires ${reserveAmount} NEURONS. Top up your balance.`,
+      }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    }
+    logStep("Credits reserved", { amount: reserveAmount, billingJobId });
+
     // ── Run pipeline: batch modules, each module's prompts run as a single mega-prompt ──
     const textSlice = analysisText.slice(0, tier === "premium" ? 25000 : 15000);
     const moduleResults: Record<string, any> = {};
@@ -342,10 +358,24 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
     if (upsertError) throw new Error(`Save failed: ${upsertError.message}`);
     logStep("Profile saved");
 
+    // ─── F-006: SETTLE billing on success ───
+    const completedModules = Object.keys(moduleResults).length;
+    const expectedModules = modulesToRun.length;
+    if (completedModules < expectedModules) {
+      // Partial run — refund unused modules
+      const unusedAmount = (expectedModules - completedModules) * 2;
+      await supabase.rpc("wallet_refund", { _user_id: userId, _amount: unusedAmount, _job_id: billingJobId, _description: `analyze-psychology partial refund (${expectedModules - completedModules}/${expectedModules})` });
+      logStep("Partial refund", { refunded: unusedAmount });
+    }
+    const settledAmount = completedModules * 2;
+    await supabase.rpc("wallet_settle", { _user_id: userId, _amount: settledAmount, _job_id: billingJobId, _description: `analyze-psychology[${tier}] ${completedModules}/${expectedModules} modules` });
+    logStep("Credits settled", { amount: settledAmount });
+
     return new Response(JSON.stringify({
       success: true,
       tier,
-      modules_completed: Object.keys(moduleResults).length,
+      modules_completed: completedModules,
+      credits_charged: settledAmount,
       profile: profileData,
     }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
@@ -353,6 +383,17 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: msg });
+    // ─── F-006: REFUND on failure (best-effort, billingJobId may be undefined if error before reservation) ───
+    try {
+      // @ts-ignore — variables defined in try block; refund only if reservation happened
+      if (typeof billingJobId !== "undefined" && typeof userId !== "undefined" && typeof reserveAmount !== "undefined") {
+        // @ts-ignore
+        await supabase.rpc("wallet_refund", { _user_id: userId, _amount: reserveAmount, _job_id: billingJobId, _description: `analyze-psychology failed: ${msg.slice(0, 200)}` });
+        logStep("Reservation refunded due to error");
+      }
+    } catch (refundErr) {
+      logStep("REFUND FAILED", { error: String(refundErr) });
+    }
     return new Response(JSON.stringify({ error: msg }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,

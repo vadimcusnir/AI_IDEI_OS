@@ -32,7 +32,7 @@ const Marketplace = lazyRetry(() => import("@/pages/Marketplace"));
 const MarketplaceDetail = lazyRetry(() => import("@/pages/MarketplaceDetail"));
 const MediaProfiles = lazyRetry(() => import("@/pages/MediaProfiles"));
 const MediaProfilePublic = lazyRetry(() => import("@/pages/MediaProfilePublic"));
-const AdminMediaProfiles = lazyRetry(() => import("@/pages/AdminMediaProfiles"));
+// F-003: AdminMediaProfiles moved to protectedRoutes (admin-only).
 const PipelineOverview = lazyRetry(() => import("@/pages/PipelineOverview"));
 const ProductSurfacePage = lazyRetry(() => import("@/pages/ProductSurfacePage"));
 const TermsOfService = lazyRetry(() => import("@/pages/TermsOfService"));
@@ -105,7 +105,7 @@ function publicRouteDefinitions() {
       <Route path="marketplace/:id" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace detail failed"><MarketplaceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
       <Route path="media/profiles/:slug" element={<ErrorBoundary fallbackTitle="Media profile failed"><MediaProfilePublic /></ErrorBoundary>} />
-      <Route path="admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
+      {/* F-003 fix: admin/media-profiles moved to protectedRoutes (admin-gated). Public access removed. */}
 
       {/* Pipeline & services (public catalog) */}
       <Route path="pipeline-overview" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
@@ -186,7 +186,7 @@ export function publicRoutes() {
       <Route path="/marketplace/:id" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace detail failed"><MarketplaceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="/media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
       <Route path="/media/profiles/:slug" element={<ErrorBoundary fallbackTitle="Media profile failed"><MediaProfilePublic /></ErrorBoundary>} />
-      <Route path="/admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
+      {/* F-003 fix: /admin/media-profiles removed from public routes (admin-gated). */}
       <Route path="/pipeline-overview" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
       <Route path="/services" element={<AppLayout><ErrorBoundary fallbackTitle="Services failed to load"><Services /></ErrorBoundary></AppLayout>} />
       <Route path="/programs" element={<AppLayout><ErrorBoundary fallbackTitle="Programs failed to load"><Programs /></ErrorBoundary></AppLayout>} />
