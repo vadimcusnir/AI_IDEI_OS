@@ -26,22 +26,14 @@ import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingProofBand } from "@/components/landing/LandingProofBand";
 import { LandingProblem } from "@/components/landing/LandingProblem";
 
-/* ── Below-the-fold (lazy-loaded for smaller initial bundle) ── */
+/* ── Below-the-fold (lazy-loaded) — TRIMMED to 8 sections post-PRM-0101 ── */
 const LandingMechanism = lazy(() => import("@/components/landing/LandingMechanism").then(m => ({ default: m.LandingMechanism })));
-const TransformationDiagram = lazy(() => import("@/components/landing/TransformationDiagram").then(m => ({ default: m.TransformationDiagram })));
-const LandingWhatYouGet = lazy(() => import("@/components/landing/LandingWhatYouGet").then(m => ({ default: m.LandingWhatYouGet })));
 const LandingOutputGalaxy = lazy(() => import("@/components/landing/LandingOutputGalaxy").then(m => ({ default: m.LandingOutputGalaxy })));
-const LandingControlSurface = lazy(() => import("@/components/landing/LandingControlSurface").then(m => ({ default: m.LandingControlSurface })));
-const LandingWhoFor = lazy(() => import("@/components/landing/LandingWhoFor").then(m => ({ default: m.LandingWhoFor })));
 const LandingWhyDifferent = lazy(() => import("@/components/landing/LandingWhyDifferent").then(m => ({ default: m.LandingWhyDifferent })));
-const LandingBenefits = lazy(() => import("@/components/landing/LandingBenefits").then(m => ({ default: m.LandingBenefits })));
-const LandingSocialProof = lazy(() => import("@/components/landing/LandingSocialProof").then(m => ({ default: m.LandingSocialProof })));
-const EcosystemMap = lazy(() => import("@/components/landing/EcosystemMap").then(m => ({ default: m.EcosystemMap })));
-const LandingTranscribeCTA = lazy(() => import("@/components/landing/LandingTranscribeCTA").then(m => ({ default: m.LandingTranscribeCTA })));
 const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").then(m => ({ default: m.LandingPricing })));
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
-const LandingKnowledgeShowcase = lazy(() => import("@/components/landing/LandingKnowledgeShowcase").then(m => ({ default: m.LandingKnowledgeShowcase })));
 const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ").then(m => ({ default: m.LandingFAQ })));
+const StickyCtaBar = lazy(() => import("@/components/landing/StickyCtaBar").then(m => ({ default: m.StickyCtaBar })));
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 
 // FAQ items needed for JSON-LD — extracted statically to avoid loading the component
