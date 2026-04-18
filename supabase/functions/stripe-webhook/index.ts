@@ -456,7 +456,7 @@ async function resolveUserByEmail(db: any, email: string | null | undefined): Pr
   }
 }
 
-function ok(extra?: Record<string, any>) {
+function ok(req: Request, extra?: Record<string, any>) {
   return new Response(JSON.stringify({ received: true, ...extra }), {
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
