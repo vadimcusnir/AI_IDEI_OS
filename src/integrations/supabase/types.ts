@@ -16369,6 +16369,21 @@ export type Database = {
         Args: { p_amount: number; p_user_id: string }
         Returns: undefined
       }
+      upsert_admin_alert: {
+        Args: {
+          p_alert_type: string
+          p_description?: string
+          p_error_signal?: string
+          p_impact_scope?: string
+          p_metadata?: Json
+          p_provider_key?: string
+          p_recommended_action?: string
+          p_service_key?: string
+          p_severity: string
+          p_title: string
+        }
+        Returns: string
+      }
       validate_jsonld_schema: { Args: { _schema: Json }; Returns: Json }
       validate_profile_guardrails: {
         Args: { _profile_id: string }
