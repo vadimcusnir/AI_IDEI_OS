@@ -19,6 +19,14 @@ interface AuthEventRow {
   created_at: string;
 }
 
+interface SpikeAlert {
+  id: string;
+  title: string;
+  description: string | null;
+  occurrences: number | null;
+  last_seen: string;
+}
+
 const AUTH_EVENTS = [
   "auth_attempt_started",
   "provider_redirect_started",
@@ -37,24 +45,32 @@ const FAILURE_EVENTS = new Set(["code_exchange_failed", "session_restore_failed"
 
 export function AuthFlowMonitor() {
   const [rows, setRows] = useState<AuthEventRow[]>([]);
+  const [alerts, setAlerts] = useState<SpikeAlert[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      const { data, error } = await supabase
-        .from("analytics_events")
-        .select("id, event_name, event_params, session_id, created_at")
-        .in("event_name", AUTH_EVENTS)
-        .order("created_at", { ascending: false })
-        .limit(200);
+      const [eventsRes, alertsRes] = await Promise.all([
+        supabase
+          .from("analytics_events")
+          .select("id, event_name, event_params, session_id, created_at")
+          .in("event_name", AUTH_EVENTS)
+          .order("created_at", { ascending: false })
+          .limit(200),
+        supabase
+          .from("admin_alerts")
+          .select("id, title, description, occurrences, last_seen")
+          .eq("alert_type", "auth_failure_spike")
+          .is("resolved_at", null)
+          .order("last_seen", { ascending: false })
+          .limit(5),
+      ]);
       if (cancelled) return;
-      if (error) {
-        console.error("[AuthFlowMonitor]", error);
-        setLoading(false);
-        return;
-      }
-      setRows((data ?? []) as AuthEventRow[]);
+      if (eventsRes.error) console.error("[AuthFlowMonitor]", eventsRes.error);
+      if (alertsRes.error) console.error("[AuthFlowMonitor:alerts]", alertsRes.error);
+      setRows((eventsRes.data ?? []) as AuthEventRow[]);
+      setAlerts((alertsRes.data ?? []) as SpikeAlert[]);
       setLoading(false);
     };
     load();
@@ -103,6 +119,23 @@ export function AuthFlowMonitor() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 max-h-[600px] overflow-y-auto">
+        {alerts.length > 0 && (
+          <div className="space-y-2 mb-2">
+            {alerts.map(a => (
+              <div key={a.id} className="border border-destructive/40 bg-destructive/10 rounded-lg p-3 text-xs">
+                <div className="flex items-center gap-2 font-medium text-destructive">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  {a.title}
+                  {a.occurrences && a.occurrences > 1 && (
+                    <Badge variant="destructive" className="ml-auto">×{a.occurrences}</Badge>
+                  )}
+                </div>
+                {a.description && <p className="text-muted-foreground mt-1">{a.description}</p>}
+                <p className="text-muted-foreground mt-1">Last seen: {new Date(a.last_seen).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        )}
         {flows.size === 0 && (
           <p className="text-sm text-muted-foreground text-center py-8">No auth events recorded yet.</p>
         )}
