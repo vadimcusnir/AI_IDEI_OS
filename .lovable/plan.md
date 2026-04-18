@@ -1,61 +1,97 @@
+# PLAN — Reconstrucție /home (PRM-0101 → execuție)
 
-User asks "ce recomanzi?" — I should give a clear recommendation, not more questions.
+**Scope:** P0 + P1 din audit. P2/P3 amânate.
+**Pivot:** `src/pages/Landing.tsx` + componente `src/components/landing/`.
+**Brand:** "Magic Button" rămâne, dar este ancorat cu output cuantificat.
 
-Context:
-- Two example YAMLs shown: `PROMPT_DATABASE_SYSTEM` (relational meta-schema for organizing prompts) and `cusnir_music_identity` (rich identity-contract narrative).
-- Current generator produces standard execution YAML (chain-of-thought + execution_steps + output_schema + security_rules) for 3,494 services. 4 done, ~3,490 to go.
-- The two examples serve DIFFERENT purposes than execution specs:
-  - PROMPT_DATABASE_SYSTEM = how to ORGANIZE prompts (meta — registry schema)
-  - cusnir_music_identity = artistic IDENTITY profile (one-off, not per-service)
-- Forcing all 3,490 services into identity-contract style = wrong fit. Most services are functional (extract, analyze, generate), not identity profiles.
+---
 
-My recommendation: **HYBRID — keep current execution schema, add lightweight DB-registry metadata layer**. Don't regenerate the 4. Don't bloat each YAML with identity-contract narrative.
+## 1. Decizii confirmate
+- Testimoniale → eliminate, înlocuite cu **metrici reale platformă**
+- Headline → "Magic Button" păstrat + cuantificare
+- Date DB live (2026-04-18): **402 neuroni · 142 servicii active · 46 episoade · 12 articole** (20 useri NU se afișează)
 
-# Recomandare
+## 2. Arhitectura țintă /home (8 secțiuni, de la 17)
 
-**Continuă cu schema actuală + adaugă strat de metadata relațional. NU regenera.**
+| # | Bloc | Componentă | Acțiune |
+|---|---|---|---|
+| 1 | HERO ancorat | `LandingHero` | REWRITE |
+| 2 | PROOF BAND real | `LandingProofBand` | REWRITE (live RPC) |
+| 3 | PROBLEM | `LandingProblem` | TRIM 6→3 |
+| 4 | MECHANISM cu exemplu | `LandingMechanism` | REWRITE |
+| 5 | OUTPUTS | `LandingOutputGalaxy` | KEEP simplu |
+| 6 | WHY DIFFERENT (mutat) | `LandingWhyDifferent` | MOVE de la #11 |
+| 7 | PRICING TEASER | `LandingPricing` | KEEP compact |
+| 8 | FINAL CTA | `LandingFinalCTA` | KEEP |
+| + | Sticky CTA | `StickyCtaBar` | NOU, 30% scroll |
 
-## De ce
+## 3. Eliminate de pe /home
+TransformationDiagram, LandingWhatYouGet, LandingControlSurface, LandingKnowledgeShowcase, LandingWhoFor, LandingBenefits, **LandingSocialProof**, EcosystemMap, LandingTranscribeCTA, PublicTestimonials.
+→ Scroll: ~18.000px → ~6.500px.
 
-| Schemă | Scop | Potrivire pe 3,490 servicii |
-|---|---|---|
-| Actuală (chain-of-thought + execution_steps + output_schema + security_rules) | Execuție AI programatică | ✅ Perfect — servicii funcționale |
-| PROMPT_DATABASE_SYSTEM | Meta — cum organizezi registrul | ❌ E schema bazei, nu a prompt-ului |
-| Identity-contract (Cusnir Music) | Profil narativ artist/brand | ❌ Doar pentru ~10 servicii de identitate |
+## 4. Spec componente
 
-Forțarea a 3,490 servicii (extract transcript, generate SEO, analyze tone…) într-un format de "identitate artistică" = bloat fără valoare execuțională.
+### 4.1 LandingHero
+- H1: `"The Magic Button for marketing."`
+- Sub: `"One upload — voice note, doc, link — becomes 50+ ready-to-publish assets in under 2 minutes."`
+- CTA primar: filled gold `Start free — no card`
+- CTA secundar: text link `See how it works ↓`
+- Trust line live: `402 neurons · 46 episodes · 142 services`
+- Eliminat ExtractionEngine din hero (mutat în Mechanism)
 
-## Ce fac concret
+### 4.2 LandingProofBand → fetch RPC `get_public_landing_stats`
 
-1. **Păstrez schema actuală** pentru cele 3,490 rămase — e deja optimă pentru execuție AI.
-2. **Adaug header standardizat** la fiecare YAML (din PROMPT_DATABASE_SYSTEM):
-   ```
-   id: PRM-XXXX
-   classification: { domain, function, input_type, output_type }
-   cluster: <semantic_cluster>
-   version: 1.0
-   status: active
-   scoring: { utility_score, revenue_score, total_score }
-   ```
-3. **Tabel nou `prompt_db_registry`** cu coloanele: `prompt_id` (PRM-####), `service_key`, `domain`, `function`, `input_type`, `output_type`, `cluster_id`, `utility_score`, `revenue_score`. Auto-completat la generare.
-4. **Cele 4 deja generate** → migrate metadata only (script, fără AI cost). Nu regenerez.
-5. **Identity-contract template** = opțional, doar pentru ~10-15 servicii de profilare/branding (avatar, brand voice, artist identity). Buton separat în Admin "Generate as Identity Profile".
+### 4.3 LandingProblem → 3 puncte
 
-## Beneficii
+### 4.4 LandingMechanism → 3 pași cu exemplu vizibil + CTA "Try with your own input →"
 
-- **Cost zero suplimentar** pentru cele 4 generate.
-- **Schemă unitară** (toate au id PRM-####, classification, scoring).
-- **Search & cluster** rapid în Admin (filter by domain/function).
-- **Fail-closed** — fiecare prompt are id + classification = anti-haos.
-- **Identity-contract** rămâne disponibil pentru cazuri reale, nu forțat.
+### 4.5 LandingPricing → prop `compact` (Free + Pro)
 
-## Implementare (în default mode)
+### 4.6 StickyCtaBar nou — fixed bottom mobile / top-right desktop, dismiss sessionStorage
 
-1. Migrare DB: tabel `prompt_db_registry` + indecși.
-2. Update `batch-generate-prompts/index.ts`: generează PRM id, extrage classification din service metadata, scrie în `prompt_db_registry`.
-3. Update system prompt: adaugă header relațional la output YAML.
-4. Script one-time: backfill cele 4 cu metadata.
-5. Admin UI: filtre by domain/function/cluster + scoring view.
-6. Resume batch — continuă de la serviciul 5.
+### 4.7 Landing.tsx — reorder + cleanup imports
 
-**Estimare**: ~30 min implementare, jobul continuă fără pauză.
+## 5. Backend
+**Migration:** `RPC public.get_public_landing_stats()` SECURITY DEFINER STABLE, GRANT EXECUTE TO anon, authenticated. Returnează `{neurons, episodes, services, articles}`.
+
+## 6. i18n × 3 limbi
+- ADD: `hero.title|subtitle|trust_line`, `mechanism.example.*`, `sticky_cta.*`
+- REMOVE: `social_proof.*`, `what_you_get.*`, `benefits.*`, `ecosystem.*`
+
+## 7. Nav header rename
+MECHANISM/OUTPUTS/CONTROL/ACCESS → **How it works / Outputs / Pricing / Sign in**
+
+## 8. WelcomeScreen Command Center
+Banner "Primul tău upload" + ghost preview "→ 12 neurons, 3 frameworks, 5 social posts" + skip "exemplu pre-încărcat".
+
+## 9. Ordinea de execuție (12 pași)
+1. Migration RPC
+2. i18n × 3 limbi (paralel)
+3. LandingHero rewrite
+4. LandingProofBand wired
+5. LandingProblem trim
+6. LandingMechanism rewrite
+7. LandingPricing compact prop
+8. StickyCtaBar nou
+9. Landing.tsx reorder + cleanup
+10. Header nav rename
+11. WelcomeScreen activation banner
+12. QA preview + scroll + i18n parity
+
+## 10. Out of scope (P2/P3)
+Interactive demo, real KnowledgeShowcase, counter animation, dot nav, testimoniale reale, `/use-cases`, `/ecosystem`.
+
+## 11. Risc & rollback
+Componentele rămân fizic → rollback = reorder. Grep i18n keys înainte de delete. RPC fallback hardcoded.
+
+## 12. Definition of done
+- [ ] 8 secțiuni vizibile
+- [ ] Scroll < 7.000px desktop
+- [ ] Headline = "Magic Button" + cuantificare
+- [ ] 1 CTA primar above the fold
+- [ ] 0 testimoniale cu inițiale
+- [ ] Proof = date reale DB
+- [ ] Sticky CTA după 30% scroll
+- [ ] Pricing în nav
+- [ ] EN/RO/RU paritate
+- [ ] Lighthouse perf > 85
