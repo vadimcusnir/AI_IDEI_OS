@@ -128,7 +128,7 @@ async function callAI(system: string, prompt: string): Promise<any> {
   }
 }
 
-function jsonRes(body: any, status = 200) {
+function jsonRes(req: Request, body: any, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
@@ -452,18 +452,18 @@ serve(async (req) => {
 
   // AUTH
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader) return jsonRes({ error: "Unauthorized" }, 401);
+  if (!authHeader) return jsonRes(req, { error: "Unauthorized" }, 401);
 
   const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
   const { data: { user }, error: authErr } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
-  if (authErr || !user) return jsonRes({ error: "Invalid token" }, 401);
+  if (authErr || !user) return jsonRes(req, { error: "Invalid token" }, 401);
 
   try {
     const body = await req.json();
     const { findings, context, mode = "full" } = body;
 
     if (!findings || !Array.isArray(findings) || findings.length === 0) {
-      return jsonRes({ error: "findings array is required (min 1 item)" }, 400);
+      return jsonRes(req, { error: "findings array is required (min 1 item)" }, 400);
     }
 
     const phases: PhaseResult[] = [];
@@ -532,7 +532,7 @@ serve(async (req) => {
       completed_at: new Date().toISOString(),
     }).catch(err => console.error("Failed to store job:", err));
 
-    return jsonRes({
+    return jsonRes(req, {
       status: "COMPLETED",
       total_duration_ms: totalDuration,
       phases: phases.map(p => ({
@@ -555,12 +555,12 @@ serve(async (req) => {
     const msg = err instanceof Error ? err.message : "Unknown error";
 
     if (msg === "RATE_LIMITED") {
-      return jsonRes({ error: "Rate limited. Try again in 30 seconds." }, 429);
+      return jsonRes(req, { error: "Rate limited. Try again in 30 seconds." }, 429);
     }
     if (msg === "CREDITS_EXHAUSTED") {
-      return jsonRes({ error: "AI credits exhausted." }, 402);
+      return jsonRes(req, { error: "AI credits exhausted." }, 402);
     }
 
-    return jsonRes({ error: msg }, 500);
+    return jsonRes(req, { error: msg }, 500);
   }
 });

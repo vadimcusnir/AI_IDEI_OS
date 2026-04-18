@@ -25,18 +25,18 @@ Deno.serve(async (req) => {
   // Admin auth check
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
-    return jsonResp({ error: "Unauthorized" }, 401);
+    return jsonResp(req, { error: "Unauthorized" }, 401);
   }
   const token = authHeader.replace("Bearer ", "");
   const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
-  if (authErr || !user) return jsonResp({ error: "Unauthorized" }, 401);
+  if (authErr || !user) return jsonResp(req, { error: "Unauthorized" }, 401);
 
   const { data: roleData } = await supabase
     .from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").single();
-  if (!roleData) return jsonResp({ error: "Admin access required" }, 403);
+  if (!roleData) return jsonResp(req, { error: "Admin access required" }, 403);
 
   // Rate limit (user-based, post-auth)
   const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
@@ -51,15 +51,15 @@ Deno.serve(async (req) => {
       case "distribute": return await handleDistribute(supabase);
       case "feedback": return await handleFeedback(supabase);
       case "autoscale": return await handleAutoscale(supabase, LOVABLE_API_KEY);
-      default: return jsonResp({ error: "Invalid action" }, 400);
+      default: return jsonResp(req, { error: "Invalid action" }, 400);
     }
   } catch (err) {
     console.error("domination-engine error:", err);
-    return jsonResp({ error: err instanceof Error ? err.message : "Unknown error" }, 500);
+    return jsonResp(req, { error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });
 
-function jsonResp(data: any, status = 200) {
+function jsonResp(req: Request, data: any, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
@@ -78,7 +78,7 @@ async function handleCapture(supabase: any, apiKey: string | undefined, limit: n
     .order("idea_rank", { ascending: false, nullsFirst: false })
     .limit(limit * 2);
 
-  if (!entities?.length) return jsonResp({ signals_created: 0, pages_generated: 0 });
+  if (!entities?.length) return jsonResp(req, { signals_created: 0, pages_generated: 0 });
 
   // Get existing landing page slugs
   const { data: existingPages } = await supabase
@@ -141,7 +141,7 @@ async function handleCapture(supabase: any, apiKey: string | undefined, limit: n
     }
   }
 
-  return jsonResp({ signals_created: signalsCreated, pages_generated: pagesGenerated, total_entities: entities.length });
+  return jsonResp(req, { signals_created: signalsCreated, pages_generated: pagesGenerated, total_entities: entities.length });
 }
 
 async function generateLandingPage(apiKey: string, entity: any, slug: string) {
@@ -199,7 +199,7 @@ async function handleDistribute(supabase: any) {
     .order("created_at", { ascending: false })
     .limit(50);
 
-  if (!assets?.length) return jsonResp({ distributed: 0 });
+  if (!assets?.length) return jsonResp(req, { distributed: 0 });
 
   const { data: existingDist } = await supabase
     .from("distribution_events").select("asset_id");
@@ -222,7 +222,7 @@ async function handleDistribute(supabase: any) {
     distributed++;
   }
 
-  return jsonResp({ distributed, channels: channels.length });
+  return jsonResp(req, { distributed, channels: channels.length });
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -292,7 +292,7 @@ async function handleFeedback(supabase: any) {
     }, { onConflict: "entity_type,entity_id,metric_date" });
   }
 
-  return jsonResp({ assets_analyzed: Object.keys(assetRevenue).length, services_analyzed: Object.keys(serviceUsage).length, boosted, killed });
+  return jsonResp(req, { assets_analyzed: Object.keys(assetRevenue).length, services_analyzed: Object.keys(serviceUsage).length, boosted, killed });
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -350,7 +350,7 @@ async function handleAutoscale(supabase: any, apiKey: string | undefined) {
     }
   }
 
-  return jsonResp({
+  return jsonResp(req, {
     current_pages: totalPages || 0,
     current_assets: totalAssets || 0,
     weekly_revenue: weeklyRevenue,

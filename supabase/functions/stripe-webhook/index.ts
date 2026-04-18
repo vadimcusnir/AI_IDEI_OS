@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
     if (existing) {
       log("Duplicate event, skipping", { eventId: event.id });
-      return ok({ already_processed: true, event_id: event.id });
+      return ok(req, { already_processed: true, event_id: event.id });
     }
 
     await db.from("stripe_processed_events").insert({
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
 
       if (session.payment_status !== "paid") {
         log("Session not paid, skipping", { id: session.id, status: session.payment_status });
-        return ok();
+        return ok(req);
       }
 
       const userId = session.metadata?.user_id;
@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
 
         if (!subscriptionId) {
           log("No subscription ID in session, skipping tier update");
-          return ok();
+          return ok(req);
         }
 
         // Fetch the subscription to get product info
@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
         const resolvedUserId = userId || await resolveUserByEmail(db, session.customer_email);
         if (!resolvedUserId) {
           log("Cannot resolve user for subscription", { email: session.customer_email });
-          return ok();
+          return ok(req);
         }
 
         if (tierConfig) {
@@ -175,7 +175,7 @@ Deno.serve(async (req) => {
         const resolvedUserId = userId || await resolveUserByEmail(db, session.customer_email);
         if (!resolvedUserId) {
           log("Cannot resolve user for payment", { email: session.customer_email });
-          return ok();
+          return ok(req);
         }
 
         // Determine NEURONS from line items price
@@ -187,12 +187,12 @@ Deno.serve(async (req) => {
 
         if (neurons <= 0) {
           log("Zero neurons calculated, skipping", { amountPaid });
-          return ok();
+          return ok(req);
         }
 
         if (neurons > 100_000) {
           log("Suspiciously high neuron amount, skipping", { neurons, amountPaid });
-          return ok();
+          return ok(req);
         }
 
         const description = `TOPUP: +${neurons} NEURONS — $${amountPaid} (${session.id})`;
@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
 
         if (dupTx) {
           log("Payment credits already added, skipping");
-          return ok({ already_processed: true });
+          return ok(req, { already_processed: true });
         }
 
         // Insert credit transaction
@@ -272,19 +272,19 @@ Deno.serve(async (req) => {
 
       if (!invoice.subscription || invoice.billing_reason === "manual") {
         log("Not a subscription invoice, skipping");
-        return ok();
+        return ok(req);
       }
 
       // Skip initial invoice (already handled in checkout.session.completed)
       if (invoice.billing_reason === "subscription_create") {
         log("Initial subscription invoice — already credited in checkout, skipping");
-        return ok();
+        return ok(req);
       }
 
       const customerEmail = invoice.customer_email;
       if (!customerEmail) {
         log("No customer email on invoice");
-        return ok();
+        return ok(req);
       }
 
       const lineItem = invoice.lines?.data?.[0];
@@ -295,13 +295,13 @@ Deno.serve(async (req) => {
 
       if (!tierConfig) {
         log("Unknown product on invoice, skipping", { productId });
-        return ok();
+        return ok(req);
       }
 
       const resolvedUserId = await resolveUserByEmail(db, customerEmail);
       if (!resolvedUserId) {
         log("User not found for renewal", { customerEmail });
-        return ok();
+        return ok(req);
       }
 
       const description = `RENEWAL: +${tierConfig.neurons} NEURONS — ${tierConfig.label} (${invoice.id})`;
@@ -313,7 +313,7 @@ Deno.serve(async (req) => {
 
       if (dupTx) {
         log("Renewal already processed", { invoiceId: invoice.id });
-        return ok({ already_processed: true });
+        return ok(req, { already_processed: true });
       }
 
       // Credit neurons
@@ -359,7 +359,7 @@ Deno.serve(async (req) => {
       const customer = await stripe.customers.retrieve(customerId);
       if (!customer || (customer as any).deleted) {
         log("Customer deleted", { customerId });
-        return ok();
+        return ok(req);
       }
 
       const email = (customer as Stripe.Customer).email;
@@ -414,7 +414,7 @@ Deno.serve(async (req) => {
       log("Unhandled event type", { type: event.type });
     }
 
-    return ok();
+    return ok(req);
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[stripe-webhook] Unhandled error:", msg);
@@ -456,7 +456,7 @@ async function resolveUserByEmail(db: any, email: string | null | undefined): Pr
   }
 }
 
-function ok(extra?: Record<string, any>) {
+function ok(req: Request, extra?: Record<string, any>) {
   return new Response(JSON.stringify({ received: true, ...extra }), {
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });

@@ -56,7 +56,7 @@ async function callAI(system: string, prompt: string, json = true): Promise<any>
   }
 }
 
-function jsonRes(body: any, status = 200) {
+function jsonRes(req: Request, body: any, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
@@ -72,11 +72,11 @@ serve(async (req) => {
 
   // ═══ AUTH ═══
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader) return jsonRes({ error: "Unauthorized" }, 401);
+  if (!authHeader) return jsonRes(req, { error: "Unauthorized" }, 401);
 
   const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
   const { data: { user }, error: authErr } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
-  if (authErr || !user) return jsonRes({ error: "Invalid token" }, 401);
+  if (authErr || !user) return jsonRes(req, { error: "Invalid token" }, 401);
 
   // Rate limit (user-based, post-auth)
   const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
@@ -89,7 +89,7 @@ serve(async (req) => {
     const user_goal = sanitizeUserInput(rawGoal || "", 2000);
 
     if (!source_content || source_content.trim().length < 50) {
-      return jsonRes({ status: "NO_DATA_AVAILABLE", reason: "Source content too short (min 50 chars)" });
+      return jsonRes(req, { status: "NO_DATA_AVAILABLE", reason: "Source content too short (min 50 chars)" });
     }
 
     // ═══════════════════════════════════════
@@ -99,7 +99,7 @@ serve(async (req) => {
     const safety = await safetyCheck(supabase, user.id);
     if (!safety.allowed) {
       kernel.log("safety_guard", "FAILED", "blocked", { reason: safety.reason });
-      return jsonRes({ status: "BLOCKED", reason: safety.reason, throttle_seconds: safety.throttle_seconds }, 429);
+      return jsonRes(req, { status: "BLOCKED", reason: safety.reason, throttle_seconds: safety.throttle_seconds }, 429);
     }
     kernel.log("safety_guard", "PLANNING", "passed");
 
@@ -138,7 +138,7 @@ serve(async (req) => {
     const economy = await economyPreFlight(supabase, user.id, plan.estimated_cost, userTier);
     if (!economy.allowed) {
       kernel.log("economy_controller", "FAILED", "blocked", { reason: economy.reason, deficit: economy.deficit });
-      return jsonRes({
+      return jsonRes(req, {
         status: "INSUFFICIENT_BALANCE",
         reason: economy.reason,
         estimated_cost: economy.estimated_cost,
@@ -160,7 +160,7 @@ serve(async (req) => {
     });
     if (reserveErr || !reserved) {
       kernel.log("reserve_neurons", "FAILED", "reserve_failed", { error: reserveErr?.message });
-      return jsonRes({ status: "RESERVE_FAILED", reason: "Could not reserve neurons", steps: kernel.getSteps() }, 402);
+      return jsonRes(req, { status: "RESERVE_FAILED", reason: "Could not reserve neurons", steps: kernel.getSteps() }, 402);
     }
     kernel.log("reserve_neurons", "PLANNING", "reserved", { amount: economy.estimated_cost });
 
@@ -549,7 +549,7 @@ Max 10 decisions. Be decisive, not descriptive.`,
       }).catch(() => {}); // non-critical
 
       // FINAL RESPONSE
-      return jsonRes({
+      return jsonRes(req, {
         status: "COMPLETED",
         job_id: job?.id,
         kernel: {
@@ -615,15 +615,15 @@ Max 10 decisions. Be decisive, not descriptive.`,
     const msg = err instanceof Error ? err.message : "Unknown error";
 
     if (msg === "RATE_LIMITED") {
-      return jsonRes({ error: "Rate limited. Try again in 30 seconds.", steps: kernel.getSteps() }, 429);
+      return jsonRes(req, { error: "Rate limited. Try again in 30 seconds.", steps: kernel.getSteps() }, 429);
     }
     if (msg === "CREDITS_EXHAUSTED") {
-      return jsonRes({ error: "AI credits exhausted. Please add funds.", steps: kernel.getSteps() }, 402);
+      return jsonRes(req, { error: "AI credits exhausted. Please add funds.", steps: kernel.getSteps() }, 402);
     }
     if (msg.startsWith("NO_DATA_AVAILABLE")) {
-      return jsonRes({ status: "NO_DATA_AVAILABLE", reason: msg, steps: kernel.getSteps() });
+      return jsonRes(req, { status: "NO_DATA_AVAILABLE", reason: msg, steps: kernel.getSteps() });
     }
 
-    return jsonRes({ error: msg, steps: kernel.getSteps() }, 500);
+    return jsonRes(req, { error: msg, steps: kernel.getSteps() }, 500);
   }
 });
