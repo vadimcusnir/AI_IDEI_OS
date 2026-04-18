@@ -6,6 +6,7 @@ import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { reportError } from "../_shared/error-reporter.ts";
+import { buildBoundedMessages } from "../_shared/prompt-boundary.ts";
 
 const logStep = (step: string, details?: unknown) => {
   console.log(`[ANALYZE-PSYCHOLOGY] ${step}${details ? ` — ${JSON.stringify(details)}` : ""}`);
@@ -235,17 +236,21 @@ serve(async (req) => {
     for (let i = 0; i < modulesToRun.length; i += BATCH_SIZE) {
       const batch = modulesToRun.slice(i, i + BATCH_SIZE);
       const batchResults = await Promise.all(batch.map(async (mod) => {
-        const combinedPrompt = `You are an expert psycholinguistic analyst performing the "${mod.name}" module.
+        const systemPrompt = `You are an expert psycholinguistic analyst performing the "${mod.name}" module.
 
-Analyze the following text and answer ALL of these analysis prompts. Return a single JSON object with your findings.
+Analyze the user-provided text and answer ALL of these analysis prompts. Return a single JSON object with your findings.
 
 ANALYSIS PROMPTS:
 ${mod.prompts.map((p, idx) => `${idx + 1}. ${p}`).join("\n")}
 
-TEXT TO ANALYZE:
-${textSlice}
-
 Return a comprehensive JSON object with scores (0-100), classifications, and confidence intervals where requested. Include a "confidence" field (0-1) for the overall module.`;
+
+        const { messages: boundedMessages } = buildBoundedMessages({
+          system: systemPrompt,
+          userParts: [{ label: "text_to_analyze", content: textSlice, maxLen: 25000 }],
+          alertSourceFn: "analyze-psychology",
+          userId: user.id,
+        });
 
         try {
           const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -256,7 +261,7 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
             },
             body: JSON.stringify({
               model: "google/gemini-2.5-flash",
-              messages: [{ role: "user", content: combinedPrompt }],
+              messages: boundedMessages,
               temperature: 0.3,
               response_format: { type: "json_object" },
             }),
