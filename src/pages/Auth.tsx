@@ -389,8 +389,13 @@ export default function Auth() {
                 onClick={async () => {
                   // Persist redirect target before OAuth redirect (sessionStorage backup for callback)
                   if (redirectTarget) storeRedirect(redirectTarget);
+                  const { trackAuthEvent } = await import("@/lib/authTelemetry");
+                  trackAuthEvent("provider_redirect_started", { provider: "google", redirect_target: redirectTarget });
                   const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-                  if (error) toast.error(t("common:google_signin_error", { message: error.message }));
+                  if (error) {
+                    trackAuthEvent("code_exchange_failed", { provider: "google", error: error.message });
+                    toast.error(t("common:google_signin_error", { message: error.message }));
+                  }
                 }}
                 className="w-full h-12 flex items-center justify-center gap-2.5 rounded-xl border border-border/50 bg-background/60 hover:bg-muted/40 hover:border-[hsl(var(--gold-oxide)/0.25)] transition-all duration-200 text-sm font-medium"
               >
