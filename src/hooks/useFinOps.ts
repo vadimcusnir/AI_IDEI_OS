@@ -84,7 +84,7 @@ export function useFinOps() {
     const [statsRes, healthRes, alertsRes, costsRes] = await Promise.all([
       supabase.rpc("finops_dashboard_stats"),
       supabase.from("provider_health_checks").select("*").order("checked_at", { ascending: false }),
-      supabase.from("admin_alerts").select("*").is("resolved_at", null).order("severity").order("last_seen", { ascending: false }),
+      supabase.from("admin_alerts").select("*").is("resolved_at", null).order("last_seen", { ascending: false }),
       supabase.from("platform_cost_ledger").select("*").order("created_at", { ascending: false }).limit(100),
     ]);
 
