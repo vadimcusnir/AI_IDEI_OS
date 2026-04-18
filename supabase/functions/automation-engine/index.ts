@@ -286,7 +286,7 @@ async function distributeContent(
 
   // Update channel stats
   for (const channelId of parsed.data.channel_ids) {
-    await client.rpc("increment_channel_sends", { p_channel_id: channelId }).catch(() => {});
+    try { await client.rpc("increment_channel_sends", { p_channel_id: channelId }); } catch { /* ignore */ }
   }
 
   return new Response(JSON.stringify({ sends: data }), {

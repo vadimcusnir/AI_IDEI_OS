@@ -877,9 +877,6 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("avatar33-pipeline error:", e);
-    if (!settled && user?.id && totalCost > 0) {
-      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Avatar33 — error` }).catch(() => {});
-    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
