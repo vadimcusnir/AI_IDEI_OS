@@ -113,6 +113,17 @@ export function LandingPricing({ ctaAction, compact = false }: Props) {
             );
           })}
         </div>
+        {compact && (
+          <div className="text-center mt-8">
+            <a
+              href="/pricing"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-gold underline underline-offset-4 decoration-gold/30 hover:decoration-gold transition-colors duration-200"
+            >
+              See all plans
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )}
       </ContentBoundary>
     </section>
   );
