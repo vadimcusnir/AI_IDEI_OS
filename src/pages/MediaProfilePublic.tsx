@@ -5,6 +5,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { Loader2, ExternalLink, Info, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface PublicIndicator {
   name: string;
@@ -256,7 +257,7 @@ export default function MediaProfilePublic() {
       {/* JSON-LD structured data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd as Record<string, unknown>) }}
       />
     </div>
   );

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface AnalysisData {
   id: string;
@@ -160,7 +161,7 @@ export default function PublicAnalysis() {
       {/* Breadcrumb JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbLd as Record<string, unknown>) }}
       />
 
 

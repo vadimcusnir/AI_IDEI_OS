@@ -4,6 +4,7 @@ import { DOCS_SECTIONS, TOPIC_CONTENT } from "./docsContent";
 import { DocsMarkdownRenderer } from "./DocsMarkdownRenderer";
 import { SEOHead } from "@/components/SEOHead";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface Props {
   section: string;
@@ -84,7 +85,7 @@ export default function DocsTopic({ section, topic }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "TechArticle",
             headline: content.title,

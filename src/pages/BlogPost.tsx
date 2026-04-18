@@ -15,6 +15,7 @@ import { ReactionBar } from "@/components/blog/ReactionBar";
 import { CommentsSection } from "@/components/blog/CommentsSection";
 import { NewsletterCTA } from "@/components/blog/NewsletterCTA";
 import { useEffect, useState, type ReactNode } from "react";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 /* ── Utility: extract first paragraph as lead/summary ── */
 function extractLead(content: string): { lead: string; rest: string } {
@@ -344,11 +345,11 @@ export default function BlogPost() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd as Record<string, unknown>) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbLd as Record<string, unknown>) }}
       />
 
       <div className="min-h-screen bg-background">

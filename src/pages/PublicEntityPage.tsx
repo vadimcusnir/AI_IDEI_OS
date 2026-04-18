@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, BookOpen, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface PublicEntity {
   id: string;
@@ -113,7 +114,7 @@ export default function PublicEntityPage() {
       {/* Inject JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd as Record<string, unknown>) }}
       />
 
       {/* Minimal navigation bar */}
