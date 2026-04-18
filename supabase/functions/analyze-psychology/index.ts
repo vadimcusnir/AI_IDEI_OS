@@ -249,7 +249,7 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
           system: systemPrompt,
           userParts: [{ label: "text_to_analyze", content: textSlice, maxLen: 25000 }],
           alertSourceFn: "analyze-psychology",
-          userId: user.id,
+          userId,
         });
 
         try {
