@@ -119,6 +119,23 @@ export function AuthFlowMonitor() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 max-h-[600px] overflow-y-auto">
+        {alerts.length > 0 && (
+          <div className="space-y-2 mb-2">
+            {alerts.map(a => (
+              <div key={a.id} className="border border-destructive/40 bg-destructive/10 rounded-lg p-3 text-xs">
+                <div className="flex items-center gap-2 font-medium text-destructive">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  {a.title}
+                  {a.occurrences && a.occurrences > 1 && (
+                    <Badge variant="destructive" className="ml-auto">×{a.occurrences}</Badge>
+                  )}
+                </div>
+                {a.description && <p className="text-muted-foreground mt-1">{a.description}</p>}
+                <p className="text-muted-foreground mt-1">Last seen: {new Date(a.last_seen).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        )}
         {flows.size === 0 && (
           <p className="text-sm text-muted-foreground text-center py-8">No auth events recorded yet.</p>
         )}
