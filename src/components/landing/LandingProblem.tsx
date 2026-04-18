@@ -20,18 +20,12 @@ export function LandingProblem() {
                 {t("problem.before_title")}
               </h2>
               <div className="space-y-4 text-body text-muted-foreground leading-relaxed max-w-md">
-                <p>{t("problem.before_p1")}</p>
-                <p className="font-semibold text-foreground">{t("problem.before_p2")}</p>
-                <div className="pl-4 border-l-2 border-signal-red/20 space-y-2.5 text-caption text-muted-foreground py-3">
-                  <p>{t("problem.before_q1")}</p>
-                  <p>{t("problem.before_q2")}</p>
-                  <p>{t("problem.before_q3")}</p>
-                </div>
+                <p>{t("problem.before_p2")}</p>
               </div>
-              <div className="mt-8 grid grid-cols-2 gap-3">
+              <div className="mt-8 space-y-3">
                 {beforeItems.map(item => (
-                  <div key={item} className="flex items-center gap-2.5 text-caption text-muted-foreground">
-                    <div className="h-1.5 w-1.5 rounded-full bg-signal-red/35 shrink-0" />
+                  <div key={item} className="flex items-center gap-3 text-caption text-muted-foreground">
+                    <div className="h-1.5 w-1.5 rounded-full bg-signal-red/40 shrink-0" />
                     {item}
                   </div>
                 ))}

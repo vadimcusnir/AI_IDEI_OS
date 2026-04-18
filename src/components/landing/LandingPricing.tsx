@@ -10,15 +10,20 @@ const FEATURED_INDEX = 2; // Pro plan
 
 interface Props {
   ctaAction: () => void;
+  /** When true, only show Free + Pro (compact for /home). Default false = full grid. */
+  compact?: boolean;
 }
 
-export function LandingPricing({ ctaAction }: Props) {
+export function LandingPricing({ ctaAction, compact = false }: Props) {
   const { t } = useTranslation("landing");
   const [interval, setInterval] = useState<"month" | "year">("month");
 
-  const plans = t("pricing.plans", { returnObjects: true }) as Array<{
+  const allPlans = t("pricing.plans", { returnObjects: true }) as Array<{
     name: string; price: string; priceAnnual?: string; period: string; promise: string; text: string; cta: string;
   }>;
+  // Compact: Free (idx 0) + Pro (idx 2). Full: all 4.
+  const plans = compact ? [allPlans[0], allPlans[2]].filter(Boolean) : allPlans;
+  const featuredIndex = compact ? 1 : FEATURED_INDEX;
 
   return (
     <section id="access" className="py-32 sm:py-44" aria-labelledby="pricing-heading">
@@ -58,9 +63,12 @@ export function LandingPricing({ ctaAction }: Props) {
           </button>
         </FadeInView>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/50 rounded-xl overflow-hidden max-w-4xl mx-auto">
+        <div className={cn(
+          "grid grid-cols-1 gap-px bg-border/50 rounded-xl overflow-hidden mx-auto",
+          compact ? "md:grid-cols-2 max-w-2xl" : "md:grid-cols-2 lg:grid-cols-4 max-w-4xl"
+        )}>
           {plans.map((plan, i) => {
-            const featured = i === FEATURED_INDEX;
+            const featured = i === featuredIndex;
             const displayPrice = interval === "year" && plan.priceAnnual
               ? plan.priceAnnual
               : plan.price;
