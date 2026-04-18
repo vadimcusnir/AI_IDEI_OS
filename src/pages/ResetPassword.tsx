@@ -7,6 +7,7 @@ import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { trackAuthEvent, resetCorrelationId } from "@/lib/authTelemetry";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -19,9 +20,24 @@ export default function ResetPassword() {
 
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    if (hashParams.get("type") === "recovery") setIsRecovery(true);
+    const hashType = hashParams.get("type");
+    const hasError = hashParams.get("error") || hashParams.get("error_code");
+    if (hashType === "recovery") {
+      setIsRecovery(true);
+      trackAuthEvent("callback_received", { source: "reset_password_hash", type: "recovery" });
+    }
+    if (hasError) {
+      trackAuthEvent("auth_error_normalized", {
+        source: "reset_password_hash",
+        error: hashParams.get("error_description") || hasError,
+      });
+      toast.error(hashParams.get("error_description") || "Recovery link invalid or expired");
+    }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") setIsRecovery(true);
+      if (event === "PASSWORD_RECOVERY") {
+        setIsRecovery(true);
+        trackAuthEvent("callback_received", { source: "auth_state_change", type: "PASSWORD_RECOVERY" });
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -52,6 +68,8 @@ export default function ResetPassword() {
 
       setSuccess(true);
       toast.success(t("reset_password.success_toast"));
+      trackAuthEvent("logout_completed", { source: "password_reset_global" });
+      resetCorrelationId();
 
       // Sign out all sessions after password reset for security
       await supabase.auth.signOut({ scope: "global" });
