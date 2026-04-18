@@ -153,13 +153,36 @@
     "dismiss": "Закрыть"
   },
   "mechanism_example": {
-    "step1_input": "голос.m4a",
     "step1_caption": "Загрузите что угодно",
     "step2_caption": "AI извлекает за 90с",
-    "step2_items": ["12 атомарных нейронов", "3 фреймворка", "1 карта аудитории", "8 хуков"],
     "step3_caption": "Активы готовы к публикации",
-    "step3_items": ["Пост LinkedIn", "Email-серия", "Лендинг-копи", "Thread Twitter"],
-    "cta": "Попробуйте со своим входом →"
+    "cta": "Попробуйте со своим входом →",
+    "tabs_label": "Выберите тип источника",
+    "tabs": {
+      "voice": "Голосовая заметка",
+      "doc": "Документ",
+      "link": "Ссылка / URL"
+    },
+    "variants": {
+      "voice": {
+        "input_filename": "голос.m4a",
+        "input_meta": "2:34 · 1.8 MB",
+        "step2_items": ["12 атомарных нейронов", "3 фреймворка", "1 карта аудитории", "8 хуков"],
+        "step3_items": ["Пост LinkedIn", "Email-серия", "Лендинг-копи", "Thread Twitter"]
+      },
+      "doc": {
+        "input_filename": "стратегия.pdf",
+        "input_meta": "24 стр · 4.2 MB",
+        "step2_items": ["28 атомарных нейронов", "5 фреймворков", "2 ICP-профиля", "Карта конкурентов"],
+        "step3_items": ["Sales one-pager", "План вебинара", "5 email-цепочка", "Pitch deck"]
+      },
+      "link": {
+        "input_filename": "youtube.com/watch?v=…",
+        "input_meta": "47:12 · транскрипт авто",
+        "step2_items": ["41 атомарный нейрон", "7 фреймворков", "12 цитат-хуков", "Граф тем"],
+        "step3_items": ["Статья в блог", "Thread Twitter", "Выпуск рассылки", "Заметки подкаста"]
+      }
+    }
   },
   "output_galaxy": {
     "label": "ВСЕЛЕННАЯ РЕЗУЛЬТАТОВ",
