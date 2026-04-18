@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { consumeRedirect } from "@/lib/authRedirect";
+import { trackAuthEvent } from "@/lib/authTelemetry";
 
 export function PostAuthRedirector() {
   const navigate = useNavigate();
@@ -19,16 +20,20 @@ export function PostAuthRedirector() {
   const handled = useRef(false);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
+        trackAuthEvent("session_created", { source: "auth_state_change", user_id: session.user.id });
+      }
       // Only act on SIGNED_IN and only once per mount cycle
       if (event !== "SIGNED_IN" || handled.current) return;
-      
+
       // Don't interfere if user is already on /auth (Auth.tsx handles it)
       if (location.pathname === "/auth") return;
-      
+
       const pending = consumeRedirect();
       if (pending && pending !== location.pathname) {
         handled.current = true;
+        trackAuthEvent("post_login_redirect_completed", { source: "PostAuthRedirector", target: pending });
         // Small delay to let auth state propagate
         setTimeout(() => navigate(pending, { replace: true }), 100);
       }
