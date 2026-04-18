@@ -168,6 +168,7 @@ export type Database = {
           impact_scope: string | null
           last_seen: string
           metadata: Json | null
+          notified_at: string | null
           occurrences: number | null
           provider_key: string | null
           recommended_action: string | null
@@ -188,6 +189,7 @@ export type Database = {
           impact_scope?: string | null
           last_seen?: string
           metadata?: Json | null
+          notified_at?: string | null
           occurrences?: number | null
           provider_key?: string | null
           recommended_action?: string | null
@@ -208,6 +210,7 @@ export type Database = {
           impact_scope?: string | null
           last_seen?: string
           metadata?: Json | null
+          notified_at?: string | null
           occurrences?: number | null
           provider_key?: string | null
           recommended_action?: string | null
@@ -15936,6 +15939,12 @@ export type Database = {
           pipeline_class: string
           preview_enabled: boolean
           service_key: string
+        }[]
+      }
+      get_admin_emails: {
+        Args: never
+        Returns: {
+          email: string
         }[]
       }
       get_capacity_status: {
