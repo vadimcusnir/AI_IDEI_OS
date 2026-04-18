@@ -210,6 +210,22 @@ serve(async (req) => {
     const totalPrompts = modulesToRun.reduce((sum, m) => sum + m.prompts.length, 0);
     logStep("Pipeline config", { tier, modules: modulesToRun.length, prompts: totalPrompts });
 
+    // ─── F-006: BILLING RESERVATION (audit hard finding) ───
+    // Pricing: 2 NEURONI per module (free=4 modules=8N, premium=10 modules=20N)
+    const reserveAmount = modulesToRun.length * 2;
+    const billingJobId = crypto.randomUUID();
+    const { data: reserveOk, error: reserveErr } = await supabase
+      .rpc("wallet_reserve", { _user_id: userId, _amount: reserveAmount, _job_id: billingJobId, _description: `analyze-psychology[${tier}]` });
+    if (reserveErr || reserveOk === false) {
+      logStep("Insufficient credits", { needed: reserveAmount, error: reserveErr?.message });
+      return new Response(JSON.stringify({
+        error: "Insufficient credits",
+        needed: reserveAmount,
+        message: `This analysis requires ${reserveAmount} NEURONS. Top up your balance.`,
+      }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    }
+    logStep("Credits reserved", { amount: reserveAmount, billingJobId });
+
     // ── Run pipeline: batch modules, each module's prompts run as a single mega-prompt ──
     const textSlice = analysisText.slice(0, tier === "premium" ? 25000 : 15000);
     const moduleResults: Record<string, any> = {};
