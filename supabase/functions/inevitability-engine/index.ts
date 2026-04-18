@@ -8,7 +8,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-function jsonResp(data: any, status = 200) {
+function jsonResp(req: Request, data: any, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },

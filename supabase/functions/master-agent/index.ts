@@ -56,7 +56,7 @@ async function callAI(system: string, prompt: string, json = true): Promise<any>
   }
 }
 
-function jsonRes(body: any, status = 200) {
+function jsonRes(req: Request, body: any, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
