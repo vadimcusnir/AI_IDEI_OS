@@ -3,6 +3,7 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { clearRedirect } from "@/lib/authRedirect";
 import { setSentryUser } from "@/lib/sentry";
+import { trackAuthEvent, resetCorrelationId } from "@/lib/authTelemetry";
 
 interface AuthContextType {
   user: User | null;
@@ -46,15 +47,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setInitialized(true);
     });
 
-    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: existingSession }, error }) => {
       if (!mounted) return;
-      setSession(existingSession);
-      setUser(existingSession?.user ?? null);
+      // Bad JWT auto-recovery — clear the corrupt token so the user can log in cleanly
+      if (error && /jwt|sub claim|invalid/i.test(error.message)) {
+        console.warn("[AuthProvider] Corrupt session detected — purging:", error.message);
+        trackAuthEvent("bad_jwt_recovered", { error: error.message });
+        try { await supabase.auth.signOut(); } catch {}
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(existingSession);
+        setUser(existingSession?.user ?? null);
+        if (existingSession?.user) trackAuthEvent("session_created", { source: "restore", user_id: existingSession.user.id });
+      }
       setLoading(false);
       setInitialized(true);
     }).catch((err) => {
       if (!mounted) return;
       console.error("[AuthProvider] getSession failed:", err);
+      trackAuthEvent("session_restore_failed", { error: String(err?.message || err) });
       setLoading(false);
       setInitialized(true);
     });
@@ -105,6 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     clearRedirect();
+    trackAuthEvent("logout_completed");
+    resetCorrelationId();
     await supabase.auth.signOut();
   }, []);
 

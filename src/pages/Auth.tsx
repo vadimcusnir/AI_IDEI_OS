@@ -106,7 +106,11 @@ export default function Auth() {
   // Redirect post-auth — în useEffect pentru a evita race conditions cu PostAuthRedirector
   useEffect(() => {
     if (user) {
-      navigate(redirectTarget || "/home", { replace: true });
+      const target = redirectTarget || "/home";
+      import("@/lib/authTelemetry").then(({ trackAuthEvent }) =>
+        trackAuthEvent("post_login_redirect_completed", { source: "Auth.tsx", target })
+      );
+      navigate(target, { replace: true });
     }
   }, [user, redirectTarget, navigate]);
   if (user) return null;
