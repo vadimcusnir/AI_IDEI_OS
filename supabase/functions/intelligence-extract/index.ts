@@ -7,6 +7,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
@@ -140,6 +141,10 @@ Deno.serve(async (req) => {
     }
   } catch (err) {
     console.error("intelligence-extract error:", err);
+    await reportError(err, {
+      functionName: "intelligence-extract",
+      alert: { severity: "high", serviceKey: "intelligence-extract", impactScope: "competitor/market/positioning analysis", recommendedAction: "Verify release_neurons rollback fired; check AI provider response." },
+    });
     return jsonResp(req, { error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });

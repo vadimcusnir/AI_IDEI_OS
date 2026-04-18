@@ -8,6 +8,7 @@ import { InviteEmail } from '../_shared/email-templates/invite.tsx'
 import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
 import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
+import { reportError } from '../_shared/error-reporter.ts'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
 
 import { getCorsHeaders } from '../_shared/cors.ts';
@@ -301,6 +302,11 @@ Deno.serve(async (req) => {
     return await handleWebhook(req)
   } catch (error) {
     console.error('Webhook handler error:', error)
+    // Wave 5 — auth emails CRITICAL (broken signup/recovery = no users)
+    await reportError(error, {
+      functionName: 'auth-email-hook',
+      alert: { severity: 'critical', serviceKey: 'auth-emails', impactScope: 'signup/invite/magic-link/recovery/email-change delivery', recommendedAction: 'Check Resend/email provider status, verify webhook signature secret.' },
+    })
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },

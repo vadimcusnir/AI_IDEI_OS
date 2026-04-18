@@ -1,4 +1,5 @@
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 /**
  * DECISION ENGINE — Sequential Pipeline
  * 
@@ -561,6 +562,11 @@ serve(async (req) => {
       return jsonRes(req, { error: "AI credits exhausted." }, 402);
     }
 
+    // Wave 5 — alert only on real failures (skip rate-limit/credit-exhaustion = expected)
+    await reportError(err, {
+      functionName: "decision-engine",
+      alert: { severity: "high", serviceKey: "decision-engine", impactScope: "OBSERVE→VALIDATE→AUDIT→CONVERSION→DECISION pipeline", recommendedAction: "Inspect phase outputs, verify AI provider response shapes." },
+    });
     return jsonRes(req, { error: msg }, 500);
   }
 });
