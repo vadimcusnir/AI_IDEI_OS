@@ -5,6 +5,7 @@ import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 
 const logStep = (step: string, details?: unknown) => {
   console.log(`[ANALYZE-PSYCHOLOGY] ${step}${details ? ` — ${JSON.stringify(details)}` : ""}`);
@@ -393,7 +394,27 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
       }
     } catch (refundErr) {
       logStep("REFUND FAILED", { error: String(refundErr) });
+      // Wave 4 — refund failure is CRITICAL (user charged, no result)
+      await reportError(refundErr, {
+        functionName: "analyze-psychology",
+        alert: {
+          severity: "critical",
+          serviceKey: "billing-refund",
+          impactScope: "user charged but pipeline failed and refund did not execute",
+          recommendedAction: "Manually issue wallet_refund RPC for affected billingJobId.",
+        },
+      });
     }
+    // Wave 4 — proactive alerting (HIGH: paid AI pipeline)
+    await reportError(error, {
+      functionName: "analyze-psychology",
+      alert: {
+        severity: "high",
+        serviceKey: "psychology-analysis",
+        impactScope: "psychology module pipeline (8 modules)",
+        recommendedAction: "Check Lovable AI Gateway status and module prompt validity.",
+      },
+    });
     return new Response(JSON.stringify({ error: msg }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,

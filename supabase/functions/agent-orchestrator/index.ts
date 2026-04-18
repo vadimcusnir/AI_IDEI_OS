@@ -2,6 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 
 /*
  * Agent Orchestrator v2 — chains 4 specialized pipeline agents:
@@ -349,6 +350,16 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("agent-orchestrator error:", e);
+    // Wave 4 — proactive alerting (HIGH: AI pipeline orchestrator)
+    await reportError(e, {
+      functionName: "agent-orchestrator",
+      alert: {
+        severity: "high",
+        serviceKey: "ai-pipeline",
+        impactScope: "extract/structure/generate/monetize stages",
+        recommendedAction: "Check stage results in dead-letter logs, verify AI provider quotas.",
+      },
+    });
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
