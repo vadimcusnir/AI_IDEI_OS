@@ -108,7 +108,7 @@ Deno.serve(async (req: Request) => {
 
 // ═══ Create Job ═══
 async function createJob(
-  client: ReturnType<typeof createClient>,
+  client: any,
   userId: string,
   body: unknown,
   headers: Record<string, string>,
@@ -155,7 +155,7 @@ async function createJob(
 
 // ═══ Trigger Job Manually ═══
 async function triggerJob(
-  client: ReturnType<typeof createClient>,
+  client: any,
   userId: string,
   body: unknown,
   headers: Record<string, string>,
@@ -207,7 +207,7 @@ async function triggerJob(
 
 // ═══ Process Due Jobs (Cron) ═══
 async function processDueJobs(
-  client: ReturnType<typeof createClient>,
+  client: any,
   headers: Record<string, string>,
 ) {
   const now = new Date().toISOString();
@@ -252,7 +252,7 @@ async function processDueJobs(
 
 // ═══ Distribute Content ═══
 async function distributeContent(
-  client: ReturnType<typeof createClient>,
+  client: any,
   userId: string,
   body: unknown,
   headers: Record<string, string>,
@@ -296,7 +296,7 @@ async function distributeContent(
 
 // ═══ Async Job Execution ═══
 async function executeJobAsync(
-  client: ReturnType<typeof createClient>,
+  client: any,
   job: { id: string; job_type: string; config: Record<string, unknown>; service_unit_id?: string | null },
   runId: string,
   userId: string,
