@@ -2894,6 +2894,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          idempotency_key: string | null
           job_id: string | null
           service_key: string | null
           type: string
@@ -2904,6 +2905,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          idempotency_key?: string | null
           job_id?: string | null
           service_key?: string | null
           type?: string
@@ -2914,6 +2916,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          idempotency_key?: string | null
           job_id?: string | null
           service_key?: string | null
           type?: string
