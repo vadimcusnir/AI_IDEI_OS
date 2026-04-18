@@ -15979,6 +15979,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_public_landing_stats: { Args: never; Returns: Json }
       get_public_profile:
         | { Args: { _username: string }; Returns: Json }
         | {

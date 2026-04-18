@@ -26,22 +26,14 @@ import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingProofBand } from "@/components/landing/LandingProofBand";
 import { LandingProblem } from "@/components/landing/LandingProblem";
 
-/* ── Below-the-fold (lazy-loaded for smaller initial bundle) ── */
+/* ── Below-the-fold (lazy-loaded) — TRIMMED to 8 sections post-PRM-0101 ── */
 const LandingMechanism = lazy(() => import("@/components/landing/LandingMechanism").then(m => ({ default: m.LandingMechanism })));
-const TransformationDiagram = lazy(() => import("@/components/landing/TransformationDiagram").then(m => ({ default: m.TransformationDiagram })));
-const LandingWhatYouGet = lazy(() => import("@/components/landing/LandingWhatYouGet").then(m => ({ default: m.LandingWhatYouGet })));
 const LandingOutputGalaxy = lazy(() => import("@/components/landing/LandingOutputGalaxy").then(m => ({ default: m.LandingOutputGalaxy })));
-const LandingControlSurface = lazy(() => import("@/components/landing/LandingControlSurface").then(m => ({ default: m.LandingControlSurface })));
-const LandingWhoFor = lazy(() => import("@/components/landing/LandingWhoFor").then(m => ({ default: m.LandingWhoFor })));
 const LandingWhyDifferent = lazy(() => import("@/components/landing/LandingWhyDifferent").then(m => ({ default: m.LandingWhyDifferent })));
-const LandingBenefits = lazy(() => import("@/components/landing/LandingBenefits").then(m => ({ default: m.LandingBenefits })));
-const LandingSocialProof = lazy(() => import("@/components/landing/LandingSocialProof").then(m => ({ default: m.LandingSocialProof })));
-const EcosystemMap = lazy(() => import("@/components/landing/EcosystemMap").then(m => ({ default: m.EcosystemMap })));
-const LandingTranscribeCTA = lazy(() => import("@/components/landing/LandingTranscribeCTA").then(m => ({ default: m.LandingTranscribeCTA })));
 const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").then(m => ({ default: m.LandingPricing })));
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
-const LandingKnowledgeShowcase = lazy(() => import("@/components/landing/LandingKnowledgeShowcase").then(m => ({ default: m.LandingKnowledgeShowcase })));
 const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ").then(m => ({ default: m.LandingFAQ })));
+const StickyCtaBar = lazy(() => import("@/components/landing/StickyCtaBar").then(m => ({ default: m.StickyCtaBar })));
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 
 // FAQ items needed for JSON-LD — extracted statically to avoid loading the component
@@ -297,33 +289,33 @@ export default function Landing() {
         </AnimatePresence>
       </header>
 
-      {/* ═══ SECTIONS ═══ */}
+      {/* ═══ SECTIONS — 8 blocks per PRM-0101 target architecture ═══ */}
       <main id="main-content" role="main">
-      <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
-      <LandingProofBand />
-      <LandingProblem />
-      <div className="gold-divider" />
-      <Suspense fallback={<div className="min-h-[2400px]" />}>
-        <LandingMechanism />
-        <TransformationDiagram />
-        <LandingWhatYouGet />
-        <LandingKnowledgeShowcase />
-        <LandingOutputGalaxy />
-        <LandingControlSurface />
-        <LandingWhoFor />
+        {/* 1. HERO (anchored, live trust line) */}
+        <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
+        {/* 2. PROOF BAND (real DB metrics) */}
+        <LandingProofBand />
+        {/* 3. PROBLEM FRAME (trimmed 6→3) */}
+        <LandingProblem />
         <div className="gold-divider" />
-        <LandingWhyDifferent />
-        <LandingBenefits />
-        <LandingSocialProof />
-        <EcosystemMap />
-        <LandingTranscribeCTA />
-        <LandingPricing ctaAction={ctaAction} />
-        <LandingFAQ />
-        <LandingFinalCTA ctaAction={ctaAction} />
-      </Suspense>
+        <Suspense fallback={<div className="min-h-[1200px]" />}>
+          {/* 4. MECHANISM (3 concrete steps with example) */}
+          <LandingMechanism />
+          {/* 5. OUTPUTS */}
+          <LandingOutputGalaxy />
+          {/* 6. WHY DIFFERENT (moved up from #11) */}
+          <LandingWhyDifferent />
+          {/* 7. PRICING TEASER (compact: Free + Pro) */}
+          <LandingPricing ctaAction={ctaAction} compact />
+          <LandingFAQ />
+          {/* 8. FINAL CTA */}
+          <LandingFinalCTA ctaAction={ctaAction} />
+        </Suspense>
       </main>
       <Suspense fallback={<div className="h-64 bg-background" />}>
         <Footer variant="landing" />
+        {/* Sticky CTA — appears 30%-92% scroll, dismissible per session */}
+        <StickyCtaBar ctaAction={ctaAction} />
       </Suspense>
 
       <OrganizationJsonLd />

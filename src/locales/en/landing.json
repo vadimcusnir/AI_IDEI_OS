@@ -1,17 +1,17 @@
 {
   "nav": {
     "knowledge_os": "Knowledge OS",
-    "how_it_works": "How It Works",
+    "how_it_works": "How it works",
     "capabilities": "Capabilities",
     "use_cases": "Use Cases",
     "docs": "Docs",
     "dashboard": "Dashboard",
-    "login": "Login",
-    "start_free": "Start Free",
-    "mechanism": "Mechanism",
+    "login": "Sign in",
+    "start_free": "Start free",
+    "mechanism": "How it works",
     "outputs": "Outputs",
-    "control": "Control",
-    "access": "Access"
+    "control": "Pricing",
+    "access": "Sign in"
   },
   "seo": {
     "title": "AI-IDEI — Knowledge Extraction Operating System",
@@ -19,12 +19,13 @@
   },
   "hero": {
     "tagline": "KNOWLEDGE EXTRACTION ENGINE",
-    "title_prefix": "The Really Closest Thing To A",
+    "title_prefix": "The",
     "title_highlight": "Magic Button",
-    "title_suffix": "For Copywriting And Marketing Work",
-    "subtitle": "Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution — powered by a knowledge extraction OS built for commercial output.",
-    "cta_start": "Start Free",
-    "cta_mechanism": "See the Mechanism"
+    "title_suffix": "for marketing.",
+    "subtitle": "One upload — voice note, doc, or link — becomes 50+ ready-to-publish assets in under 2 minutes.",
+    "cta_start": "Start free — no card",
+    "cta_mechanism": "See how it works ↓",
+    "trust_template": "{{neurons}} neurons · {{episodes}} episodes · {{services}} AI services live"
   },
   "problem": {
     "before_label": "BEFORE",
@@ -34,7 +35,7 @@
     "before_q1": "You open another AI tool. You test random prompts.",
     "before_q2": "You save interesting things. You try to write.",
     "before_q3": "You restart. You overthink. You lose momentum.",
-    "before_items": ["too many ideas", "weak positioning", "slow writing", "unclear offers", "inconsistent content", "scattered execution"],
+    "before_items": ["slow writing", "weak positioning", "scattered execution"],
     "after_label": "AFTER",
     "after_title": "AI-IDEI closes that gap.",
     "after_p1": "It helps you turn raw thinking into usable copy, structured content, stronger messaging, and faster marketing output.",
@@ -138,12 +139,27 @@
     ]
   },
   "proof_band": {
-    "stats": [
-      { "value": "50+", "label": "Deliverables per upload" },
-      { "value": "12", "label": "Output families" },
-      { "value": "\u221e", "label": "Knowledge reuse" },
-      { "value": "<2min", "label": "Idea to asset" }
-    ]
+    "label": "REAL PLATFORM METRICS · LIVE",
+    "labels": {
+      "neurons": "Neurons extracted",
+      "episodes": "Episodes processed",
+      "services": "AI services live",
+      "articles": "Knowledge articles"
+    }
+  },
+  "sticky_cta": {
+    "label": "Ready to try?",
+    "cta": "Start free →",
+    "dismiss": "Dismiss"
+  },
+  "mechanism_example": {
+    "step1_input": "voice-note.m4a",
+    "step1_caption": "Upload anything",
+    "step2_caption": "AI extracts in 90s",
+    "step2_items": ["12 atomic neurons", "3 frameworks", "1 audience map", "8 angle hooks"],
+    "step3_caption": "Publish-ready assets",
+    "step3_items": ["LinkedIn post", "Email sequence", "Landing copy", "Twitter thread"],
+    "cta": "Try with your own input →"
   },
   "output_galaxy": {
     "label": "OUTPUT UNIVERSE",
