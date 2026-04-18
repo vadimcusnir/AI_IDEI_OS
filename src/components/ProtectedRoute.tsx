@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { Loader2 } from "lucide-react";
 import { storeRedirect } from "@/lib/authRedirect";
+import { trackAuthEvent } from "@/lib/authTelemetry";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -26,7 +27,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (!user) {
     // Preserve intended destination for post-auth redirect
-    storeRedirect(location.pathname + location.search + location.hash);
+    const target = location.pathname + location.search + location.hash;
+    storeRedirect(target);
+    trackAuthEvent("guard_redirect_triggered", { reason: "unauthenticated", from: target, to: "/auth" });
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
@@ -35,6 +38,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (!isExempt && !flags.checklist_completed) {
     const target = location.pathname + location.search + location.hash;
     const onboardingUrl = `/onboarding?redirect=${encodeURIComponent(target)}`;
+    trackAuthEvent("guard_redirect_triggered", { reason: "onboarding_incomplete", from: target, to: onboardingUrl });
     return <Navigate to={onboardingUrl} replace />;
   }
 
