@@ -1,6 +1,7 @@
 import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 
 // Product → tier mapping (must match economyConfig.ts SUBSCRIPTION_TIERS)
 const PRODUCT_TIERS: Record<string, { tier: string; neurons: number; label: string }> = {
@@ -418,6 +419,17 @@ Deno.serve(async (req) => {
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[stripe-webhook] Unhandled error:", msg);
+    // Wave 4 — proactive alerting (CRITICAL: payment processing)
+    await reportError(error, {
+      functionName: "stripe-webhook",
+      alert: {
+        severity: "critical",
+        serviceKey: "payment",
+        providerKey: "stripe",
+        impactScope: "billing/subscriptions/credits",
+        recommendedAction: "Verify Stripe webhook secret, check provider dashboard for failed events, replay if needed.",
+      },
+    });
     return new Response(JSON.stringify({ error: "Webhook processing failed" }), {
       status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
