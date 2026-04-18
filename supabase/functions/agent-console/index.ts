@@ -463,7 +463,13 @@ Deno.serve(async (req) => {
 
     // If model wants tools
     if (choice?.finish_reason === "tool_calls" || choice?.message?.tool_calls?.length > 0) {
-      const toolCalls = choice.message.tool_calls;
+      // ─── F-008: cap tool execution to prevent unbounded drain ───
+      const MAX_TOOL_CALLS_PER_REQUEST = 8;
+      const toolCallsRaw = choice.message.tool_calls || [];
+      if (toolCallsRaw.length > MAX_TOOL_CALLS_PER_REQUEST) {
+        console.warn(`[agent] F-008 cap: model requested ${toolCallsRaw.length} tools, capped to ${MAX_TOOL_CALLS_PER_REQUEST}`);
+      }
+      const toolCalls = toolCallsRaw.slice(0, MAX_TOOL_CALLS_PER_REQUEST);
       apiMessages.push(choice.message);
 
       for (const tc of toolCalls) {
