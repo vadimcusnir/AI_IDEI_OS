@@ -25,17 +25,17 @@ Deno.serve(async (req) => {
 
   // Admin auth
   const authHeader = req.headers.get("authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) return jsonResp({ error: "Unauthorized" }, 401);
+  if (!authHeader.startsWith("Bearer ")) return jsonResp(req, { error: "Unauthorized" }, 401);
   const token = authHeader.replace("Bearer ", "");
   const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
-  if (authErr || !user) return jsonResp({ error: "Unauthorized" }, 401);
+  if (authErr || !user) return jsonResp(req, { error: "Unauthorized" }, 401);
 
   const { data: roleData } = await supabase
     .from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").single();
-  if (!roleData) return jsonResp({ error: "Admin access required" }, 403);
+  if (!roleData) return jsonResp(req, { error: "Admin access required" }, 403);
 
   // Rate limit (user-based, post-auth)
   const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
@@ -50,11 +50,11 @@ Deno.serve(async (req) => {
       case "update_rankings": return await updateRankings(supabase);
       case "snapshot_metrics": return await snapshotMetrics(supabase);
       case "auto_evolve": return await autoEvolve(supabase);
-      default: return jsonResp({ error: "Invalid action" }, 400);
+      default: return jsonResp(req, { error: "Invalid action" }, 400);
     }
   } catch (err) {
     console.error("inevitability-engine error:", err);
-    return jsonResp({ error: err instanceof Error ? err.message : "Unknown error" }, 500);
+    return jsonResp(req, { error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });
 
@@ -119,7 +119,7 @@ async function computeLockIn(supabase: any) {
     updated++;
   }
 
-  return jsonResp({ users_processed: updated });
+  return jsonResp(req, { users_processed: updated });
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -196,7 +196,7 @@ async function updateRankings(supabase: any) {
     updated++;
   }
 
-  return jsonResp({ creators_ranked: updated });
+  return jsonResp(req, { creators_ranked: updated });
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -269,7 +269,7 @@ async function snapshotMetrics(supabase: any) {
     avg_lock_in_score: Math.round(avgLockIn * 100) / 100,
   }, { onConflict: "metric_date" });
 
-  return jsonResp({
+  return jsonResp(req, {
     metric_date: today,
     total_users: totalUsers || 0,
     active_users_7d: activeUsers7d,
@@ -332,5 +332,5 @@ async function autoEvolve(supabase: any) {
     actions.push(`service_activated:${svc.service_key}`);
   }
 
-  return jsonResp({ actions_taken: actions.length, actions });
+  return jsonResp(req, { actions_taken: actions.length, actions });
 }
