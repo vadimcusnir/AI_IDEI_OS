@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { trackAuthEvent } from "@/lib/authTelemetry";
 
 type AuthMode = "login" | "signup" | "forgot";
 
@@ -70,6 +71,18 @@ export default function Auth() {
   useMemo(() => {
     const modeParam = searchParams.get("mode");
     if (modeParam === "signup") setMode("signup");
+  }, []);
+
+  // Telemetry: visitor landed on /auth without an active session
+  useEffect(() => {
+    if (!user) {
+      trackAuthEvent("auth_attempt_started", {
+        mode: searchParams.get("mode") || "login",
+        has_redirect: !!redirectTarget,
+        redirect_target: redirectTarget,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Minimum 8 chars (upgraded from 6)

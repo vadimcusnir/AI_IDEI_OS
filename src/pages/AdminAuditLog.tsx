@@ -15,6 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { AuthFlowMonitor } from "@/components/admin/AuthFlowMonitor";
+import { Activity } from "lucide-react";
 
 interface ComplianceEntry {
   id: string;
@@ -205,7 +207,12 @@ export default function AdminAuditLog() {
             <TabsTrigger value="compliance" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> Compliance</TabsTrigger>
             <TabsTrigger value="ledger" className="text-xs gap-1"><Shield className="h-3 w-3" /> Decision Ledger</TabsTrigger>
             <TabsTrigger value="sessions" className="text-xs gap-1"><User className="h-3 w-3" /> Admin Sessions</TabsTrigger>
+            <TabsTrigger value="auth-flow" className="text-xs gap-1"><Activity className="h-3 w-3" /> Auth Flow</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="auth-flow">
+            <AuthFlowMonitor />
+          </TabsContent>
 
           {/* Compliance Tab */}
           <TabsContent value="compliance">

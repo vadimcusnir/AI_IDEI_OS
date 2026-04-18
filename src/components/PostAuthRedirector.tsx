@@ -20,9 +20,30 @@ export function PostAuthRedirector() {
   const handled = useRef(false);
 
   useEffect(() => {
+    // Detect OAuth implicit-flow callback debris (e.g. #access_token=... or #error=...)
+    if (typeof window !== "undefined" && window.location.hash) {
+      const h = new URLSearchParams(window.location.hash.substring(1));
+      if (h.get("access_token") || h.get("error")) {
+        trackAuthEvent("callback_received", {
+          source: "hash_fragment",
+          has_token: !!h.get("access_token"),
+          error: h.get("error_description") || h.get("error") || null,
+        });
+        if (h.get("error")) {
+          trackAuthEvent("code_exchange_failed", {
+            source: "hash_fragment",
+            error: h.get("error_description") || h.get("error"),
+          });
+        }
+      }
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
         trackAuthEvent("session_created", { source: "auth_state_change", user_id: session.user.id });
+      }
+      if (event === "TOKEN_REFRESHED" && !session) {
+        trackAuthEvent("session_restore_failed", { source: "token_refresh", reason: "refresh_returned_null" });
       }
       // Only act on SIGNED_IN and only once per mount cycle
       if (event !== "SIGNED_IN" || handled.current) return;
