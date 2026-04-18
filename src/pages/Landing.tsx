@@ -289,33 +289,33 @@ export default function Landing() {
         </AnimatePresence>
       </header>
 
-      {/* ═══ SECTIONS ═══ */}
+      {/* ═══ SECTIONS — 8 blocks per PRM-0101 target architecture ═══ */}
       <main id="main-content" role="main">
-      <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
-      <LandingProofBand />
-      <LandingProblem />
-      <div className="gold-divider" />
-      <Suspense fallback={<div className="min-h-[2400px]" />}>
-        <LandingMechanism />
-        <TransformationDiagram />
-        <LandingWhatYouGet />
-        <LandingKnowledgeShowcase />
-        <LandingOutputGalaxy />
-        <LandingControlSurface />
-        <LandingWhoFor />
+        {/* 1. HERO (anchored, live trust line) */}
+        <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
+        {/* 2. PROOF BAND (real DB metrics) */}
+        <LandingProofBand />
+        {/* 3. PROBLEM FRAME (trimmed 6→3) */}
+        <LandingProblem />
         <div className="gold-divider" />
-        <LandingWhyDifferent />
-        <LandingBenefits />
-        <LandingSocialProof />
-        <EcosystemMap />
-        <LandingTranscribeCTA />
-        <LandingPricing ctaAction={ctaAction} />
-        <LandingFAQ />
-        <LandingFinalCTA ctaAction={ctaAction} />
-      </Suspense>
+        <Suspense fallback={<div className="min-h-[1200px]" />}>
+          {/* 4. MECHANISM (3 concrete steps with example) */}
+          <LandingMechanism />
+          {/* 5. OUTPUTS */}
+          <LandingOutputGalaxy />
+          {/* 6. WHY DIFFERENT (moved up from #11) */}
+          <LandingWhyDifferent />
+          {/* 7. PRICING TEASER (compact: Free + Pro) */}
+          <LandingPricing ctaAction={ctaAction} compact />
+          <LandingFAQ />
+          {/* 8. FINAL CTA */}
+          <LandingFinalCTA ctaAction={ctaAction} />
+        </Suspense>
       </main>
       <Suspense fallback={<div className="h-64 bg-background" />}>
         <Footer variant="landing" />
+        {/* Sticky CTA — appears 30%-92% scroll, dismissible per session */}
+        <StickyCtaBar ctaAction={ctaAction} />
       </Suspense>
 
       <OrganizationJsonLd />
