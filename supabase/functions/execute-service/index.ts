@@ -11,6 +11,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { reportError } from "../_shared/error-reporter.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { buildBoundedMessages } from "../_shared/prompt-boundary.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const inputSchema = z.object({
@@ -175,6 +176,16 @@ Your task:
                     service_level === "L2" ? "google/gemini-3-flash-preview" :
                     "google/gemini-2.5-flash";
 
+    const { messages: boundedMessages } = buildBoundedMessages({
+      system: systemPrompt,
+      userParts: [
+        { label: "user_input", content: user_input, maxLen: 20000 },
+        ...(neuronContext ? [{ label: "neuron_context", content: neuronContext, maxLen: 30000 }] : []),
+      ],
+      alertSourceFn: "execute-service",
+      userId: user.id,
+    });
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -183,10 +194,7 @@ Your task:
       },
       body: JSON.stringify({
         model: aiModel,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: user_input + neuronContext },
-        ],
+        messages: boundedMessages,
       }),
     });
 
