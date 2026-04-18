@@ -36,7 +36,13 @@
     },
     "welcome_title": "Cu ce te pot ajuta?",
     "welcome_subtitle": "Descrie ce ai nevoie, încarcă un fișier sau alege o sugestie.",
-    "suggested_for_you": "Sugerate pentru tine"
+    "suggested_for_you": "Sugerate pentru tine",
+    "activation": {
+      "title": "Primul tău upload",
+      "subtitle": "Aruncă o notă vocală, un document sau un link — vezi ce iese.",
+      "preview": "→ 12 neuroni · 3 framework-uri · 5 postări sociale",
+      "skip": "Încearcă un exemplu pre-încărcat"
+    }
   },
   "credits": {
     "title": "Credite NEURONS",

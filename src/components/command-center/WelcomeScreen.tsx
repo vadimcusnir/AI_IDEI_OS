@@ -28,8 +28,39 @@ interface WelcomeScreenProps {
 export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
   const { t } = useTranslation(["pages", "common"]);
 
+  const isFirstTime = neuronCount === 0;
+
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-6">
+      {/* First-time activation banner — PRM-0101 P1 */}
+      {isFirstTime && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-lg rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.07] to-primary/[0.02] px-4 py-3.5"
+          role="region"
+          aria-label="First upload activation"
+        >
+          <div className="flex items-start gap-3">
+            <div className="h-8 w-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+              <Sparkles className="h-4 w-4 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-foreground">
+                {t("pages:home.activation.title", { defaultValue: "Your first upload" })}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {t("pages:home.activation.subtitle", { defaultValue: "Drop a voice note, doc, or link — see what comes out." })}
+              </p>
+              <p className="text-xs font-mono text-primary/70 mt-1.5 tabular-nums">
+                {t("pages:home.activation.preview", { defaultValue: "→ 12 neurons · 3 frameworks · 5 social posts" })}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Logo + greeting */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
