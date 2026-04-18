@@ -19,6 +19,14 @@ interface AuthEventRow {
   created_at: string;
 }
 
+interface SpikeAlert {
+  id: string;
+  title: string;
+  description: string | null;
+  occurrences: number | null;
+  last_seen: string;
+}
+
 const AUTH_EVENTS = [
   "auth_attempt_started",
   "provider_redirect_started",
