@@ -9,6 +9,7 @@ import { Loader2, ArrowLeft, CheckCircle, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface ProductPage {
   id: string;
@@ -83,10 +84,7 @@ export default function ProductSurfacePage() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(page.schema_json)
-              .replace(/</g, "\\u003c")
-              .replace(/>/g, "\\u003e")
-              .replace(/&/g, "\\u0026"),
+            __html: safeJsonLd(page.schema_json as Record<string, unknown>),
           }}
         />
       )}

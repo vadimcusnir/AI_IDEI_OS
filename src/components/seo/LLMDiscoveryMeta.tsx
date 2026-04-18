@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 /**
  * Injects structured metadata for LLM discoverability.
@@ -18,7 +19,7 @@ export function LLMDiscoveryMeta({
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.id = "llm-discovery-meta";
-    script.textContent = JSON.stringify({
+    script.textContent = safeJsonLd({
       "@context": "https://schema.org",
       "@type": "WebApplication",
       name: `AI-IDEI — ${pageName}`,

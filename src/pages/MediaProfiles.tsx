@@ -6,6 +6,7 @@ import { Users, Search, ChevronRight, ArrowRight, Shield } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { safeJsonLd } from "@/lib/jsonLdSafe";
 
 interface ProfileListItem {
   id: string;
@@ -178,7 +179,7 @@ export default function MediaProfiles() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Intelligence Profiles — AI-IDEI",
