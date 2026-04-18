@@ -36,7 +36,13 @@
     },
     "welcome_title": "How can I help?",
     "welcome_subtitle": "Describe what you need, upload a file, or pick a suggestion below.",
-    "suggested_for_you": "Suggested for you"
+    "suggested_for_you": "Suggested for you",
+    "activation": {
+      "title": "Your first upload",
+      "subtitle": "Drop a voice note, doc, or link — see what comes out.",
+      "preview": "→ 12 neurons · 3 frameworks · 5 social posts",
+      "skip": "Try a pre-loaded example"
+    }
   },
   "credits": {
     "title": "NEURONS Credits",
