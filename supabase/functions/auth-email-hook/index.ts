@@ -8,6 +8,7 @@ import { InviteEmail } from '../_shared/email-templates/invite.tsx'
 import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
 import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
+import { reportError } from '../_shared/error-reporter.ts'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
 
 import { getCorsHeaders } from '../_shared/cors.ts';

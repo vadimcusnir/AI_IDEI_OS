@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 import {
   getTierLimits,
   economyPreFlight,

@@ -7,6 +7,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 

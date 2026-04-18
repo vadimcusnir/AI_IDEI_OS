@@ -1,4 +1,5 @@
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { reportError } from "../_shared/error-reporter.ts";
 /**
  * DECISION ENGINE — Sequential Pipeline
  * 

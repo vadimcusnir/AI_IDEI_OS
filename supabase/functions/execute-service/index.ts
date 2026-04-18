@@ -8,6 +8,7 @@
  * 6. Stores deliverable, updates purchase status
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { reportError } from "../_shared/error-reporter.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -250,6 +251,10 @@ Your task:
 
   } catch (e) {
     console.error("execute-service error:", e);
+    await reportError(e, {
+      functionName: "execute-service",
+      alert: { severity: "high", serviceKey: "service-execution", impactScope: "L1/L2/L3 service deliverables", recommendedAction: "Check execution_prompts integrity, AI gateway quota, purchase rollback." },
+    });
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: corsHeaders });
   }
 });
