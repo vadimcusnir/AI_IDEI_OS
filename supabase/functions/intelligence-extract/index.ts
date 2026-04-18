@@ -22,25 +22,25 @@ Deno.serve(async (req) => {
   // Auth
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
-    return jsonResp({ error: "Unauthorized" }, 401);
+    return jsonResp(req, { error: "Unauthorized" }, 401);
   }
   const token = authHeader.replace("Bearer ", "");
   const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
-  if (authErr || !user) return jsonResp({ error: "Unauthorized" }, 401);
+  if (authErr || !user) return jsonResp(req, { error: "Unauthorized" }, 401);
 
   // Rate limit (user-based, post-auth)
   const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
   if (rateLimited) return rateLimited;
 
-  if (!apiKey) return jsonResp({ error: "AI not configured" }, 500);
+  if (!apiKey) return jsonResp(req, { error: "AI not configured" }, 500);
 
   try {
     const { content, analysis_type = "competitor", goal } = await req.json();
     if (!content || content.length < 50) {
-      return jsonResp({ error: "Content too short (min 50 chars)" }, 400);
+      return jsonResp(req, { error: "Content too short (min 50 chars)" }, 400);
     }
 
     // Reserve neurons
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
       _amount: estimatedCost,
     });
     if (reserveErr || !(reserved as any)?.ok) {
-      return jsonResp({
+      return jsonResp(req, {
         error: "INSUFFICIENT_BALANCE",
         balance: (reserved as any)?.balance || 0,
         cost: estimatedCost,
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
       await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: estimatedCost });
       settled = true;
 
-      return jsonResp({
+      return jsonResp(req, {
         status: "COMPLETED",
         job_id: job?.id,
         cost: estimatedCost,
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
     }
   } catch (err) {
     console.error("intelligence-extract error:", err);
-    return jsonResp({ error: err instanceof Error ? err.message : "Unknown error" }, 500);
+    return jsonResp(req, { error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });
 
