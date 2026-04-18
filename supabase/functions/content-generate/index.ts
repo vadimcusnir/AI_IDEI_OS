@@ -242,10 +242,6 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("content-generate error:", e);
-    // RELEASE neurons on failure (if not settled)
-    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
-      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Content Generation — error` }).catch(() => {});
-    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
