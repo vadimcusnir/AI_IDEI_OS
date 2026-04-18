@@ -45,24 +45,32 @@ const FAILURE_EVENTS = new Set(["code_exchange_failed", "session_restore_failed"
 
 export function AuthFlowMonitor() {
   const [rows, setRows] = useState<AuthEventRow[]>([]);
+  const [alerts, setAlerts] = useState<SpikeAlert[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      const { data, error } = await supabase
-        .from("analytics_events")
-        .select("id, event_name, event_params, session_id, created_at")
-        .in("event_name", AUTH_EVENTS)
-        .order("created_at", { ascending: false })
-        .limit(200);
+      const [eventsRes, alertsRes] = await Promise.all([
+        supabase
+          .from("analytics_events")
+          .select("id, event_name, event_params, session_id, created_at")
+          .in("event_name", AUTH_EVENTS)
+          .order("created_at", { ascending: false })
+          .limit(200),
+        supabase
+          .from("admin_alerts")
+          .select("id, title, description, occurrences, last_seen")
+          .eq("alert_type", "auth_failure_spike")
+          .is("resolved_at", null)
+          .order("last_seen", { ascending: false })
+          .limit(5),
+      ]);
       if (cancelled) return;
-      if (error) {
-        console.error("[AuthFlowMonitor]", error);
-        setLoading(false);
-        return;
-      }
-      setRows((data ?? []) as AuthEventRow[]);
+      if (eventsRes.error) console.error("[AuthFlowMonitor]", eventsRes.error);
+      if (alertsRes.error) console.error("[AuthFlowMonitor:alerts]", alertsRes.error);
+      setRows((eventsRes.data ?? []) as AuthEventRow[]);
+      setAlerts((alertsRes.data ?? []) as SpikeAlert[]);
       setLoading(false);
     };
     load();
