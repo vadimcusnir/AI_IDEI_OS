@@ -141,6 +141,10 @@ Deno.serve(async (req) => {
     }
   } catch (err) {
     console.error("intelligence-extract error:", err);
+    await reportError(err, {
+      functionName: "intelligence-extract",
+      alert: { severity: "high", serviceKey: "intelligence-extract", impactScope: "competitor/market/positioning analysis", recommendedAction: "Verify release_neurons rollback fired; check AI provider response." },
+    });
     return jsonResp(req, { error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });

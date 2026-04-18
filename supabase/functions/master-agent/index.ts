@@ -624,6 +624,11 @@ Max 10 decisions. Be decisive, not descriptive.`,
     if (msg.startsWith("NO_DATA_AVAILABLE")) {
       return jsonRes(req, { status: "NO_DATA_AVAILABLE", reason: msg, steps: kernel.getSteps() });
     }
+    // Wave 5 — alert on unexpected failures (skip rate-limit/credit-exhaustion/no-data = expected)
+    await reportError(err, {
+      functionName: "master-agent",
+      alert: { severity: "high", serviceKey: "master-agent", impactScope: "10-step autonomous production engine", recommendedAction: "Check kernel.getSteps() output, verify economy gates and AI provider quotas." },
+    });
 
     return jsonRes(req, { error: msg, steps: kernel.getSteps() }, 500);
   }

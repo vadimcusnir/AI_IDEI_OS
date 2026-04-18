@@ -302,6 +302,11 @@ Deno.serve(async (req) => {
     return await handleWebhook(req)
   } catch (error) {
     console.error('Webhook handler error:', error)
+    // Wave 5 — auth emails CRITICAL (broken signup/recovery = no users)
+    await reportError(error, {
+      functionName: 'auth-email-hook',
+      alert: { severity: 'critical', serviceKey: 'auth-emails', impactScope: 'signup/invite/magic-link/recovery/email-change delivery', recommendedAction: 'Check Resend/email provider status, verify webhook signature secret.' },
+    })
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
