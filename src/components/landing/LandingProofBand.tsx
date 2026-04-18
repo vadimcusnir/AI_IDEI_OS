@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FadeInView } from "@/components/motion/PageTransition";
 import { ContentBoundary } from "@/components/layout/ContentBoundary";
 import { supabase } from "@/integrations/supabase/client";
+import { CountUpStat } from "@/components/landing/CountUpStat";
 
 type Stats = { neurons: number; episodes: number; services: number; articles: number };
 
@@ -41,12 +42,7 @@ export function LandingProofBand() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
           {items.map((s, i) => (
             <FadeInView key={s.label} delay={i * 0.08}>
-              <div className="text-center group">
-                <p className="text-4xl sm:text-5xl font-mono font-bold text-gold tracking-tight leading-none tabular-nums group-hover:scale-105 transition-transform duration-300">
-                  {s.value.toLocaleString()}
-                </p>
-                <p className="text-eyebrow font-mono tracking-[0.2em] text-muted-foreground mt-3">{s.label}</p>
-              </div>
+              <CountUpStat target={s.value} label={s.label} />
             </FadeInView>
           ))}
         </div>

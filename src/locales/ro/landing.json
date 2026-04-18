@@ -153,13 +153,36 @@
     "dismiss": "Închide"
   },
   "mechanism_example": {
-    "step1_input": "voce.m4a",
     "step1_caption": "Încarcă orice",
     "step2_caption": "AI extrage în 90s",
-    "step2_items": ["12 neuroni atomici", "3 framework-uri", "1 hartă audiență", "8 hook-uri"],
     "step3_caption": "Active gata de publicat",
-    "step3_items": ["Post LinkedIn", "Secvență email", "Copy landing", "Thread Twitter"],
-    "cta": "Încearcă cu input-ul tău →"
+    "cta": "Încearcă cu input-ul tău →",
+    "tabs_label": "Încearcă un tip de sursă",
+    "tabs": {
+      "voice": "Notă vocală",
+      "doc": "Document",
+      "link": "Link / URL"
+    },
+    "variants": {
+      "voice": {
+        "input_filename": "voce.m4a",
+        "input_meta": "2:34 · 1.8 MB",
+        "step2_items": ["12 neuroni atomici", "3 framework-uri", "1 hartă audiență", "8 hook-uri"],
+        "step3_items": ["Post LinkedIn", "Secvență email", "Copy landing", "Thread Twitter"]
+      },
+      "doc": {
+        "input_filename": "strategie.pdf",
+        "input_meta": "24 pagini · 4.2 MB",
+        "step2_items": ["28 neuroni atomici", "5 framework-uri", "2 profiluri ICP", "Hartă competitivă"],
+        "step3_items": ["One-pager vânzări", "Schiță webinar", "5 email-uri nurture", "Pitch deck"]
+      },
+      "link": {
+        "input_filename": "youtube.com/watch?v=…",
+        "input_meta": "47:12 · transcript auto",
+        "step2_items": ["41 neuroni atomici", "7 framework-uri", "12 citate-hook", "Graf de subiecte"],
+        "step3_items": ["Articol de blog", "Thread Twitter", "Newsletter", "Note de podcast"]
+      }
+    }
   },
   "output_galaxy": {
     "label": "UNIVERSUL OUTPUT-URILOR",

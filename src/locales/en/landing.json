@@ -153,13 +153,36 @@
     "dismiss": "Dismiss"
   },
   "mechanism_example": {
-    "step1_input": "voice-note.m4a",
     "step1_caption": "Upload anything",
     "step2_caption": "AI extracts in 90s",
-    "step2_items": ["12 atomic neurons", "3 frameworks", "1 audience map", "8 angle hooks"],
     "step3_caption": "Publish-ready assets",
-    "step3_items": ["LinkedIn post", "Email sequence", "Landing copy", "Twitter thread"],
-    "cta": "Try with your own input →"
+    "cta": "Try with your own input →",
+    "tabs_label": "Try a source type",
+    "tabs": {
+      "voice": "Voice note",
+      "doc": "Document",
+      "link": "Link / URL"
+    },
+    "variants": {
+      "voice": {
+        "input_filename": "voice-note.m4a",
+        "input_meta": "2:34 · 1.8 MB",
+        "step2_items": ["12 atomic neurons", "3 frameworks", "1 audience map", "8 angle hooks"],
+        "step3_items": ["LinkedIn post", "Email sequence", "Landing copy", "Twitter thread"]
+      },
+      "doc": {
+        "input_filename": "strategy-deck.pdf",
+        "input_meta": "24 pages · 4.2 MB",
+        "step2_items": ["28 atomic neurons", "5 frameworks", "2 ICP profiles", "Competitive map"],
+        "step3_items": ["Sales one-pager", "Webinar outline", "5-email nurture", "Pitch deck"]
+      },
+      "link": {
+        "input_filename": "youtube.com/watch?v=…",
+        "input_meta": "47:12 · transcript auto",
+        "step2_items": ["41 atomic neurons", "7 frameworks", "12 quotable hooks", "Topic graph"],
+        "step3_items": ["Blog article", "Twitter thread", "Newsletter issue", "Podcast notes"]
+      }
+    }
   },
   "output_galaxy": {
     "label": "OUTPUT UNIVERSE",

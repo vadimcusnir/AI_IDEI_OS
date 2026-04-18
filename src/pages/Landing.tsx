@@ -34,6 +34,7 @@ const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
 const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ").then(m => ({ default: m.LandingFAQ })));
 const StickyCtaBar = lazy(() => import("@/components/landing/StickyCtaBar").then(m => ({ default: m.StickyCtaBar })));
+const LandingDotNav = lazy(() => import("@/components/landing/LandingDotNav").then(m => ({ default: m.LandingDotNav })));
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 
 // FAQ items needed for JSON-LD — extracted statically to avoid loading the component
@@ -159,6 +160,16 @@ export default function Landing() {
 
       <ScrollProgress />
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
+      <Suspense fallback={null}>
+        <LandingDotNav
+          items={[
+            { id: "mechanism", label: t("nav.mechanism") },
+            { id: "outputs", label: t("nav.outputs") },
+            { id: "access", label: t("nav.control") },
+            { id: "faq", label: "FAQ" },
+          ]}
+        />
+      </Suspense>
 
       {/* ═══ TOP BAR — Marquee ═══ */}
       <div className="relative overflow-hidden bg-foreground/95 border-b border-border/50">
