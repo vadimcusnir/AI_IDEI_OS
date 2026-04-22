@@ -56,7 +56,8 @@
       "stop": "Oprește generarea",
       "hint_run": "execută",
       "hint_commands": "comenzi",
-      "hint_attach": "atașează"
+      "hint_attach": "atașează",
+      "drop_files": "Trage fișierele aici"
     },
     "sessions": {
       "title": "Sesiuni recente",
