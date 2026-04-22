@@ -246,7 +246,7 @@ export function AppSidebar() {
       <SidebarGroup key={section.key} className="py-1">
         {!collapsed && (
           <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50 select-none px-3 mb-0.5">
-            {section.label}
+            {t(`navigation:sections.${section.labelKey}`)}
           </SidebarGroupLabel>
         )}
         <SidebarGroupContent>
@@ -346,13 +346,13 @@ export function AppSidebar() {
           <SidebarGroup>
             {!collapsed && (
               <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50">
-                EXPLORE
+                {t("navigation:sections.explore")}
               </SidebarGroupLabel>
             )}
             <SidebarGroupContent>
               <SidebarMenu>
-                {renderItem({ label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" })}
-                {renderItem({ label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" })}
+                {renderItem({ labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" })}
+                {renderItem({ labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
