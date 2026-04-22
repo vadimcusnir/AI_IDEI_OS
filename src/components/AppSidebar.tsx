@@ -373,11 +373,11 @@ export function AppSidebar() {
               <button
                 onClick={toggleMode}
                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors text-left group"
-                title={isOperator ? "Switch to User Mode" : "Switch to Operator Mode"}
+                title={t(isOperator ? "navigation:mode.switch_to_user" : "navigation:mode.switch_to_operator")}
               >
                 <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
                 <span className="text-micro font-mono tracking-wide text-muted-foreground group-hover:text-foreground transition-colors">
-                  {isOperator ? "OPERATOR" : "USER"} MODE
+                  {t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
                 </span>
               </button>
             )}
@@ -385,7 +385,7 @@ export function AppSidebar() {
               <button
                 onClick={toggleMode}
                 className="p-1.5 rounded-md hover:bg-muted/50 transition-colors"
-                title={isOperator ? "Operator Mode" : "User Mode"}
+                title={t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
               >
                 <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
               </button>
@@ -417,9 +417,9 @@ export function AppSidebar() {
         ) : (
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Sign In" className="w-full" onClick={() => navigate("/auth")}>
+              <SidebarMenuButton tooltip={t("navigation:sign_in")} className="w-full" onClick={() => navigate("/auth")}>
                 <LogIn className="h-4 w-4" />
-                {!collapsed && <span>Sign In</span>}
+                {!collapsed && <span>{t("navigation:sign_in")}</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
