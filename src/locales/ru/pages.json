@@ -34,9 +34,29 @@
       "view_jobs": "Все Задания",
       "view_jobs_desc": "Мониторинг выполнения"
     },
-    "welcome_title": "Чем могу помочь?",
-    "welcome_subtitle": "Опишите, что вам нужно, загрузите файл или выберите предложение.",
+    "welcome_title": "Командный центр",
+    "welcome_subtitle": "Запустите команду, извлеките знания или продолжите сессию.",
     "suggested_for_you": "Рекомендации для вас",
+    "cmd": {
+      "placeholder": "Запустить команду...",
+      "stop": "Остановить генерацию",
+      "hint_run": "запустить",
+      "hint_commands": "команды",
+      "hint_attach": "прикрепить"
+    },
+    "sessions": {
+      "title": "Недавние сессии",
+      "empty_session": "Пустая сессия",
+      "messages_one": "{{count}} сообщение",
+      "messages_few": "{{count}} сообщения",
+      "messages_many": "{{count}} сообщений",
+      "messages_other": "{{count}} сообщения",
+      "show_less": "Скрыть",
+      "show_more_one": "Показать ещё {{count}} сессию",
+      "show_more_few": "Показать ещё {{count}} сессии",
+      "show_more_many": "Показать ещё {{count}} сессий",
+      "show_more_other": "Показать ещё {{count}} сессии"
+    },
     "activation": {
       "title": "Ваша первая загрузка",
       "subtitle": "Голосовая заметка, документ или ссылка — посмотрите, что получится.",
