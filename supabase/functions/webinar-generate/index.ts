@@ -298,9 +298,11 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("webinar-generate error:", e);
-    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
-      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Webinar — error` }).catch(() => {});
+    if (!settled && user?.id && totalCost > 0) {
+      try {
+        await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Webinar — error` });
+      } catch { /* swallow */ }
     }
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : String(e) }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
