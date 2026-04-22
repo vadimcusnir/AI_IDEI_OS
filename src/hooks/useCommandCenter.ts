@@ -62,7 +62,7 @@ export function useCommandCenter() {
     episodeCount: totalEpisodes,
     workspaceId: currentWorkspace?.id ?? null,
   });
-  const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
+  const { suggestions: decisionSuggestions, loading: suggestionsLoading } = useAgentDecisionEngine();
 
   // ═══ UI state ═══
   const [showOutputs, setShowOutputs] = useState(false);
@@ -405,7 +405,7 @@ export function useCommandCenter() {
     // Counts
     totalNeurons, totalEpisodes,
     // Suggestions
-    decisionSuggestions,
+    decisionSuggestions, suggestionsLoading,
     // Sessions
     sessions: session.sessions, sessionId: session.sessionId,
     isLoadingSessions: session.isLoadingSessions,

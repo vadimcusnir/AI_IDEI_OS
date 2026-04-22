@@ -117,6 +117,7 @@ export default function Home() {
                     onCommand={cc.handleCommand}
                     onPipelineMessage={cc.handlePipelineMessage}
                     suggestions={cc.decisionSuggestions}
+                    suggestionsLoading={cc.suggestionsLoading}
                     neuronCount={cc.totalNeurons}
                     episodeCount={cc.totalEpisodes}
                     balance={cc.balance}

@@ -6,6 +6,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MagicPipelineFlow } from "@/components/pipeline/MagicPipelineFlow";
 
 interface Suggestion {
@@ -20,12 +21,13 @@ interface WelcomeScreenProps {
   onCommand: (prompt: string) => void;
   onPipelineMessage?: (role: "user" | "assistant", content: string, meta?: Record<string, any>) => void;
   suggestions: Suggestion[];
+  suggestionsLoading?: boolean;
   neuronCount: number;
   episodeCount: number;
   balance: number;
 }
 
-export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
+export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, suggestionsLoading, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
   const { t } = useTranslation(["pages", "common"]);
 
   const isFirstTime = neuronCount === 0;
@@ -90,8 +92,23 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
         <MagicPipelineFlow onPipelineMessage={onPipelineMessage} />
       </motion.div>
 
-      {/* Proactive suggestions — max 4 */}
-      {suggestions.length > 0 && (
+      {/* Proactive suggestions — max 4 (skeleton while loading) */}
+      {suggestionsLoading ? (
+        <div className="w-full max-w-lg space-y-3" aria-hidden="true">
+          <Skeleton className="h-3 w-32 mx-auto" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="flex items-start gap-3 p-3 rounded-xl border border-border/40 bg-muted/20">
+                <Skeleton className="h-5 w-5 rounded-md shrink-0 mt-0.5" />
+                <div className="flex-1 space-y-1.5 min-w-0">
+                  <Skeleton className="h-3.5 w-3/4" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : suggestions.length > 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -117,7 +134,7 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
             ))}
           </div>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Stats */}
       <motion.div
