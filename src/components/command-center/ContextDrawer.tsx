@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Loader2, X, ExternalLink } from "lucide-react";
 import {
   SigilEye, SigilBolt, SigilCrystal,
