@@ -6,7 +6,7 @@
  * Shell fills whatever space AppLayout provides via flex-1.
  * No hardcoded height calc — purely flex-driven.
  */
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, lazy, Suspense } from "react";
 import { RotateCcw } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -19,31 +19,33 @@ import { executionActions } from "@/stores/executionStore";
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
 import { CommandBubble } from "@/components/command-center/CommandBubble";
-import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
-import { EconomicGate } from "@/components/command-center/EconomicGate";
 import { PermissionGate } from "@/components/command-center/PermissionGate";
-import { PostExecutionPanel } from "@/components/command-center/PostExecutionPanel";
 import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusBar";
 import { CommandInputZone } from "@/components/command-center/CommandInputZone";
-import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
-import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { SessionList } from "@/components/command-center/SessionList";
 import { SessionListSkeleton } from "@/components/command-center/SessionListSkeleton";
 import { TypingIndicator } from "@/components/command-center/TypingIndicator";
-import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
-import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
 import { ErrorRecoveryHandler, classifyError } from "@/components/command-center/ErrorRecoveryHandler";
-import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
-import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
-import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
-import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
 import { ComposerChips, type ComposerIntent } from "@/components/command-center/ComposerChips";
 import { GlobalDropZone } from "@/components/command-center/GlobalDropZone";
+
+// Lazy-load heavy / conditionally rendered surfaces — keeps Home initial chunk small.
+const EconomicGate = lazy(() => import("@/components/command-center/EconomicGate").then(m => ({ default: m.EconomicGate })));
+const LowBalanceGate = lazy(() => import("@/components/command-center/LowBalanceGate").then(m => ({ default: m.LowBalanceGate })));
+const PostExecutionPanel = lazy(() => import("@/components/command-center/PostExecutionPanel").then(m => ({ default: m.PostExecutionPanel })));
+const ExecutionSummary = lazy(() => import("@/components/command-center/ExecutionSummary").then(m => ({ default: m.ExecutionSummary })));
+const ContextDrawer = lazy(() => import("@/components/command-center/ContextDrawer").then(m => ({ default: m.ContextDrawer })));
+const KeyboardShortcutsOverlay = lazy(() => import("@/components/command-center/KeyboardShortcutsOverlay").then(m => ({ default: m.KeyboardShortcutsOverlay })));
+const WelcomeModal = lazy(() => import("@/components/onboarding/WelcomeModal").then(m => ({ default: m.WelcomeModal })));
+const GuidedTooltip = lazy(() => import("@/components/onboarding/GuidedTooltip").then(m => ({ default: m.GuidedTooltip })));
+const NeuronBundleUpsell = lazy(() => import("@/components/upsell/NeuronBundleUpsell").then(m => ({ default: m.NeuronBundleUpsell })));
+const KnowledgeGapDashboard = lazy(() => import("@/components/upsell/KnowledgeGapDashboard").then(m => ({ default: m.KnowledgeGapDashboard })));
+const OutputPanel = lazy(() => import("@/components/command-center/OutputPanel").then(m => ({ default: m.OutputPanel })));
 
 export default function Home() {
   const cc = useCommandCenter();
