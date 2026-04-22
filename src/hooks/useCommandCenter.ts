@@ -408,6 +408,7 @@ export function useCommandCenter() {
     decisionSuggestions,
     // Sessions
     sessions: session.sessions, sessionId: session.sessionId,
+    isLoadingSessions: session.isLoadingSessions,
     loadSession: session.loadSession, deleteSession: session.deleteSession,
     // Refs
     inputZoneRef: cmd.inputZoneRef, scrollRef, messagesEndRef,

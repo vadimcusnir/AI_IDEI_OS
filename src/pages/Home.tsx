@@ -29,6 +29,8 @@ import { CommandInputZone } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { SessionList } from "@/components/command-center/SessionList";
+import { SessionListSkeleton } from "@/components/command-center/SessionListSkeleton";
+import { TypingIndicator } from "@/components/command-center/TypingIndicator";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
@@ -120,18 +122,22 @@ export default function Home() {
                     balance={cc.balance}
                   />
                   {/* Session history below welcome */}
-                  <SessionList
-                    sessions={cc.sessions}
-                    currentSessionId={cc.sessionId}
-                    onSelect={async (sid) => {
-                      const msgs = await cc.loadSession(sid);
-                      if (msgs.length > 0) {
-                        executionActions.setMessages(msgs);
-                      }
-                    }}
-                    onDelete={cc.deleteSession}
-                    className="w-full max-w-md mt-6"
-                  />
+                  {cc.isLoadingSessions && cc.sessions.length === 0 ? (
+                    <SessionListSkeleton className="w-full max-w-md mt-6" rows={3} />
+                  ) : (
+                    <SessionList
+                      sessions={cc.sessions}
+                      currentSessionId={cc.sessionId}
+                      onSelect={async (sid) => {
+                        const msgs = await cc.loadSession(sid);
+                        if (msgs.length > 0) {
+                          executionActions.setMessages(msgs);
+                        }
+                      }}
+                      onDelete={cc.deleteSession}
+                      className="w-full max-w-md mt-6"
+                    />
+                  )}
                   {/* Knowledge gap analysis */}
                   <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
                 </div>
@@ -162,19 +168,7 @@ export default function Home() {
 
                   {/* Loading indicator (only when no execution phase is active) */}
                   {cc.loading && !cc.isStreaming && cc.execState.phase === "idle" && (
-                    <div className="flex items-start gap-2.5">
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                      </div>
-                      <div className="flex items-center gap-2 pt-2">
-                        <div className="flex gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
-                        </div>
-                        <span className="text-xs text-muted-foreground ml-1">Thinking...</span>
-                      </div>
-                    </div>
+                    <TypingIndicator />
                   )}
 
                   {/* Error recovery */}
