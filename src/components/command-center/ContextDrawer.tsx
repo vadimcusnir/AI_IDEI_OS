@@ -208,6 +208,7 @@ export function ContextDrawer({
 function StateTab({ tier, balance, phase, navigate }: {
   tier: string; balance: number; phase: string; navigate: (path: string) => void;
 }) {
+  const { t } = useTranslation(["pages", "common"]);
   // Average daily neuron spend — static fallback, computed from typical usage pattern
   const burnRate = 32;
   const runway = burnRate > 0 ? Math.floor(balance / burnRate) : 999;
