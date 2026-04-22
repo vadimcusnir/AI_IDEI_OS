@@ -46,10 +46,10 @@ Deno.serve(async (req) => {
     const { action = "snapshot_metrics" } = body;
 
     switch (action) {
-      case "compute_lock_in": return await computeLockIn(supabase);
-      case "update_rankings": return await updateRankings(supabase);
-      case "snapshot_metrics": return await snapshotMetrics(supabase);
-      case "auto_evolve": return await autoEvolve(supabase);
+      case "compute_lock_in": return await computeLockIn(req, supabase);
+      case "update_rankings": return await updateRankings(req, supabase);
+      case "snapshot_metrics": return await snapshotMetrics(req, supabase);
+      case "auto_evolve": return await autoEvolve(req, supabase);
       default: return jsonResp(req, { error: "Invalid action" }, 400);
     }
   } catch (err) {
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
 // ═══════════════════════════════════════════════════════════════
 // 1. COMPUTE LOCK-IN — Score each user's dependency on the platform
 // ═══════════════════════════════════════════════════════════════
-async function computeLockIn(supabase: any) {
+async function computeLockIn(req: Request, supabase: any) {
   // Get all users with activity
   const { data: profiles } = await supabase
     .from("profiles").select("id").limit(1000);
@@ -125,7 +125,7 @@ async function computeLockIn(supabase: any) {
 // ═══════════════════════════════════════════════════════════════
 // 2. UPDATE RANKINGS — Creator leaderboard
 // ═══════════════════════════════════════════════════════════════
-async function updateRankings(supabase: any) {
+async function updateRankings(req: Request, supabase: any) {
   // Get all sellers with transactions
   const { data: txns } = await supabase
     .from("asset_transactions").select("seller_id, amount_neurons, asset_id")
@@ -202,7 +202,7 @@ async function updateRankings(supabase: any) {
 // ═══════════════════════════════════════════════════════════════
 // 3. SNAPSHOT METRICS — Daily platform health
 // ═══════════════════════════════════════════════════════════════
-async function snapshotMetrics(supabase: any) {
+async function snapshotMetrics(req: Request, supabase: any) {
   const today = new Date().toISOString().split("T")[0];
 
   // Total users
@@ -286,7 +286,7 @@ async function snapshotMetrics(supabase: any) {
 // ═══════════════════════════════════════════════════════════════
 // 4. AUTO-EVOLVE — Self-improving system triggers
 // ═══════════════════════════════════════════════════════════════
-async function autoEvolve(supabase: any) {
+async function autoEvolve(req: Request, supabase: any) {
   const actions: string[] = [];
 
   // Auto-pricing: adjust prices of high-performing assets

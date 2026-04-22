@@ -143,6 +143,10 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+  let user: { id: string } | null = null;
+  let totalCost = 0;
+  let settled = false;
+
   try {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
@@ -151,13 +155,14 @@ Deno.serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
-    const { data: { user }, error: authErr } = await userClient.auth.getUser();
-    if (authErr || !user) {
+    const { data: { user: authUser }, error: authErr } = await userClient.auth.getUser();
+    if (authErr || !authUser) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
+    user = { id: authUser.id };
 
     // Rate limit (user-based, post-auth)
-    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(authUser.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     if (req.method === "GET") {
@@ -182,11 +187,11 @@ Deno.serve(async (req) => {
       : WEBINAR_MODULES;
 
     const totalPrompts = modulesToRun.reduce((s, m) => s + m.prompts.length, 0);
-    const totalCost = totalPrompts * 40;
+    totalCost = totalPrompts * 40;
 
     // RESERVE neurons (atomic wallet)
     const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
-      _user_id: user.id,
+      _user_id: authUser.id,
       _amount: totalCost,
       _description: `RESERVE: Webinar Generation: ${modulesToRun.length} modules, ${totalPrompts} prompts`,
     });
@@ -197,7 +202,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    let settled = false;
+    // settled hoisted above
 
     const configContext = webinar_config
       ? `\n\nWebinar Config: Duration=${webinar_config.duration || 60}min, Topic="${webinar_config.topic || ""}", Audience="${webinar_config.audience || ""}"`
@@ -234,7 +239,7 @@ Deno.serve(async (req) => {
             const data = await resp.json();
             return { role: p.role, content: data.choices?.[0]?.message?.content || "" };
           } catch (e) {
-            return { role: p.role, content: `Error: ${e.message}` };
+            return { role: p.role, content: `Error: ${e instanceof Error ? e.message : String(e)}` };
           }
         }));
 
@@ -264,7 +269,7 @@ Deno.serve(async (req) => {
       .join("\n\n---\n\n");
 
     await supabase.from("artifacts").insert({
-      author_id: user.id,
+      author_id: authUser.id,
       title: `Webinar Package — ${new Date().toLocaleDateString("ro-RO")}`,
       artifact_type: "document",
       content: fullContent.slice(0, 200_000),
@@ -284,7 +289,7 @@ Deno.serve(async (req) => {
     }
 
     // SETTLE neurons on success
-    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Webinar Generation` });
+    await supabase.rpc("settle_neurons", { _user_id: authUser.id, _amount: totalCost, _description: `SETTLE: Webinar Generation` });
     settled = true;
 
     return new Response(JSON.stringify({ results, prompts_completed: completedPrompts, credits_spent: totalCost }), {
@@ -293,9 +298,11 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("webinar-generate error:", e);
-    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
-      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Webinar — error` }).catch(() => {});
+    if (!settled && user?.id && totalCost > 0) {
+      try {
+        await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Webinar — error` });
+      } catch { /* swallow */ }
     }
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : String(e) }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
