@@ -38,6 +38,7 @@ export function ContextDrawer({
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<RightTab>("state");
   const navigate = useNavigate();
+  const { t } = useTranslation(["pages", "common"]);
   const { tier } = useUserTier();
   const { phase, steps, totalCredits, startedAt, completedAt } = execution;
 
