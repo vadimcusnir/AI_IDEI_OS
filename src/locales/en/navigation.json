@@ -75,5 +75,50 @@
   "notebooks": "Notebooks",
   "capitalization": "Capitalization",
   "data_pipeline": "Data Pipeline",
-  "db_schema": "DB Schema"
+  "db_schema": "DB Schema",
+  "sections": {
+    "core": "CORE",
+    "economy": "ECONOMY",
+    "intelligence": "INTELLIGENCE",
+    "tools": "TOOLS",
+    "admin": "ADMIN",
+    "explore": "EXPLORE"
+  },
+  "items": {
+    "command_center": "Command Center",
+    "pipeline": "Pipeline",
+    "services": "Services",
+    "library": "Library",
+    "jobs": "Jobs",
+    "credits": "Credits",
+    "marketplace": "Marketplace",
+    "purchases": "Purchases",
+    "neurons": "Neurons",
+    "knowledge_graph": "Knowledge Graph",
+    "my_analytics": "My Analytics",
+    "deliverables": "Deliverables",
+    "learning": "Learning",
+    "progress": "Progress",
+    "workspace": "Workspace",
+    "personal_os": "Personal OS",
+    "augmentation": "Augmentation",
+    "vip_program": "VIP Program",
+    "integrations": "Integrations",
+    "admin_dashboard": "Dashboard",
+    "council_chat": "Council Chat",
+    "control_center": "Control Center",
+    "cost_engine": "Cost Engine",
+    "kernel": "Kernel",
+    "runtime": "Runtime",
+    "analytics": "Analytics",
+    "catalog": "Catalog"
+  },
+  "mode": {
+    "operator": "OPERATOR MODE",
+    "user": "USER MODE",
+    "switch_to_user": "Switch to User Mode",
+    "switch_to_operator": "Switch to Operator Mode"
+  },
+  "more": "More",
+  "sign_in": "Sign In"
 }

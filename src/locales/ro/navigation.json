@@ -75,5 +75,50 @@
   "notebooks": "Caiete",
   "capitalization": "Capitalizare",
   "data_pipeline": "Pipeline Date",
-  "db_schema": "Schema BD"
+  "db_schema": "Schema BD",
+  "sections": {
+    "core": "PRINCIPAL",
+    "economy": "ECONOMIE",
+    "intelligence": "INTELIGENȚĂ",
+    "tools": "INSTRUMENTE",
+    "admin": "ADMIN",
+    "explore": "EXPLOREAZĂ"
+  },
+  "items": {
+    "command_center": "Centru Comandă",
+    "pipeline": "Pipeline",
+    "services": "Servicii",
+    "library": "Bibliotecă",
+    "jobs": "Joburi",
+    "credits": "Credite",
+    "marketplace": "Marketplace",
+    "purchases": "Achiziții",
+    "neurons": "Neuroni",
+    "knowledge_graph": "Graf Cunoaștere",
+    "my_analytics": "Analizele Mele",
+    "deliverables": "Livrabile",
+    "learning": "Învățare",
+    "progress": "Progres",
+    "workspace": "Workspace",
+    "personal_os": "Personal OS",
+    "augmentation": "Augmentare",
+    "vip_program": "Program VIP",
+    "integrations": "Integrări",
+    "admin_dashboard": "Panou",
+    "council_chat": "Chat Consiliu",
+    "control_center": "Centru Control",
+    "cost_engine": "Motor Cost",
+    "kernel": "Kernel",
+    "runtime": "Runtime",
+    "analytics": "Analize",
+    "catalog": "Catalog"
+  },
+  "mode": {
+    "operator": "MOD OPERATOR",
+    "user": "MOD UTILIZATOR",
+    "switch_to_user": "Comută în Mod Utilizator",
+    "switch_to_operator": "Comută în Mod Operator"
+  },
+  "more": "Mai mult",
+  "sign_in": "Autentificare"
 }

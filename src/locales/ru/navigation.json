@@ -75,5 +75,50 @@
   "notebooks": "Записные книжки",
   "capitalization": "Капитализация",
   "data_pipeline": "Конвейер данных",
-  "db_schema": "Схема БД"
+  "db_schema": "Схема БД",
+  "sections": {
+    "core": "ОСНОВА",
+    "economy": "ЭКОНОМИКА",
+    "intelligence": "РАЗВЕДКА",
+    "tools": "ИНСТРУМЕНТЫ",
+    "admin": "АДМИН",
+    "explore": "ОБЗОР"
+  },
+  "items": {
+    "command_center": "Центр Управления",
+    "pipeline": "Конвейер",
+    "services": "Сервисы",
+    "library": "Библиотека",
+    "jobs": "Задания",
+    "credits": "Кредиты",
+    "marketplace": "Маркетплейс",
+    "purchases": "Покупки",
+    "neurons": "Нейроны",
+    "knowledge_graph": "Граф Знаний",
+    "my_analytics": "Моя Аналитика",
+    "deliverables": "Поставки",
+    "learning": "Обучение",
+    "progress": "Прогресс",
+    "workspace": "Рабочее пространство",
+    "personal_os": "Personal OS",
+    "augmentation": "Аугментация",
+    "vip_program": "VIP Программа",
+    "integrations": "Интеграции",
+    "admin_dashboard": "Панель",
+    "council_chat": "Чат Совета",
+    "control_center": "Центр Контроля",
+    "cost_engine": "Движок Стоимости",
+    "kernel": "Ядро",
+    "runtime": "Среда",
+    "analytics": "Аналитика",
+    "catalog": "Каталог"
+  },
+  "mode": {
+    "operator": "РЕЖИМ ОПЕРАТОРА",
+    "user": "РЕЖИМ ПОЛЬЗОВАТЕЛЯ",
+    "switch_to_user": "Переключить в режим пользователя",
+    "switch_to_operator": "Переключить в режим оператора"
+  },
+  "more": "Ещё",
+  "sign_in": "Войти"
 }
