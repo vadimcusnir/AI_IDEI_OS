@@ -155,10 +155,11 @@ Deno.serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
-    const { data: { user }, error: authErr } = await userClient.auth.getUser();
-    if (authErr || !user) {
+    const { data: { user: authUser }, error: authErr } = await userClient.auth.getUser();
+    if (authErr || !authUser) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
+    user = { id: authUser.id };
 
     // Rate limit (user-based, post-auth)
     const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
@@ -186,7 +187,7 @@ Deno.serve(async (req) => {
       : WEBINAR_MODULES;
 
     const totalPrompts = modulesToRun.reduce((s, m) => s + m.prompts.length, 0);
-    const totalCost = totalPrompts * 40;
+    totalCost = totalPrompts * 40;
 
     // RESERVE neurons (atomic wallet)
     const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
@@ -201,7 +202,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    let settled = false;
+    // settled hoisted above
 
     const configContext = webinar_config
       ? `\n\nWebinar Config: Duration=${webinar_config.duration || 60}min, Topic="${webinar_config.topic || ""}", Audience="${webinar_config.audience || ""}"`
