@@ -143,6 +143,10 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+  let user: { id: string } | null = null;
+  let totalCost = 0;
+  let settled = false;
+
   try {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
