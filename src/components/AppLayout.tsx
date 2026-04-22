@@ -106,7 +106,13 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </ErrorBoundary>
             </main>
           ) : (
-            <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
+            <main
+              id="main-content"
+              className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden md:pb-0"
+              style={{
+                paddingBottom: "calc(3.5rem + env(safe-area-inset-bottom, 0px))",
+              }}
+            >
               <ErrorBoundary>
                 <PageTransition>{children}</PageTransition>
               </ErrorBoundary>

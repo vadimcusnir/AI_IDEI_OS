@@ -279,9 +279,30 @@
     @apply bg-background text-foreground font-sans;
     font-size: 1rem; /* 16px mobile — WCAG minimum */
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* 16px body globally — WCAG AA minimum. Dense UI uses utility classes, not base. */
+
+  /* ── Mobile UX polish — disable tap flash, prevent text-size adjust on rotate ── */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  /* Prevent iOS input zoom on focus (inputs <16px trigger zoom) */
+  @media (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px;
+    }
+  }
 
   /* ── Global focus states — P1 accessibility ── */
   :focus-visible {
