@@ -72,10 +72,12 @@ export default function Home() {
 
   return (
     <>
-      <WelcomeModal />
-      <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
+      <Suspense fallback={null}>
+        <WelcomeModal />
+        <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
+        <KeyboardShortcutsOverlay />
+      </Suspense>
       <SEOHead title={`${cc.t("pages:home.cockpit")} — AI-IDEI`} description={cc.t("pages:home.cockpit_desc")} />
-      <KeyboardShortcutsOverlay />
       <OfflineBanner />
       <GlobalDropZone
         disabled={!!cc.permissionBlock || cc.showEconomicGate || cc.showLowBalance}
