@@ -6,7 +6,7 @@
  * Shell fills whatever space AppLayout provides via flex-1.
  * No hardcoded height calc — purely flex-driven.
  */
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, lazy, Suspense } from "react";
 import { RotateCcw } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -19,31 +19,33 @@ import { executionActions } from "@/stores/executionStore";
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
 import { CommandBubble } from "@/components/command-center/CommandBubble";
-import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
-import { EconomicGate } from "@/components/command-center/EconomicGate";
 import { PermissionGate } from "@/components/command-center/PermissionGate";
-import { PostExecutionPanel } from "@/components/command-center/PostExecutionPanel";
 import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusBar";
 import { CommandInputZone } from "@/components/command-center/CommandInputZone";
-import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
-import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { SessionList } from "@/components/command-center/SessionList";
 import { SessionListSkeleton } from "@/components/command-center/SessionListSkeleton";
 import { TypingIndicator } from "@/components/command-center/TypingIndicator";
-import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
-import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
 import { ErrorRecoveryHandler, classifyError } from "@/components/command-center/ErrorRecoveryHandler";
-import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
-import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
-import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
-import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
 import { ComposerChips, type ComposerIntent } from "@/components/command-center/ComposerChips";
 import { GlobalDropZone } from "@/components/command-center/GlobalDropZone";
+
+// Lazy-load heavy / conditionally rendered surfaces — keeps Home initial chunk small.
+const EconomicGate = lazy(() => import("@/components/command-center/EconomicGate").then(m => ({ default: m.EconomicGate })));
+const LowBalanceGate = lazy(() => import("@/components/command-center/LowBalanceGate").then(m => ({ default: m.LowBalanceGate })));
+const PostExecutionPanel = lazy(() => import("@/components/command-center/PostExecutionPanel").then(m => ({ default: m.PostExecutionPanel })));
+const ExecutionSummary = lazy(() => import("@/components/command-center/ExecutionSummary").then(m => ({ default: m.ExecutionSummary })));
+const ContextDrawer = lazy(() => import("@/components/command-center/ContextDrawer").then(m => ({ default: m.ContextDrawer })));
+const KeyboardShortcutsOverlay = lazy(() => import("@/components/command-center/KeyboardShortcutsOverlay").then(m => ({ default: m.KeyboardShortcutsOverlay })));
+const WelcomeModal = lazy(() => import("@/components/onboarding/WelcomeModal").then(m => ({ default: m.WelcomeModal })));
+const GuidedTooltip = lazy(() => import("@/components/onboarding/GuidedTooltip").then(m => ({ default: m.GuidedTooltip })));
+const NeuronBundleUpsell = lazy(() => import("@/components/upsell/NeuronBundleUpsell").then(m => ({ default: m.NeuronBundleUpsell })));
+const KnowledgeGapDashboard = lazy(() => import("@/components/upsell/KnowledgeGapDashboard").then(m => ({ default: m.KnowledgeGapDashboard })));
+const OutputPanel = lazy(() => import("@/components/command-center/OutputPanel").then(m => ({ default: m.OutputPanel })));
 
 export default function Home() {
   const cc = useCommandCenter();
@@ -70,10 +72,12 @@ export default function Home() {
 
   return (
     <>
-      <WelcomeModal />
-      <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
+      <Suspense fallback={null}>
+        <WelcomeModal />
+        <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
+        <KeyboardShortcutsOverlay />
+      </Suspense>
       <SEOHead title={`${cc.t("pages:home.cockpit")} — AI-IDEI`} description={cc.t("pages:home.cockpit_desc")} />
-      <KeyboardShortcutsOverlay />
       <OfflineBanner />
       <GlobalDropZone
         disabled={!!cc.permissionBlock || cc.showEconomicGate || cc.showLowBalance}
@@ -140,7 +144,9 @@ export default function Home() {
                     />
                   )}
                   {/* Knowledge gap analysis */}
-                  <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
+                  <Suspense fallback={null}>
+                    <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
+                  </Suspense>
                 </div>
               ) : (
                 /* ── Conversation feed (ChatGPT-style: generous spacing, centered) ── */
@@ -185,23 +191,27 @@ export default function Home() {
 
                   {/* Execution summary */}
                   {(cc.execState.phase === "completed" || cc.execState.phase === "failed") && (
-                    <ExecutionSummary
-                      phase={cc.execState.phase} intent={cc.execState.intent}
-                      planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
-                      stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
-                      totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
-                      durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
-                      onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
-                      onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
-                    />
+                    <Suspense fallback={null}>
+                      <ExecutionSummary
+                        phase={cc.execState.phase} intent={cc.execState.intent}
+                        planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
+                        stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
+                        totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
+                        durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
+                        onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
+                        onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Post-execution upsell */}
                   {cc.execState.phase === "completed" && cc.execState.totalCredits > 0 && (
-                    <NeuronBundleUpsell
-                      balance={cc.balance}
-                      creditsJustSpent={cc.execState.totalCredits}
-                    />
+                    <Suspense fallback={null}>
+                      <NeuronBundleUpsell
+                        balance={cc.balance}
+                        creditsJustSpent={cc.execState.totalCredits}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Inline panels */}
@@ -226,31 +236,37 @@ export default function Home() {
 
                   <AnimatePresence>
                     {cc.showEconomicGate && cc.execState.phase === "confirming" && (
-                      <EconomicGate
-                        balance={cc.balance} estimatedCost={cc.execState.totalCredits}
-                        tierDiscount={cc.tierDiscount} tier={cc.tier}
-                        onProceed={cc.handleEconomicProceed}
-                        onCancel={cc.handleEconomicCancel}
-                      />
+                      <Suspense fallback={null}>
+                        <EconomicGate
+                          balance={cc.balance} estimatedCost={cc.execState.totalCredits}
+                          tierDiscount={cc.tierDiscount} tier={cc.tier}
+                          onProceed={cc.handleEconomicProceed}
+                          onCancel={cc.handleEconomicCancel}
+                        />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
                   {/* Outputs flow inline as the assistant's reply — auto-shown when execution completes */}
                   <AnimatePresence>
                     {cc.execState.phase === "completed" && cc.outputs.length > 0 && (
-                      <OutputPanel outputs={cc.outputs} visible={true} onRerun={cc.handleRerun}
-                        onClose={() => cc.setShowOutputs(false)} onSaveAll={cc.handleSaveAllOutputs} savingAll={cc.savingAllOutputs} />
+                      <Suspense fallback={null}>
+                        <OutputPanel outputs={cc.outputs} visible={true} onRerun={cc.handleRerun}
+                          onClose={() => cc.setShowOutputs(false)} onSaveAll={cc.handleSaveAllOutputs} savingAll={cc.savingAllOutputs} />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
                   <AnimatePresence>
                     {cc.execState.phase === "completed" && cc.showPostExecution && (
-                      <PostExecutionPanel
-                        intent={cc.execState.intent as any} creditsSpent={cc.execState.totalCredits}
-                        outputCount={cc.outputs.length}
-                        onAction={(prompt) => { cc.setInput(prompt); cc.setShowPostExecution(false); cc.inputZoneRef.current?.focus(); }}
-                        onSaveTemplate={cc.handleSaveTemplate} onDismiss={() => cc.setShowPostExecution(false)} userTier={cc.tier}
-                      />
+                      <Suspense fallback={null}>
+                        <PostExecutionPanel
+                          intent={cc.execState.intent as any} creditsSpent={cc.execState.totalCredits}
+                          outputCount={cc.outputs.length}
+                          onAction={(prompt) => { cc.setInput(prompt); cc.setShowPostExecution(false); cc.inputZoneRef.current?.focus(); }}
+                          onSaveTemplate={cc.handleSaveTemplate} onDismiss={() => cc.setShowPostExecution(false)} userTier={cc.tier}
+                        />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
@@ -302,20 +318,24 @@ export default function Home() {
         </div>
 
         {/* ═══ RIGHT: Context Drawer (desktop only, self-managing) ═══ */}
-        <ContextDrawer
-          execution={cc.execState}
-          outputs={cc.outputs}
-          balance={cc.balance}
-          onSaveTemplate={cc.handleSaveTemplate}
-          onViewOutputs={() => cc.setShowOutputs(true)}
-          onRerun={cc.handleRerun}
-        />
+        <Suspense fallback={null}>
+          <ContextDrawer
+            execution={cc.execState}
+            outputs={cc.outputs}
+            balance={cc.balance}
+            onSaveTemplate={cc.handleSaveTemplate}
+            onViewOutputs={() => cc.setShowOutputs(true)}
+            onRerun={cc.handleRerun}
+          />
+        </Suspense>
       </div>
 
       {/* Low balance gate */}
       <AnimatePresence>
         {cc.showLowBalance && (
-          <LowBalanceGate balance={cc.balance} onDismiss={() => cc.setShowLowBalance(false)} />
+          <Suspense fallback={null}>
+            <LowBalanceGate balance={cc.balance} onDismiss={() => cc.setShowLowBalance(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </>
