@@ -5,9 +5,11 @@
 import { useNeuronGapAnalysis } from "@/hooks/useNeuronGapAnalysis";
 import { CompletionOfferCard } from "./CompletionOfferCard";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Brain, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
+import { Brain, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { useState, useCallback } from "react";
 import type { CompletionOffer } from "@/hooks/useNeuronGapAnalysis";
@@ -20,6 +22,7 @@ interface Props {
 export function KnowledgeGapDashboard({ className, compact = false }: Props) {
   const { gaps, overallCompletionPct, totalNeurons, offers, loading } = useNeuronGapAnalysis();
   const navigate = useNavigate();
+  const { t } = useTranslation(["pages", "common"]);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
 
   const handleAction = useCallback((offer: CompletionOffer) => {
@@ -32,8 +35,16 @@ export function KnowledgeGapDashboard({ className, compact = false }: Props) {
 
   if (loading) {
     return (
-      <div className={cn("flex items-center justify-center py-8", className)}>
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      <div className={cn("space-y-4", className)} aria-hidden="true">
+        <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-4 w-4 rounded" />
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-4 w-10 ml-auto" />
+          </div>
+          <Skeleton className="h-2 w-full" />
+          <Skeleton className="h-3 w-3/4" />
+        </div>
       </div>
     );
   }
@@ -44,8 +55,12 @@ export function KnowledgeGapDashboard({ className, compact = false }: Props) {
       <div className={cn("rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 flex items-center gap-3", className)}>
         <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-foreground">Knowledge Profile Complete</p>
-          <p className="text-xs text-muted-foreground">Your {totalNeurons} neurons cover all expected dimensions.</p>
+          <p className="text-sm font-semibold text-foreground">
+            {t("pages:home.km.complete_title", { defaultValue: "Knowledge Map Complete" })}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {t("pages:home.km.complete_body", { count: totalNeurons, defaultValue: "Your {{count}} neurons cover all expected dimensions." })}
+          </p>
         </div>
       </div>
     );
@@ -59,12 +74,18 @@ export function KnowledgeGapDashboard({ className, compact = false }: Props) {
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center gap-2 mb-3">
           <Brain className="h-4 w-4 text-primary" />
-          <p className="text-sm font-semibold text-foreground">Knowledge Completeness</p>
+          <p className="text-sm font-semibold text-foreground">
+            {t("pages:home.km.title", { defaultValue: "Knowledge Map" })}
+          </p>
           <span className="ml-auto text-sm font-mono font-bold text-primary">{overallCompletionPct}%</span>
         </div>
         <Progress value={overallCompletionPct} className="h-2 mb-3" />
         <p className="text-xs text-muted-foreground">
-          {totalNeurons} neurons extracted • {gaps.length} dimension{gaps.length !== 1 ? "s" : ""} incomplete
+          {t("pages:home.km.summary", {
+            neurons: totalNeurons,
+            gaps: gaps.length,
+            defaultValue: "{{neurons}} neurons · {{gaps}} gaps detected",
+          })}
         </p>
       </div>
 
@@ -105,7 +126,7 @@ export function KnowledgeGapDashboard({ className, compact = false }: Props) {
       {visibleOffers.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/50 px-1">
-            Recommended Actions
+            {t("pages:home.km.recommended_actions", { defaultValue: "Recommended Actions" })}
           </p>
           {visibleOffers.map(offer => (
             <CompletionOfferCard
