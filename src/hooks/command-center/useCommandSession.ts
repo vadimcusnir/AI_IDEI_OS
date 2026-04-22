@@ -18,7 +18,7 @@ export function useCommandSession() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
-    sessionId, sessions,
+    sessionId, sessions, isLoadingSessions,
     saveMessage, loadSession, loadCurrentSession,
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
@@ -57,7 +57,7 @@ export function useCommandSession() {
   }, [newSession, navigate]);
 
   return {
-    sessionId, sessions, sessionLoaded,
+    sessionId, sessions, sessionLoaded, isLoadingSessions,
     saveMessage, loadSession, deleteSession,
     clearChat, refreshSessions,
   };
