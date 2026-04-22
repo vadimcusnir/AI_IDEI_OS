@@ -42,6 +42,15 @@
       "analyzing": "Analizez…",
       "generating": "Generez…"
     },
+    "km": {
+      "title": "Harta cunoașterii",
+      "summary": "{{neurons}} neuroni · {{gaps}} goluri detectate",
+      "complete_title": "Harta cunoașterii completă",
+      "complete_body_one": "Cei {{count}} neuron acoperă toate dimensiunile așteptate.",
+      "complete_body_few": "Cei {{count}} neuroni acoperă toate dimensiunile așteptate.",
+      "complete_body_other": "Cei {{count}} de neuroni acoperă toate dimensiunile așteptate.",
+      "recommended_actions": "Acțiuni recomandate"
+    },
     "cmd": {
       "placeholder": "Rulează o comandă...",
       "stop": "Oprește generarea",

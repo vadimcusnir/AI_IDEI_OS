@@ -42,6 +42,14 @@
       "analyzing": "Analyzing…",
       "generating": "Generating…"
     },
+    "km": {
+      "title": "Knowledge Map",
+      "summary": "{{neurons}} neurons · {{gaps}} gaps detected",
+      "complete_title": "Knowledge Map Complete",
+      "complete_body_one": "Your {{count}} neuron covers all expected dimensions.",
+      "complete_body_other": "Your {{count}} neurons cover all expected dimensions.",
+      "recommended_actions": "Recommended Actions"
+    },
     "cmd": {
       "placeholder": "Run a command...",
       "stop": "Stop generation",
