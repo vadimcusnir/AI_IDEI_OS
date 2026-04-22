@@ -127,7 +127,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               exit={{ opacity: 0 }}
               className="absolute inset-0 z-50 bg-primary/[0.04] border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center backdrop-blur-sm"
             >
-              <p className="text-sm font-medium text-primary">Trage fișierele aici</p>
+              <p className="text-sm font-medium text-primary">{t("pages:home.cmd.drop_files", { defaultValue: "Drop files here" })}</p>
             </motion.div>
           )}
         </AnimatePresence>
