@@ -162,7 +162,7 @@ Deno.serve(async (req) => {
     user = { id: authUser.id };
 
     // Rate limit (user-based, post-auth)
-    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(authUser.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     if (req.method === "GET") {
@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
       .join("\n\n---\n\n");
 
     await supabase.from("artifacts").insert({
-      author_id: user.id,
+      author_id: authUser.id,
       title: `Webinar Package — ${new Date().toLocaleDateString("ro-RO")}`,
       artifact_type: "document",
       content: fullContent.slice(0, 200_000),
@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
     }
 
     // SETTLE neurons on success
-    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Webinar Generation` });
+    await supabase.rpc("settle_neurons", { _user_id: authUser.id, _amount: totalCost, _description: `SETTLE: Webinar Generation` });
     settled = true;
 
     return new Response(JSON.stringify({ results, prompts_completed: completedPrompts, credits_spent: totalCost }), {
