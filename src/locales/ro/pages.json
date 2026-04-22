@@ -220,11 +220,43 @@
     "progress": "Progres",
     "completed": "finalizat",
     "step": "Pasul {{number}}",
+    "step_of_total": "Pasul {{current}} din {{total}}",
     "step_completed": "✓ Finalizat",
     "created_suffix": "creat",
+    "badge_3_steps": "3 Pași către Active de Cunoaștere",
+    "tutorial_cta": "Tutorial Interactiv (+50 NEURONS)",
+    "instant_title": "Încearcă Acum — Analiză Instantanee",
+    "instant_desc": "Lipește orice text sau URL și obține informație structurată în mai puțin de 60 secunde. Fără configurare.",
+    "previous": "← Înapoi",
+    "next": "Înainte →",
+    "upload_more": "Încarcă Mai Mult",
     "pipeline_active_title": "Pipeline-ul tău este activ! 🎉",
     "pipeline_active_desc": "Ai completat toți pașii. Continuă să încarci conținut și să rulezi servicii pentru a-ți maximiza capitalul intelectual.",
     "back_to_cockpit": "Înapoi la Cockpit",
+    "step_source": {
+      "title": "Adaugă Sursa",
+      "subtitle": "Încarcă sau lipește conținut",
+      "desc": "Trage un MP3, lipește un link YouTube sau scrie text direct. AI transcrie și structurează totul automat.",
+      "action": "Deschide Extractor",
+      "reward": "+25 XP",
+      "tip": "Sfat: Link-urile YouTube sunt transcrise automat cu detecție vorbitor."
+    },
+    "step_extract": {
+      "title": "Extrage Cunoaștere",
+      "subtitle": "AI găsește tipare și insight-uri",
+      "desc": "AI-ul analizează conținutul și extrage framework-uri, insight-uri, tipare și neuroni reutilizabili — automat.",
+      "action": "Vezi Neuroni",
+      "reward": "+25 XP per neuron",
+      "tip": "Un episod produce de obicei 5-15 neuroni unici."
+    },
+    "step_produce": {
+      "title": "Generează Active",
+      "subtitle": "Transformă în livrabile",
+      "desc": "Rulează servicii AI pentru a transforma neuronii în articole, strategii, rapoarte și active profesionale — salvate în Bibliotecă.",
+      "action": "Explorează Servicii",
+      "reward": "+15 XP per activ",
+      "tip": "Începe cu „Quick Extract” — e cel mai rapid mod de a vedea rezultate."
+    },
     "steps": {
       "upload_title": "Încarcă Conținut",
       "upload_desc": "Adaugă un podcast, text sau video. Platforma va transcrie și pregăti conținutul pentru extracție.",
