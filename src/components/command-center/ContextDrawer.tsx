@@ -335,12 +335,13 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
   consumedCredits: number; totalCredits: number;
   navigate: (path: string) => void;
 }) {
+  const { t } = useTranslation(["pages", "common"]);
   if (phase === "idle") {
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilBolt size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-dense text-muted-foreground/25 font-medium">No active execution</p>
-        <p className="text-nano text-muted-foreground/15 mt-1">Run a command to see progress here</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">{t("pages:home.context.runs_empty_title", { defaultValue: "No active execution" })}</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">{t("pages:home.context.runs_empty_body", { defaultValue: "Run a command to see progress here" })}</p>
       </div>
     );
   }
@@ -422,12 +423,13 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
 
 // ═══ TAB: ASSETS ═══
 function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOutputs: () => void }) {
+  const { t } = useTranslation(["pages", "common"]);
   if (outputs.length === 0) {
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilCrystal size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-dense text-muted-foreground/25 font-medium">No assets yet</p>
-        <p className="text-nano text-muted-foreground/15 mt-1">Execute a service to generate outputs</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">{t("pages:home.context.assets_empty_title", { defaultValue: "No assets yet" })}</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">{t("pages:home.context.assets_empty_body", { defaultValue: "Execute a service to generate outputs" })}</p>
       </div>
     );
   }
@@ -436,10 +438,10 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
     <div className="p-4 space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">
-          {outputs.length} asset{outputs.length !== 1 ? "s" : ""}
+          {t("pages:home.context.assets_count", { count: outputs.length, defaultValue: "{{count}} assets" })}
         </span>
         <button onClick={onViewOutputs} className="text-micro text-primary/60 hover:text-primary font-medium transition-colors">
-          View all →
+          {t("pages:home.context.view_all", { defaultValue: "View all" })} →
         </button>
       </div>
 
@@ -463,10 +465,57 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
       {outputs.length > 3 && (
         <p className="text-micro text-muted-foreground/30 px-3 flex items-center gap-1.5">
           <SigilLock size={11} className="text-muted-foreground/15" />
-          {outputs.length - 3} locked — unlock with NEURONS
+          {t("pages:home.context.assets_locked", { count: outputs.length - 3, defaultValue: "{{count}} locked — unlock with NEURONS" })}
         </p>
       )}
     </div>
   );
+}
+
+// ═══ TabPill — shared tab button with icon + label + optional count badge ═══
+interface TabPillProps {
+  tab: {
+    id: RightTab;
+    label: string;
+    icon: React.FC<{ className?: string; size?: number }>;
+    badge?: boolean;
+    count?: number;
+  };
+  active: boolean;
+  onClick: () => void;
+}
+
+function TabPill({ tab, active, onClick }: TabPillProps) {
+  const Icon = tab.icon;
+  return (
+    <button
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex-1 flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
+        active
+          ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
+          : "text-muted-foreground/45 hover:text-muted-foreground hover:bg-muted/20"
+      )}
+    >
+      <Icon size={13} className={active ? "text-primary" : ""} />
+      <span className="uppercase tracking-widest text-[10px]">{tab.label}</span>
+      {typeof tab.count === "number" && tab.count > 0 && (
+        <span className={cn(
+          "ml-0.5 inline-flex items-center justify-center min-w-[16px] h-[15px] px-1 rounded-full text-[9px] tabular-nums font-bold",
+          active ? "bg-primary/15 text-primary" : "bg-muted/60 text-muted-foreground/70"
+        )}>
+          {tab.count > 99 ? "99+" : tab.count}
+        </span>
+      )}
+      {tab.badge && (
+        <span className={cn(
+          "absolute top-1 right-1 h-1.5 w-1.5 rounded-full",
+          tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+        )} />
+      )}
+    </button>
+  );
+}
 }
 
