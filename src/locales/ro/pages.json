@@ -37,6 +37,11 @@
     "welcome_title": "Command Center",
     "welcome_subtitle": "Rulează o comandă, extrage cunoaștere sau continuă o sesiune.",
     "suggested_for_you": "Sugerate pentru tine",
+    "typing": {
+      "thinking": "Gândesc…",
+      "analyzing": "Analizez…",
+      "generating": "Generez…"
+    },
     "cmd": {
       "placeholder": "Rulează o comandă...",
       "stop": "Oprește generarea",

@@ -37,6 +37,11 @@
     "welcome_title": "Command Center",
     "welcome_subtitle": "Run a command, extract knowledge, or continue a session.",
     "suggested_for_you": "Suggested for you",
+    "typing": {
+      "thinking": "Thinking…",
+      "analyzing": "Analyzing…",
+      "generating": "Generating…"
+    },
     "cmd": {
       "placeholder": "Run a command...",
       "stop": "Stop generation",
