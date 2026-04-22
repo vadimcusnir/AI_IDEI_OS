@@ -169,7 +169,7 @@ export function ContextDrawer({
             className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-hidden flex flex-col"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20 shrink-0">
-              <span className="text-micro font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
+              <span className="text-micro font-bold uppercase tracking-[0.2em] text-muted-foreground/60">{t("pages:home.context.control_panel", { defaultValue: "Control Panel" })}</span>
               <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
                 <X className="h-3.5 w-3.5" />
               </button>
