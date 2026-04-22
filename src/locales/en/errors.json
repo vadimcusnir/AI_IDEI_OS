@@ -45,5 +45,11 @@
   "boundary_title": "Something went wrong",
   "boundary_description": "An unexpected error occurred.",
   "boundary_retry": "Try Again",
-  "boundary_reload": "Reload Page"
+  "boundary_reload": "Reload Page",
+  "cmd_insufficient_neurons": "Not enough neurons. This command requires ~{{count}}N. Top up →",
+  "cmd_timeout": "Command timed out. Try again or simplify your request.",
+  "cmd_unknown": "Unknown command. Type / to see available commands.",
+  "cmd_upload_failed": "File upload failed. Max size: 50MB. Supported: PDF, TXT, DOCX.",
+  "cmd_session_expired": "Session expired. Your work is saved — resume anytime.",
+  "cmd_file_too_large": "File too large ({{size}}MB). Maximum allowed: 50MB."
 }

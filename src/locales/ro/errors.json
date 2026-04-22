@@ -45,5 +45,11 @@
   "boundary_title": "Ceva nu a mers bine",
   "boundary_description": "A apărut o eroare neașteptată.",
   "boundary_retry": "Încearcă din nou",
-  "boundary_reload": "Reîncarcă pagina"
+  "boundary_reload": "Reîncarcă pagina",
+  "cmd_insufficient_neurons": "Neuroni insuficienți. Această comandă necesită ~{{count}}N. Reîncarcă →",
+  "cmd_timeout": "Comanda a expirat. Reîncearcă sau simplifică cererea.",
+  "cmd_unknown": "Comandă necunoscută. Tastează / pentru a vedea comenzile disponibile.",
+  "cmd_upload_failed": "Încărcarea fișierului a eșuat. Mărime maximă: 50MB. Acceptate: PDF, TXT, DOCX.",
+  "cmd_session_expired": "Sesiunea a expirat. Munca ta este salvată — reia oricând.",
+  "cmd_file_too_large": "Fișier prea mare ({{size}}MB). Maxim permis: 50MB."
 }
