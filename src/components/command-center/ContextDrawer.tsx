@@ -517,5 +517,3 @@ function TabPill({ tab, active, onClick }: TabPillProps) {
     </button>
   );
 }
-}
-
