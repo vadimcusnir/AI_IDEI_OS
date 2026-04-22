@@ -128,7 +128,7 @@ export default function Onboarding() {
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-micro font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
-            3 Steps to Knowledge Assets
+            {t("onboarding.badge_3_steps")}
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
@@ -138,7 +138,7 @@ export default function Onboarding() {
           </p>
           <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs border-border/50 hover:border-[hsl(var(--gold-oxide)/0.3)]">
             <BookOpen className="h-3.5 w-3.5" />
-            Interactive Tutorial (+50 NEURONS)
+            {t("onboarding.tutorial_cta")}
           </Button>
         </motion.div>
 
@@ -182,7 +182,7 @@ export default function Onboarding() {
                       "text-nano sm:text-micro font-semibold tracking-wide",
                       isActive ? "text-[hsl(var(--gold-oxide))]" : isCompleted ? "text-foreground" : "text-muted-foreground/50"
                     )}>
-                      {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
+                      {t(`onboarding.${step.i18nKey}.title`)}
                     </span>
                   </button>
                   {idx < STEPS.length - 1 && (
@@ -222,10 +222,10 @@ export default function Onboarding() {
           <div className="rounded-2xl border border-[hsl(var(--gold-oxide)/0.15)] bg-[hsl(var(--gold-oxide)/0.02)] p-5 sm:p-6">
             <div className="flex items-center gap-2 mb-1.5">
               <Sparkles className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
-              <h2 className="text-sm font-bold">Try It Now — Instant Analysis</h2>
+              <h2 className="text-sm font-bold">{t("onboarding.instant_title")}</h2>
             </div>
             <p className="text-xs text-muted-foreground mb-4">
-              Paste any text or URL and get structured intelligence in under 60 seconds. No setup needed.
+              {t("onboarding.instant_desc")}
             </p>
             <InstantAnalysisFlow />
           </div>
@@ -255,7 +255,7 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-nano font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
+                        {t("onboarding.step_of_total", { current: activeStep + 1, total: STEPS.length })}
                       </span>
                       {isCompleted && (
                         <span className="text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
@@ -265,7 +265,7 @@ export default function Onboarding() {
                     </div>
                     <div className="flex items-center gap-1 text-nano font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
                       <Gift className="h-3 w-3" />
-                      {step.reward}
+                      {t(`onboarding.${step.i18nKey}.reward`)}
                     </div>
                   </div>
 
@@ -278,18 +278,18 @@ export default function Onboarding() {
                       <Icon className={cn("h-6 w-6", isCompleted ? "text-[hsl(var(--gold-oxide))]" : "text-foreground")} />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{step.title}</h2>
-                      <p className="text-micro text-muted-foreground font-medium">{step.subtitle}</p>
+                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{t(`onboarding.${step.i18nKey}.title`)}</h2>
+                      <p className="text-micro text-muted-foreground font-medium">{t(`onboarding.${step.i18nKey}.subtitle`)}</p>
                     </div>
                   </div>
 
-                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.desc}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">{t(`onboarding.${step.i18nKey}.desc`)}</p>
 
                   {/* Tip */}
                   <div className="rounded-xl bg-muted/30 border border-border/30 p-3.5 mb-5">
                     <div className="flex items-center gap-1.5">
                       <Play className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
-                      <p className="text-micro text-muted-foreground/70 italic">{step.tip}</p>
+                      <p className="text-micro text-muted-foreground/70 italic">{t(`onboarding.${step.i18nKey}.tip`)}</p>
                     </div>
                   </div>
 
@@ -308,7 +308,7 @@ export default function Onboarding() {
                       className="gap-2 text-xs"
                       onClick={() => navigate(step.action)}
                     >
-                      {step.actionLabel}
+                      {t(`onboarding.${step.i18nKey}.action`)}
                       <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -327,7 +327,7 @@ export default function Onboarding() {
             disabled={activeStep === 0}
             onClick={() => setActiveStep(s => s - 1)}
           >
-            ← Previous
+            {t("onboarding.previous")}
           </Button>
           <Button
             variant="ghost"
@@ -336,7 +336,7 @@ export default function Onboarding() {
             disabled={activeStep === STEPS.length - 1}
             onClick={() => setActiveStep(s => s + 1)}
           >
-            Next →
+            {t("onboarding.next")}
           </Button>
         </div>
 
@@ -363,7 +363,7 @@ export default function Onboarding() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button variant="outline" onClick={() => navigate("/extractor")} className="gap-2 text-xs">
-                Upload More
+                {t("onboarding.upload_more")}
               </Button>
             </div>
           </motion.div>
