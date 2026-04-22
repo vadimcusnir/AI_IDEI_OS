@@ -78,7 +78,8 @@ function useOperatorMode(isAdmin: boolean) {
 // ═══ NAVIGATION MAP — Flat, deterministic, pipeline-aligned ═══
 
 interface NavItem {
-  label: string;
+  /** i18n key under navigation:items.* */
+  labelKey: string;
   to: string;
   icon: React.ElementType;
   controlId?: string;
@@ -91,7 +92,8 @@ interface NavItem {
 
 interface NavSection {
   key: string;
-  label: string;
+  /** i18n key under navigation:sections.* */
+  labelKey: string;
   items: NavItem[];
   authOnly?: boolean;
   adminOnly?: boolean;
@@ -102,66 +104,66 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   {
     key: "core",
-    label: "CORE",
+    labelKey: "core",
     items: [
-      { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-      { label: "Pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline" },
-      { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs", operatorOnly: true },
+      { labelKey: "command_center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+      { labelKey: "pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline" },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs", operatorOnly: true },
     ],
   },
   {
     key: "economy",
-    label: "ECONOMY",
+    labelKey: "economy",
     authOnly: true,
     items: [
-      { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { label: "Purchases", to: "/purchases", icon: Clock, controlId: "nav.purchases", operatorOnly: true },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "purchases", to: "/purchases", icon: Clock, controlId: "nav.purchases", operatorOnly: true },
     ],
   },
   {
     key: "intelligence",
-    label: "INTELLIGENCE",
+    labelKey: "intelligence",
     authOnly: true,
     operatorOnly: true,
     items: [
-      { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-      { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
-      { label: "My Analytics", to: "/my-analytics", icon: BarChart3, controlId: "nav.my_analytics" },
+      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { labelKey: "knowledge_graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "my_analytics", to: "/my-analytics", icon: BarChart3, controlId: "nav.my_analytics" },
     ],
   },
   {
     key: "tools",
-    label: "TOOLS",
+    labelKey: "tools",
     authOnly: true,
     items: [
-      { label: "Deliverables", to: "/deliverables", icon: Database, controlId: "nav.deliverables" },
-      { label: "Learning", to: "/learning", icon: GraduationCap, controlId: "nav.learning" },
-      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-      { label: "Workspace", to: "/workspace", icon: Database, controlId: "nav.workspace", operatorOnly: true },
-      { label: "Personal OS", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os", operatorOnly: true },
-      { label: "Augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation", operatorOnly: true },
-      { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip", operatorOnly: true },
-      { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
+      { labelKey: "deliverables", to: "/deliverables", icon: Database, controlId: "nav.deliverables" },
+      { labelKey: "learning", to: "/learning", icon: GraduationCap, controlId: "nav.learning" },
+      { labelKey: "progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
+      { labelKey: "workspace", to: "/workspace", icon: Database, controlId: "nav.workspace", operatorOnly: true },
+      { labelKey: "personal_os", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os", operatorOnly: true },
+      { labelKey: "augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation", operatorOnly: true },
+      { labelKey: "vip_program", to: "/vip", icon: Gem, controlId: "nav.vip", operatorOnly: true },
+      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
 ];
 
 const ADMIN_SECTION: NavSection = {
   key: "admin",
-  label: "ADMIN",
+  labelKey: "admin",
   adminOnly: true,
   items: [
-    { label: "Dashboard", to: "/admin", icon: Shield, adminOnly: true },
-    { label: "Council Chat", to: "/admin/chat", icon: MessagesSquare, adminOnly: true },
-    { label: "Control Center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
-    { label: "Cost Engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
-    { label: "Kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
-    { label: "Runtime", to: "/runtime", icon: Activity, adminOnly: true },
-    { label: "Analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
-    { label: "Catalog", to: "/services-catalog", icon: Database, adminOnly: true },
+    { labelKey: "admin_dashboard", to: "/admin", icon: Shield, adminOnly: true },
+    { labelKey: "council_chat", to: "/admin/chat", icon: MessagesSquare, adminOnly: true },
+    { labelKey: "control_center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
+    { labelKey: "cost_engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
+    { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
+    { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
+    { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
+    { labelKey: "catalog", to: "/services-catalog", icon: Database, adminOnly: true },
   ],
 };
 
