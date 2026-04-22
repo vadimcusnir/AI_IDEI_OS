@@ -201,12 +201,13 @@ export function AppSidebar() {
   const renderItem = (item: NavItem) => {
     if (item.adminOnly && !isAdmin) return null;
     if (item.operatorOnly && !isOperator) return null;
+    const label = t(`navigation:items.${item.labelKey}`);
     const el = (
       <SidebarMenuItem key={item.to}>
         <SidebarMenuButton
           asChild
           isActive={isActive(item.to)}
-          tooltip={item.label}
+          tooltip={label}
         >
           <button
             onClick={() => navigate(item.to)}
@@ -217,7 +218,7 @@ export function AppSidebar() {
             )}
           >
             <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
-            {!collapsed && <span>{item.label}</span>}
+            {!collapsed && <span>{label}</span>}
           </button>
         </SidebarMenuButton>
       </SidebarMenuItem>
