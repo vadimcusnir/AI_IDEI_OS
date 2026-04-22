@@ -124,33 +124,13 @@ export function ContextDrawer({
         >
           {/* Tab bar — premium treatment */}
           <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20">
-            {TABS.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
-                    activeTab === tab.id
-                      ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
-                      : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
-                  )}
-                >
-                  <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
-                  <span className="hidden xl:inline uppercase tracking-widest">{tab.label}</span>
-                  {tab.badge && (
-                    <span className={cn(
-                      "h-1.5 w-1.5 rounded-full",
-                      tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
-                    )} />
-                  )}
-                </button>
-              );
-            })}
+            {TABS.map(tab => (
+              <TabPill key={tab.id} tab={tab} active={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} />
+            ))}
             <button
               onClick={() => setIsOpen(false)}
               className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/25 hover:text-foreground hover:bg-muted/30 transition-colors ml-0.5 shrink-0"
+              aria-label={t("common:close", { defaultValue: "Close" })}
             >
               <X className="h-3 w-3" />
             </button>
