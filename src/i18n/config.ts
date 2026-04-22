@@ -20,12 +20,20 @@ const deferredNamespaces = ["pages", "architecture"] as const;
 const loadedLanguages = new Set(["en"]);
 const deferredENLoaded = new Set<string>();
 
-// Lazy-load deferred EN namespaces on first use
+// Lazy-load deferred EN namespaces on first use.
+// Explicit loader map so vite emits separate chunks (no static-import collision).
+const deferredENLoaders: Record<string, () => Promise<{ default: Record<string, unknown> }>> = {
+  pages: () => import("../locales/en/pages.json"),
+  architecture: () => import("../locales/en/architecture.json"),
+};
+
 i18n.on("initialized", () => {
   deferredNamespaces.forEach(async (ns) => {
     if (deferredENLoaded.has(ns)) return;
     deferredENLoaded.add(ns);
-    const mod = await import(`../locales/en/${ns}.json`);
+    const loader = deferredENLoaders[ns];
+    if (!loader) return;
+    const mod = await loader();
     i18n.addResourceBundle("en", ns, mod.default, true, true);
   });
 });
