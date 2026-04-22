@@ -117,7 +117,7 @@ export default function Onboarding() {
     <PageTransition>
     <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
-       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 3 steps." />
+       <SEOHead title={`${t("onboarding.title")} — AI-IDEI`} description={t("onboarding.subtitle")} />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* Hero Header */}
