@@ -18,6 +18,7 @@ import {
   Loader2, RefreshCw, Layers, Sparkles, Shield,
 } from "lucide-react";
 import { VisibilityControls } from "@/components/workspace/VisibilityControls";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface WorkspaceStats {
   totalNeurons: number;
