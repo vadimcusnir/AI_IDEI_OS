@@ -131,11 +131,12 @@ Deno.serve(async (req) => {
 
     steps.forEach((step: any, idx: number) => {
       const groupId = step.parallel_group || null;
-      if (groupId && currentGroup?.groupId === groupId) {
+      if (groupId && currentGroup && currentGroup.groupId === groupId) {
         currentGroup.steps.push({ step, index: idx });
       } else {
-        currentGroup = { groupId, steps: [{ step, index: idx }] };
-        stepGroups.push(currentGroup);
+        const newGroup: StepGroup = { groupId, steps: [{ step, index: idx }] };
+        currentGroup = newGroup;
+        stepGroups.push(newGroup);
       }
     });
 

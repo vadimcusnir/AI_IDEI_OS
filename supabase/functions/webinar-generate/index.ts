@@ -234,7 +234,7 @@ Deno.serve(async (req) => {
             const data = await resp.json();
             return { role: p.role, content: data.choices?.[0]?.message?.content || "" };
           } catch (e) {
-            return { role: p.role, content: `Error: ${e.message}` };
+            return { role: p.role, content: `Error: ${e instanceof Error ? e.message : String(e)}` };
           }
         }));
 
