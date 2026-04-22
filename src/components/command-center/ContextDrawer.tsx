@@ -72,10 +72,16 @@ export function ContextDrawer({
   const isActive = phase === "executing" || phase === "delivering" || phase === "planning";
   const consumedCredits = steps.filter(s => s.status === "completed" || s.status === "running").reduce((sum, s) => sum + s.credits, 0);
 
-  const TABS: Array<{ id: RightTab; label: string; icon: React.FC<{ className?: string; size?: number }>; badge?: boolean }> = [
-    { id: "state", label: "State", icon: SigilEye, badge: balance < 200 },
-    { id: "runs", label: "Runs", icon: SigilBolt, badge: isActive },
-    { id: "assets", label: "Assets", icon: SigilCrystal },
+  const TABS: Array<{
+    id: RightTab;
+    label: string;
+    icon: React.FC<{ className?: string; size?: number }>;
+    badge?: boolean;
+    count?: number;
+  }> = [
+    { id: "state", label: t("pages:home.context.tab_state", { defaultValue: "State" }), icon: SigilEye, badge: balance < 200 },
+    { id: "runs", label: t("pages:home.context.tab_runs", { defaultValue: "Runs" }), icon: SigilBolt, badge: isActive, count: steps.length || undefined },
+    { id: "assets", label: t("pages:home.context.tab_assets", { defaultValue: "Assets" }), icon: SigilCrystal, count: outputs.length || undefined },
   ];
 
   // Collapsed icon strip
