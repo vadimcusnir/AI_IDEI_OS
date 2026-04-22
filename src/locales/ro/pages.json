@@ -34,9 +34,27 @@
       "view_jobs": "Vezi Joburi",
       "view_jobs_desc": "Monitorizează execuțiile"
     },
-    "welcome_title": "Cu ce te pot ajuta?",
-    "welcome_subtitle": "Descrie ce ai nevoie, încarcă un fișier sau alege o sugestie.",
+    "welcome_title": "Command Center",
+    "welcome_subtitle": "Rulează o comandă, extrage cunoaștere sau continuă o sesiune.",
     "suggested_for_you": "Sugerate pentru tine",
+    "cmd": {
+      "placeholder": "Rulează o comandă...",
+      "stop": "Oprește generarea",
+      "hint_run": "execută",
+      "hint_commands": "comenzi",
+      "hint_attach": "atașează"
+    },
+    "sessions": {
+      "title": "Sesiuni recente",
+      "empty_session": "Sesiune goală",
+      "messages_one": "{{count}} mesaj",
+      "messages_few": "{{count}} mesaje",
+      "messages_other": "{{count}} de mesaje",
+      "show_less": "Arată mai puțin",
+      "show_more_one": "Arată încă {{count}} sesiune",
+      "show_more_few": "Arată încă {{count}} sesiuni",
+      "show_more_other": "Arată încă {{count}} de sesiuni"
+    },
     "activation": {
       "title": "Primul tău upload",
       "subtitle": "Aruncă o notă vocală, un document sau un link — vezi ce iese.",

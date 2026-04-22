@@ -3,6 +3,7 @@
  */
 
 import { useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Paperclip, X, Square, ArrowUp, Terminal } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
@@ -41,6 +42,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
     ref,
   ) {
+    const { t } = useTranslation(["pages", "common"]);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -193,7 +195,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   onShowSlashMenuChange(e.target.value.startsWith("/") && !e.target.value.includes(" "));
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Execută comandă..."
+                placeholder={t("pages:home.cmd.placeholder", { defaultValue: "Run a command..." })}
                 className="w-full resize-none bg-transparent px-1 py-2 text-sm leading-5 focus:outline-none placeholder:text-muted-foreground/35 min-h-[40px] max-h-[180px]"
                 rows={1}
                 style={{ height: "auto" }}
@@ -226,7 +228,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   size="icon"
                   className="h-10 w-10 rounded-xl bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                   onClick={onStop}
-                  title="Oprește generarea"
+                  title={t("pages:home.cmd.stop", { defaultValue: "Stop generation" })}
                 >
                   <Square className="h-3.5 w-3.5 fill-current" />
                 </Button>
@@ -250,7 +252,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
           {/* Keyboard hint — desktop only (noise on touch) */}
           <p className="hidden sm:block text-nano text-muted-foreground/20 text-center mt-1.5 select-none tracking-wide">
-            <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> servicii
+            <kbd className="font-mono">Enter</kbd> {t("pages:home.cmd.hint_run", { defaultValue: "to run" })} · <kbd className="font-mono">/</kbd> {t("pages:home.cmd.hint_commands", { defaultValue: "for commands" })} · <kbd className="font-mono">+</kbd> {t("pages:home.cmd.hint_attach", { defaultValue: "to attach" })}
           </p>
         </div>
       </div>

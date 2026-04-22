@@ -34,9 +34,25 @@
       "view_jobs": "View Jobs",
       "view_jobs_desc": "Monitor executions"
     },
-    "welcome_title": "How can I help?",
-    "welcome_subtitle": "Describe what you need, upload a file, or pick a suggestion below.",
+    "welcome_title": "Command Center",
+    "welcome_subtitle": "Run a command, extract knowledge, or continue a session.",
     "suggested_for_you": "Suggested for you",
+    "cmd": {
+      "placeholder": "Run a command...",
+      "stop": "Stop generation",
+      "hint_run": "to run",
+      "hint_commands": "for commands",
+      "hint_attach": "to attach"
+    },
+    "sessions": {
+      "title": "Recent Sessions",
+      "empty_session": "Empty session",
+      "messages_one": "{{count}} message",
+      "messages_other": "{{count}} messages",
+      "show_less": "Show less",
+      "show_more_one": "Show {{count}} more session",
+      "show_more_other": "Show {{count}} more sessions"
+    },
     "activation": {
       "title": "Your first upload",
       "subtitle": "Drop a voice note, doc, or link — see what comes out.",

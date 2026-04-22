@@ -73,10 +73,10 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
         </div>
         <div>
           <h2 className="text-xl font-bold tracking-tight">
-            {t("pages:home.welcome_title", { defaultValue: "How can I help?" })}
+            {t("pages:home.welcome_title", { defaultValue: "Command Center" })}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("pages:home.welcome_subtitle", { defaultValue: "Describe what you need, upload a file, or pick a suggestion below." })}
+            {t("pages:home.welcome_subtitle", { defaultValue: "Run a command, extract knowledge, or continue a session." })}
           </p>
         </div>
       </motion.div>

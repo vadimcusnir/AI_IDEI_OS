@@ -446,7 +446,7 @@ export function AgentConsole() {
                   <div className="min-w-0 flex-1">
                     <p className="text-micro truncate">{s.last_message || "Session"}</p>
                     <p className="text-nano text-muted-foreground">
-                      {new Date(s.created_at).toLocaleDateString()} · {s.message_count} msgs
+                      {new Date(s.created_at).toLocaleDateString()} · {s.message_count === 1 ? "1 message" : `${s.message_count} messages`}
                     </p>
                   </div>
                   <button
