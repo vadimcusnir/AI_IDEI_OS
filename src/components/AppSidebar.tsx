@@ -78,7 +78,8 @@ function useOperatorMode(isAdmin: boolean) {
 // ═══ NAVIGATION MAP — Flat, deterministic, pipeline-aligned ═══
 
 interface NavItem {
-  label: string;
+  /** i18n key under navigation:items.* */
+  labelKey: string;
   to: string;
   icon: React.ElementType;
   controlId?: string;
@@ -91,7 +92,8 @@ interface NavItem {
 
 interface NavSection {
   key: string;
-  label: string;
+  /** i18n key under navigation:sections.* */
+  labelKey: string;
   items: NavItem[];
   authOnly?: boolean;
   adminOnly?: boolean;
@@ -102,66 +104,66 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   {
     key: "core",
-    label: "CORE",
+    labelKey: "core",
     items: [
-      { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-      { label: "Pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline" },
-      { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs", operatorOnly: true },
+      { labelKey: "command_center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+      { labelKey: "pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline" },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs", operatorOnly: true },
     ],
   },
   {
     key: "economy",
-    label: "ECONOMY",
+    labelKey: "economy",
     authOnly: true,
     items: [
-      { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { label: "Purchases", to: "/purchases", icon: Clock, controlId: "nav.purchases", operatorOnly: true },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "purchases", to: "/purchases", icon: Clock, controlId: "nav.purchases", operatorOnly: true },
     ],
   },
   {
     key: "intelligence",
-    label: "INTELLIGENCE",
+    labelKey: "intelligence",
     authOnly: true,
     operatorOnly: true,
     items: [
-      { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-      { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
-      { label: "My Analytics", to: "/my-analytics", icon: BarChart3, controlId: "nav.my_analytics" },
+      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { labelKey: "knowledge_graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "my_analytics", to: "/my-analytics", icon: BarChart3, controlId: "nav.my_analytics" },
     ],
   },
   {
     key: "tools",
-    label: "TOOLS",
+    labelKey: "tools",
     authOnly: true,
     items: [
-      { label: "Deliverables", to: "/deliverables", icon: Database, controlId: "nav.deliverables" },
-      { label: "Learning", to: "/learning", icon: GraduationCap, controlId: "nav.learning" },
-      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-      { label: "Workspace", to: "/workspace", icon: Database, controlId: "nav.workspace", operatorOnly: true },
-      { label: "Personal OS", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os", operatorOnly: true },
-      { label: "Augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation", operatorOnly: true },
-      { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip", operatorOnly: true },
-      { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
+      { labelKey: "deliverables", to: "/deliverables", icon: Database, controlId: "nav.deliverables" },
+      { labelKey: "learning", to: "/learning", icon: GraduationCap, controlId: "nav.learning" },
+      { labelKey: "progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
+      { labelKey: "workspace", to: "/workspace", icon: Database, controlId: "nav.workspace", operatorOnly: true },
+      { labelKey: "personal_os", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os", operatorOnly: true },
+      { labelKey: "augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation", operatorOnly: true },
+      { labelKey: "vip_program", to: "/vip", icon: Gem, controlId: "nav.vip", operatorOnly: true },
+      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
 ];
 
 const ADMIN_SECTION: NavSection = {
   key: "admin",
-  label: "ADMIN",
+  labelKey: "admin",
   adminOnly: true,
   items: [
-    { label: "Dashboard", to: "/admin", icon: Shield, adminOnly: true },
-    { label: "Council Chat", to: "/admin/chat", icon: MessagesSquare, adminOnly: true },
-    { label: "Control Center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
-    { label: "Cost Engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
-    { label: "Kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
-    { label: "Runtime", to: "/runtime", icon: Activity, adminOnly: true },
-    { label: "Analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
-    { label: "Catalog", to: "/services-catalog", icon: Database, adminOnly: true },
+    { labelKey: "admin_dashboard", to: "/admin", icon: Shield, adminOnly: true },
+    { labelKey: "council_chat", to: "/admin/chat", icon: MessagesSquare, adminOnly: true },
+    { labelKey: "control_center", to: "/admin/control-center", icon: Terminal, adminOnly: true },
+    { labelKey: "cost_engine", to: "/admin/cost-engine", icon: Coins, adminOnly: true },
+    { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
+    { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
+    { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
+    { labelKey: "catalog", to: "/services-catalog", icon: Database, adminOnly: true },
   ],
 };
 
@@ -199,12 +201,13 @@ export function AppSidebar() {
   const renderItem = (item: NavItem) => {
     if (item.adminOnly && !isAdmin) return null;
     if (item.operatorOnly && !isOperator) return null;
+    const label = t(`navigation:items.${item.labelKey}`);
     const el = (
       <SidebarMenuItem key={item.to}>
         <SidebarMenuButton
           asChild
           isActive={isActive(item.to)}
-          tooltip={item.label}
+          tooltip={label}
         >
           <button
             onClick={() => navigate(item.to)}
@@ -215,7 +218,7 @@ export function AppSidebar() {
             )}
           >
             <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
-            {!collapsed && <span>{item.label}</span>}
+            {!collapsed && <span>{label}</span>}
           </button>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -243,7 +246,7 @@ export function AppSidebar() {
       <SidebarGroup key={section.key} className="py-1">
         {!collapsed && (
           <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50 select-none px-3 mb-0.5">
-            {section.label}
+            {t(`navigation:sections.${section.labelKey}`)}
           </SidebarGroupLabel>
         )}
         <SidebarGroupContent>
@@ -343,13 +346,13 @@ export function AppSidebar() {
           <SidebarGroup>
             {!collapsed && (
               <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50">
-                EXPLORE
+                {t("navigation:sections.explore")}
               </SidebarGroupLabel>
             )}
             <SidebarGroupContent>
               <SidebarMenu>
-                {renderItem({ label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" })}
-                {renderItem({ label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" })}
+                {renderItem({ labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" })}
+                {renderItem({ labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -370,11 +373,11 @@ export function AppSidebar() {
               <button
                 onClick={toggleMode}
                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors text-left group"
-                title={isOperator ? "Switch to User Mode" : "Switch to Operator Mode"}
+                title={t(isOperator ? "navigation:mode.switch_to_user" : "navigation:mode.switch_to_operator")}
               >
                 <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
                 <span className="text-micro font-mono tracking-wide text-muted-foreground group-hover:text-foreground transition-colors">
-                  {isOperator ? "OPERATOR" : "USER"} MODE
+                  {t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
                 </span>
               </button>
             )}
@@ -382,7 +385,7 @@ export function AppSidebar() {
               <button
                 onClick={toggleMode}
                 className="p-1.5 rounded-md hover:bg-muted/50 transition-colors"
-                title={isOperator ? "Operator Mode" : "User Mode"}
+                title={t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
               >
                 <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
               </button>
@@ -414,9 +417,9 @@ export function AppSidebar() {
         ) : (
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Sign In" className="w-full" onClick={() => navigate("/auth")}>
+              <SidebarMenuButton tooltip={t("navigation:sign_in")} className="w-full" onClick={() => navigate("/auth")}>
                 <LogIn className="h-4 w-4" />
-                {!collapsed && <span>Sign In</span>}
+                {!collapsed && <span>{t("navigation:sign_in")}</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

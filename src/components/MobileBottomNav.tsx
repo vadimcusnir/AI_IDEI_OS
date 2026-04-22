@@ -20,61 +20,61 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Progress } from "@/components/ui/progress";
 
 const BAR_ITEMS = [
-  { path: "/home", icon: Home, label: "Home" },
-  { path: "/pipeline", icon: Workflow, label: "Pipeline" },
-  { path: "/library", icon: BookOpen, label: "Library" },
-  { path: "/services", icon: Sparkles, label: "Services" },
+  { path: "/home", icon: Home, labelKey: "command_center" },
+  { path: "/pipeline", icon: Workflow, labelKey: "pipeline" },
+  { path: "/library", icon: BookOpen, labelKey: "library" },
+  { path: "/services", icon: Sparkles, labelKey: "services" },
 ];
 
-interface MenuItem { path: string; icon: React.ElementType; label: string; adminOnly?: boolean; operatorOnly?: boolean }
-interface MenuSection { key: string; label: string; items: MenuItem[]; adminOnly?: boolean; operatorOnly?: boolean }
+interface MenuItem { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean; operatorOnly?: boolean }
+interface MenuSection { key: string; labelKey: string; items: MenuItem[]; adminOnly?: boolean; operatorOnly?: boolean }
 
 // ═══ MIRROR OF AppSidebar SECTIONS — keep in sync ═══
 const MENU_SECTIONS: MenuSection[] = [
   {
-    key: "core", label: "CORE", items: [
-      { path: "/home", icon: Home, label: "Command Center" },
-      { path: "/pipeline", icon: Workflow, label: "Pipeline" },
-      { path: "/services", icon: Sparkles, label: "Services" },
-      { path: "/library", icon: BookOpen, label: "Library" },
-      { path: "/jobs", icon: Clock, label: "Jobs", operatorOnly: true },
+    key: "core", labelKey: "core", items: [
+      { path: "/home", icon: Home, labelKey: "command_center" },
+      { path: "/pipeline", icon: Workflow, labelKey: "pipeline" },
+      { path: "/services", icon: Sparkles, labelKey: "services" },
+      { path: "/library", icon: BookOpen, labelKey: "library" },
+      { path: "/jobs", icon: Clock, labelKey: "jobs", operatorOnly: true },
     ],
   },
   {
-    key: "economy", label: "ECONOMY", items: [
-      { path: "/credits", icon: Coins, label: "Credits" },
-      { path: "/marketplace", icon: Store, label: "Marketplace" },
-      { path: "/purchases", icon: Clock, label: "Purchases", operatorOnly: true },
+    key: "economy", labelKey: "economy", items: [
+      { path: "/credits", icon: Coins, labelKey: "credits" },
+      { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+      { path: "/purchases", icon: Clock, labelKey: "purchases", operatorOnly: true },
     ],
   },
   {
-    key: "intelligence", label: "INTELLIGENCE", operatorOnly: true, items: [
-      { path: "/neurons", icon: Brain, label: "Neurons" },
-      { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
-      { path: "/my-analytics", icon: BarChart3, label: "My Analytics" },
+    key: "intelligence", labelKey: "intelligence", operatorOnly: true, items: [
+      { path: "/neurons", icon: Brain, labelKey: "neurons" },
+      { path: "/intelligence", icon: Network, labelKey: "knowledge_graph" },
+      { path: "/my-analytics", icon: BarChart3, labelKey: "my_analytics" },
     ],
   },
   {
-    key: "tools", label: "TOOLS", items: [
-      { path: "/deliverables", icon: Database, label: "Deliverables" },
-      { path: "/learning", icon: GraduationCap, label: "Learning" },
-      { path: "/gamification", icon: Trophy, label: "Progress" },
-      { path: "/workspace", icon: Database, label: "Workspace", operatorOnly: true },
-      { path: "/personal-os", icon: Cpu, label: "Personal OS", operatorOnly: true },
-      { path: "/augmentation", icon: Zap, label: "Augmentation", operatorOnly: true },
-      { path: "/vip", icon: Gem, label: "VIP Program", operatorOnly: true },
-      { path: "/integrations", icon: Plug, label: "Integrations", operatorOnly: true },
+    key: "tools", labelKey: "tools", items: [
+      { path: "/deliverables", icon: Database, labelKey: "deliverables" },
+      { path: "/learning", icon: GraduationCap, labelKey: "learning" },
+      { path: "/gamification", icon: Trophy, labelKey: "progress" },
+      { path: "/workspace", icon: Database, labelKey: "workspace", operatorOnly: true },
+      { path: "/personal-os", icon: Cpu, labelKey: "personal_os", operatorOnly: true },
+      { path: "/augmentation", icon: Zap, labelKey: "augmentation", operatorOnly: true },
+      { path: "/vip", icon: Gem, labelKey: "vip_program", operatorOnly: true },
+      { path: "/integrations", icon: Plug, labelKey: "integrations", operatorOnly: true },
     ],
   },
   {
-    key: "admin", label: "ADMIN", adminOnly: true, items: [
-      { path: "/admin", icon: Shield, label: "Dashboard", adminOnly: true },
-      { path: "/admin/control-center", icon: Activity, label: "Control Center", adminOnly: true },
-      { path: "/admin/cost-engine", icon: Coins, label: "Cost Engine", adminOnly: true },
-      { path: "/admin/kernel", icon: Cpu, label: "Kernel", adminOnly: true },
-      { path: "/runtime", icon: Activity, label: "Runtime", adminOnly: true },
-      { path: "/analytics", icon: BarChart3, label: "Analytics", adminOnly: true },
-      { path: "/services-catalog", icon: Database, label: "Catalog", adminOnly: true },
+    key: "admin", labelKey: "admin", adminOnly: true, items: [
+      { path: "/admin", icon: Shield, labelKey: "admin_dashboard", adminOnly: true },
+      { path: "/admin/control-center", icon: Activity, labelKey: "control_center", adminOnly: true },
+      { path: "/admin/cost-engine", icon: Coins, labelKey: "cost_engine", adminOnly: true },
+      { path: "/admin/kernel", icon: Cpu, labelKey: "kernel", adminOnly: true },
+      { path: "/runtime", icon: Activity, labelKey: "runtime", adminOnly: true },
+      { path: "/analytics", icon: BarChart3, labelKey: "analytics", adminOnly: true },
+      { path: "/services-catalog", icon: Database, labelKey: "catalog", adminOnly: true },
     ],
   },
 ];
@@ -84,7 +84,7 @@ const MODE_KEY = "ai-idei-sidebar-mode";
 export function MobileBottomNav() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "navigation"]);
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -121,8 +121,9 @@ export function MobileBottomNav() {
         "pb-[env(safe-area-inset-bottom,0px)]",
       )}>
         <div className="flex items-stretch justify-around h-14 px-1">
-          {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
+          {BAR_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = isActive(path);
+            const label = t(`navigation:items.${labelKey}`);
             return (
               <button
                 key={path}
@@ -144,7 +145,7 @@ export function MobileBottomNav() {
             className="flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] text-muted-foreground active:scale-95"
           >
             <Menu className="h-5 w-5" />
-            <span className="text-micro font-medium">More</span>
+            <span className="text-micro font-medium">{t("navigation:more")}</span>
           </button>
         </div>
       </nav>
@@ -173,7 +174,7 @@ export function MobileBottomNav() {
               return (
                 <div key={section.key}>
                   <p className="text-nano font-bold uppercase tracking-[0.15em] text-muted-foreground/50 px-4 pt-4 pb-1.5">
-                    {section.label}
+                    {t(`navigation:sections.${section.labelKey}`)}
                   </p>
                   {items.map((item) => {
                     const active = isActive(item.path);
@@ -189,7 +190,7 @@ export function MobileBottomNav() {
                         )}
                       >
                         <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
-                        <span className="flex-1 text-left">{item.label}</span>
+                        <span className="flex-1 text-left">{t(`navigation:items.${item.labelKey}`)}</span>
                       </button>
                     );
                   })}
@@ -220,18 +221,18 @@ export function MobileBottomNav() {
             <div className="flex items-center gap-2 px-3 py-1.5 text-left">
               <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
               <span className="text-micro font-mono tracking-wide text-muted-foreground">
-                {isOperator ? "OPERATOR" : "USER"} MODE
+                {t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
               </span>
             </div>
 
             <button onClick={() => handleNav("/profile")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <User className="h-4 w-4 text-muted-foreground" /> Profile
+              <User className="h-4 w-4 text-muted-foreground" /> {t("navigation:profile")}
             </button>
             <button onClick={() => handleNav("/notifications")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <Bell className="h-4 w-4 text-muted-foreground" /> Notifications
+              <Bell className="h-4 w-4 text-muted-foreground" /> {t("navigation:notifications")}
             </button>
             <button onClick={() => handleNav("/workspace")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <Settings className="h-4 w-4 text-muted-foreground" /> Settings
+              <Settings className="h-4 w-4 text-muted-foreground" /> {t("common:settings", { defaultValue: "Settings" })}
             </button>
             <button
               onClick={() => { signOut(); setMenuOpen(false); }}
