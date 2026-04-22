@@ -84,7 +84,7 @@ const MODE_KEY = "ai-idei-sidebar-mode";
 export function MobileBottomNav() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "navigation"]);
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -121,8 +121,9 @@ export function MobileBottomNav() {
         "pb-[env(safe-area-inset-bottom,0px)]",
       )}>
         <div className="flex items-stretch justify-around h-14 px-1">
-          {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
+          {BAR_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = isActive(path);
+            const label = t(`navigation:items.${labelKey}`);
             return (
               <button
                 key={path}
@@ -144,7 +145,7 @@ export function MobileBottomNav() {
             className="flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] text-muted-foreground active:scale-95"
           >
             <Menu className="h-5 w-5" />
-            <span className="text-micro font-medium">More</span>
+            <span className="text-micro font-medium">{t("navigation:more")}</span>
           </button>
         </div>
       </nav>
@@ -173,7 +174,7 @@ export function MobileBottomNav() {
               return (
                 <div key={section.key}>
                   <p className="text-nano font-bold uppercase tracking-[0.15em] text-muted-foreground/50 px-4 pt-4 pb-1.5">
-                    {section.label}
+                    {t(`navigation:sections.${section.labelKey}`)}
                   </p>
                   {items.map((item) => {
                     const active = isActive(item.path);
@@ -189,7 +190,7 @@ export function MobileBottomNav() {
                         )}
                       >
                         <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
-                        <span className="flex-1 text-left">{item.label}</span>
+                        <span className="flex-1 text-left">{t(`navigation:items.${item.labelKey}`)}</span>
                       </button>
                     );
                   })}
@@ -220,18 +221,18 @@ export function MobileBottomNav() {
             <div className="flex items-center gap-2 px-3 py-1.5 text-left">
               <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
               <span className="text-micro font-mono tracking-wide text-muted-foreground">
-                {isOperator ? "OPERATOR" : "USER"} MODE
+                {t(isOperator ? "navigation:mode.operator" : "navigation:mode.user")}
               </span>
             </div>
 
             <button onClick={() => handleNav("/profile")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <User className="h-4 w-4 text-muted-foreground" /> Profile
+              <User className="h-4 w-4 text-muted-foreground" /> {t("navigation:profile")}
             </button>
             <button onClick={() => handleNav("/notifications")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <Bell className="h-4 w-4 text-muted-foreground" /> Notifications
+              <Bell className="h-4 w-4 text-muted-foreground" /> {t("navigation:notifications")}
             </button>
             <button onClick={() => handleNav("/workspace")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
-              <Settings className="h-4 w-4 text-muted-foreground" /> Settings
+              <Settings className="h-4 w-4 text-muted-foreground" /> {t("common:settings", { defaultValue: "Settings" })}
             </button>
             <button
               onClick={() => { signOut(); setMenuOpen(false); }}
