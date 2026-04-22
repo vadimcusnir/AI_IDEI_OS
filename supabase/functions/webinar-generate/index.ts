@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
 
     // RESERVE neurons (atomic wallet)
     const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
-      _user_id: user.id,
+      _user_id: authUser.id,
       _amount: totalCost,
       _description: `RESERVE: Webinar Generation: ${modulesToRun.length} modules, ${totalPrompts} prompts`,
     });
