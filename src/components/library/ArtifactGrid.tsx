@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
-  FileText, Clock, Eye, Trash2, Lock, Globe, Store, ArrowRight,
+  FileText, Clock, Eye, Trash2, Lock, Globe, Store,
   Download, Pencil, Zap,
 } from "lucide-react";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -78,16 +79,14 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
         </h3>
       )}
       {artifacts.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
-          <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-          <h2 className="text-base font-bold mb-1">{t("library.no_artifacts")}</h2>
-          <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-            {t("library.no_artifacts_hint")}
-          </p>
-          <Button size="sm" onClick={() => navigate("/services")} className="gap-2">
-            {t("library.view_services")} <ArrowRight className="h-3.5 w-3.5" />
-          </Button>
-        </div>
+        <EmptyState
+          tone="active"
+          icon={FileText}
+          title={t("library.no_artifacts")}
+          description={t("library.no_artifacts_hint")}
+          actionLabel={t("library.view_services")}
+          onAction={() => navigate("/services")}
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {artifacts.map(artifact => {
