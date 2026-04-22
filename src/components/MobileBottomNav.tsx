@@ -20,61 +20,61 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Progress } from "@/components/ui/progress";
 
 const BAR_ITEMS = [
-  { path: "/home", icon: Home, label: "Home" },
-  { path: "/pipeline", icon: Workflow, label: "Pipeline" },
-  { path: "/library", icon: BookOpen, label: "Library" },
-  { path: "/services", icon: Sparkles, label: "Services" },
+  { path: "/home", icon: Home, labelKey: "command_center" },
+  { path: "/pipeline", icon: Workflow, labelKey: "pipeline" },
+  { path: "/library", icon: BookOpen, labelKey: "library" },
+  { path: "/services", icon: Sparkles, labelKey: "services" },
 ];
 
-interface MenuItem { path: string; icon: React.ElementType; label: string; adminOnly?: boolean; operatorOnly?: boolean }
-interface MenuSection { key: string; label: string; items: MenuItem[]; adminOnly?: boolean; operatorOnly?: boolean }
+interface MenuItem { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean; operatorOnly?: boolean }
+interface MenuSection { key: string; labelKey: string; items: MenuItem[]; adminOnly?: boolean; operatorOnly?: boolean }
 
 // ═══ MIRROR OF AppSidebar SECTIONS — keep in sync ═══
 const MENU_SECTIONS: MenuSection[] = [
   {
-    key: "core", label: "CORE", items: [
-      { path: "/home", icon: Home, label: "Command Center" },
-      { path: "/pipeline", icon: Workflow, label: "Pipeline" },
-      { path: "/services", icon: Sparkles, label: "Services" },
-      { path: "/library", icon: BookOpen, label: "Library" },
-      { path: "/jobs", icon: Clock, label: "Jobs", operatorOnly: true },
+    key: "core", labelKey: "core", items: [
+      { path: "/home", icon: Home, labelKey: "command_center" },
+      { path: "/pipeline", icon: Workflow, labelKey: "pipeline" },
+      { path: "/services", icon: Sparkles, labelKey: "services" },
+      { path: "/library", icon: BookOpen, labelKey: "library" },
+      { path: "/jobs", icon: Clock, labelKey: "jobs", operatorOnly: true },
     ],
   },
   {
-    key: "economy", label: "ECONOMY", items: [
-      { path: "/credits", icon: Coins, label: "Credits" },
-      { path: "/marketplace", icon: Store, label: "Marketplace" },
-      { path: "/purchases", icon: Clock, label: "Purchases", operatorOnly: true },
+    key: "economy", labelKey: "economy", items: [
+      { path: "/credits", icon: Coins, labelKey: "credits" },
+      { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+      { path: "/purchases", icon: Clock, labelKey: "purchases", operatorOnly: true },
     ],
   },
   {
-    key: "intelligence", label: "INTELLIGENCE", operatorOnly: true, items: [
-      { path: "/neurons", icon: Brain, label: "Neurons" },
-      { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
-      { path: "/my-analytics", icon: BarChart3, label: "My Analytics" },
+    key: "intelligence", labelKey: "intelligence", operatorOnly: true, items: [
+      { path: "/neurons", icon: Brain, labelKey: "neurons" },
+      { path: "/intelligence", icon: Network, labelKey: "knowledge_graph" },
+      { path: "/my-analytics", icon: BarChart3, labelKey: "my_analytics" },
     ],
   },
   {
-    key: "tools", label: "TOOLS", items: [
-      { path: "/deliverables", icon: Database, label: "Deliverables" },
-      { path: "/learning", icon: GraduationCap, label: "Learning" },
-      { path: "/gamification", icon: Trophy, label: "Progress" },
-      { path: "/workspace", icon: Database, label: "Workspace", operatorOnly: true },
-      { path: "/personal-os", icon: Cpu, label: "Personal OS", operatorOnly: true },
-      { path: "/augmentation", icon: Zap, label: "Augmentation", operatorOnly: true },
-      { path: "/vip", icon: Gem, label: "VIP Program", operatorOnly: true },
-      { path: "/integrations", icon: Plug, label: "Integrations", operatorOnly: true },
+    key: "tools", labelKey: "tools", items: [
+      { path: "/deliverables", icon: Database, labelKey: "deliverables" },
+      { path: "/learning", icon: GraduationCap, labelKey: "learning" },
+      { path: "/gamification", icon: Trophy, labelKey: "progress" },
+      { path: "/workspace", icon: Database, labelKey: "workspace", operatorOnly: true },
+      { path: "/personal-os", icon: Cpu, labelKey: "personal_os", operatorOnly: true },
+      { path: "/augmentation", icon: Zap, labelKey: "augmentation", operatorOnly: true },
+      { path: "/vip", icon: Gem, labelKey: "vip_program", operatorOnly: true },
+      { path: "/integrations", icon: Plug, labelKey: "integrations", operatorOnly: true },
     ],
   },
   {
-    key: "admin", label: "ADMIN", adminOnly: true, items: [
-      { path: "/admin", icon: Shield, label: "Dashboard", adminOnly: true },
-      { path: "/admin/control-center", icon: Activity, label: "Control Center", adminOnly: true },
-      { path: "/admin/cost-engine", icon: Coins, label: "Cost Engine", adminOnly: true },
-      { path: "/admin/kernel", icon: Cpu, label: "Kernel", adminOnly: true },
-      { path: "/runtime", icon: Activity, label: "Runtime", adminOnly: true },
-      { path: "/analytics", icon: BarChart3, label: "Analytics", adminOnly: true },
-      { path: "/services-catalog", icon: Database, label: "Catalog", adminOnly: true },
+    key: "admin", labelKey: "admin", adminOnly: true, items: [
+      { path: "/admin", icon: Shield, labelKey: "admin_dashboard", adminOnly: true },
+      { path: "/admin/control-center", icon: Activity, labelKey: "control_center", adminOnly: true },
+      { path: "/admin/cost-engine", icon: Coins, labelKey: "cost_engine", adminOnly: true },
+      { path: "/admin/kernel", icon: Cpu, labelKey: "kernel", adminOnly: true },
+      { path: "/runtime", icon: Activity, labelKey: "runtime", adminOnly: true },
+      { path: "/analytics", icon: BarChart3, labelKey: "analytics", adminOnly: true },
+      { path: "/services-catalog", icon: Database, labelKey: "catalog", adminOnly: true },
     ],
   },
 ];
