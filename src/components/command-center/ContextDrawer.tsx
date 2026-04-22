@@ -221,7 +221,7 @@ function StateTab({ tier, balance, phase, navigate }: {
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.04] to-transparent rounded-bl-full" />
         
         <div className="flex items-center justify-between mb-3 relative">
-          <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">Balance</span>
+          <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">{t("pages:home.context.balance", { defaultValue: "Balance" })}</span>
           <div className="flex items-center gap-1.5">
             <SigilCrown
               size={14}
@@ -265,26 +265,26 @@ function StateTab({ tier, balance, phase, navigate }: {
         <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTrend size={13} className="text-muted-foreground/30" />
-            Burn rate
+            {t("pages:home.context.burn_rate", { defaultValue: "Burn rate" })}
           </span>
-          <span className="text-muted-foreground font-mono tabular-nums text-micro">~{burnRate} N/task</span>
+          <span className="text-muted-foreground font-mono tabular-nums text-micro">~{burnRate} {t("pages:home.context.per_task", { defaultValue: "N/task" })}</span>
         </div>
         <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTarget size={13} className="text-muted-foreground/30" />
-            Runway
+            {t("pages:home.context.runway", { defaultValue: "Runway" })}
           </span>
           <span className={cn(
             "font-mono tabular-nums text-micro font-semibold",
             runway < 10 ? "text-destructive" : "text-foreground"
           )}>
-            ~{runway} tasks
+            ~{runway} {t("pages:home.context.tasks", { defaultValue: "tasks" })}
           </span>
         </div>
         {tier !== "vip" && tier !== "pro" && (
           <div className="flex items-center justify-between text-dense">
-            <span className="text-muted-foreground/50">Discount</span>
-            <span className="text-muted-foreground/30 text-micro">0% — upgrade for 25%</span>
+            <span className="text-muted-foreground/50">{t("pages:home.context.discount", { defaultValue: "Discount" })}</span>
+            <span className="text-muted-foreground/30 text-micro">{t("pages:home.context.discount_upgrade", { defaultValue: "0% — upgrade for 25%" })}</span>
           </div>
         )}
       </div>
@@ -297,7 +297,9 @@ function StateTab({ tier, balance, phase, navigate }: {
             ? "bg-destructive/[0.04] border-destructive/10 text-destructive"
             : "bg-muted/20 border-border/15 text-muted-foreground/60"
         )}>
-          {balance < 200 ? "⚠ Sold critic — reîncarcă" : "Sold scăzut — planifică reîncărcarea"}
+          {balance < 200
+            ? t("pages:home.context.warn_critical", { defaultValue: "⚠ Critical balance — top up" })
+            : t("pages:home.context.warn_low", { defaultValue: "Low balance — plan a top-up" })}
         </div>
       )}
 
@@ -308,7 +310,7 @@ function StateTab({ tier, balance, phase, navigate }: {
           className="w-full h-9 text-xs gap-2 font-semibold rounded-xl shadow-sm shadow-primary/10"
           onClick={() => navigate("/credits")}
         >
-          <SigilNeuron size={14} /> Cumpără NEURONS
+          <SigilNeuron size={14} /> {t("pages:home.context.buy_neurons", { defaultValue: "Buy NEURONS" })}
         </Button>
         {tier !== "vip" && tier !== "pro" && (
           <Button
@@ -317,7 +319,7 @@ function StateTab({ tier, balance, phase, navigate }: {
             className="w-full h-8 text-dense gap-2 text-muted-foreground/60 hover:text-foreground rounded-xl"
             onClick={() => navigate("/credits")}
           >
-            <SigilRocket size={13} /> Upgrade plan
+            <SigilRocket size={13} /> {t("pages:home.context.upgrade_plan", { defaultValue: "Upgrade plan" })}
           </Button>
         )}
       </div>
