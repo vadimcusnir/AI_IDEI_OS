@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Loader2, X, ExternalLink } from "lucide-react";
 import {
   SigilEye, SigilBolt, SigilCrystal,
@@ -37,6 +38,7 @@ export function ContextDrawer({
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<RightTab>("state");
   const navigate = useNavigate();
+  const { t } = useTranslation(["pages", "common"]);
   const { tier } = useUserTier();
   const { phase, steps, totalCredits, startedAt, completedAt } = execution;
 
@@ -70,10 +72,16 @@ export function ContextDrawer({
   const isActive = phase === "executing" || phase === "delivering" || phase === "planning";
   const consumedCredits = steps.filter(s => s.status === "completed" || s.status === "running").reduce((sum, s) => sum + s.credits, 0);
 
-  const TABS: Array<{ id: RightTab; label: string; icon: React.FC<{ className?: string; size?: number }>; badge?: boolean }> = [
-    { id: "state", label: "State", icon: SigilEye, badge: balance < 200 },
-    { id: "runs", label: "Runs", icon: SigilBolt, badge: isActive },
-    { id: "assets", label: "Assets", icon: SigilCrystal },
+  const TABS: Array<{
+    id: RightTab;
+    label: string;
+    icon: React.FC<{ className?: string; size?: number }>;
+    badge?: boolean;
+    count?: number;
+  }> = [
+    { id: "state", label: t("pages:home.context.tab_state", { defaultValue: "State" }), icon: SigilEye, badge: balance < 200 },
+    { id: "runs", label: t("pages:home.context.tab_runs", { defaultValue: "Runs" }), icon: SigilBolt, badge: isActive, count: steps.length || undefined },
+    { id: "assets", label: t("pages:home.context.tab_assets", { defaultValue: "Assets" }), icon: SigilCrystal, count: outputs.length || undefined },
   ];
 
   // Collapsed icon strip
@@ -116,33 +124,13 @@ export function ContextDrawer({
         >
           {/* Tab bar — premium treatment */}
           <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20">
-            {TABS.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
-                    activeTab === tab.id
-                      ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
-                      : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
-                  )}
-                >
-                  <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
-                  <span className="hidden xl:inline uppercase tracking-widest">{tab.label}</span>
-                  {tab.badge && (
-                    <span className={cn(
-                      "h-1.5 w-1.5 rounded-full",
-                      tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
-                    )} />
-                  )}
-                </button>
-              );
-            })}
+            {TABS.map(tab => (
+              <TabPill key={tab.id} tab={tab} active={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} />
+            ))}
             <button
               onClick={() => setIsOpen(false)}
               className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/25 hover:text-foreground hover:bg-muted/30 transition-colors ml-0.5 shrink-0"
+              aria-label={t("common:close", { defaultValue: "Close" })}
             >
               <X className="h-3 w-3" />
             </button>
@@ -181,37 +169,16 @@ export function ContextDrawer({
             className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-hidden flex flex-col"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20 shrink-0">
-              <span className="text-micro font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
+              <span className="text-micro font-bold uppercase tracking-[0.2em] text-muted-foreground/60">{t("pages:home.context.control_panel", { defaultValue: "Control Panel" })}</span>
               <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
             {/* Mobile tab bar */}
             <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20 shrink-0">
-              {TABS.map(tab => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
-                      activeTab === tab.id
-                        ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
-                        : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
-                    )}
-                  >
-                    <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
-                    <span className="uppercase tracking-widest">{tab.label}</span>
-                    {tab.badge && (
-                      <span className={cn(
-                        "h-1.5 w-1.5 rounded-full",
-                        tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
-                      )} />
-                    )}
-                  </button>
-                );
-              })}
+              {TABS.map(tab => (
+                <TabPill key={tab.id} tab={tab} active={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} />
+              ))}
             </div>
             {/* Mobile tab content */}
             <div className="flex-1 overflow-y-auto">
@@ -241,6 +208,7 @@ export function ContextDrawer({
 function StateTab({ tier, balance, phase, navigate }: {
   tier: string; balance: number; phase: string; navigate: (path: string) => void;
 }) {
+  const { t } = useTranslation(["pages", "common"]);
   // Average daily neuron spend — static fallback, computed from typical usage pattern
   const burnRate = 32;
   const runway = burnRate > 0 ? Math.floor(balance / burnRate) : 999;
@@ -253,7 +221,7 @@ function StateTab({ tier, balance, phase, navigate }: {
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.04] to-transparent rounded-bl-full" />
         
         <div className="flex items-center justify-between mb-3 relative">
-          <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">Balance</span>
+          <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">{t("pages:home.context.balance", { defaultValue: "Balance" })}</span>
           <div className="flex items-center gap-1.5">
             <SigilCrown
               size={14}
@@ -297,26 +265,26 @@ function StateTab({ tier, balance, phase, navigate }: {
         <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTrend size={13} className="text-muted-foreground/30" />
-            Burn rate
+            {t("pages:home.context.burn_rate", { defaultValue: "Burn rate" })}
           </span>
-          <span className="text-muted-foreground font-mono tabular-nums text-micro">~{burnRate} N/task</span>
+          <span className="text-muted-foreground font-mono tabular-nums text-micro">~{burnRate} {t("pages:home.context.per_task", { defaultValue: "N/task" })}</span>
         </div>
         <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTarget size={13} className="text-muted-foreground/30" />
-            Runway
+            {t("pages:home.context.runway", { defaultValue: "Runway" })}
           </span>
           <span className={cn(
             "font-mono tabular-nums text-micro font-semibold",
             runway < 10 ? "text-destructive" : "text-foreground"
           )}>
-            ~{runway} tasks
+            ~{runway} {t("pages:home.context.tasks", { defaultValue: "tasks" })}
           </span>
         </div>
         {tier !== "vip" && tier !== "pro" && (
           <div className="flex items-center justify-between text-dense">
-            <span className="text-muted-foreground/50">Discount</span>
-            <span className="text-muted-foreground/30 text-micro">0% — upgrade for 25%</span>
+            <span className="text-muted-foreground/50">{t("pages:home.context.discount", { defaultValue: "Discount" })}</span>
+            <span className="text-muted-foreground/30 text-micro">{t("pages:home.context.discount_upgrade", { defaultValue: "0% — upgrade for 25%" })}</span>
           </div>
         )}
       </div>
@@ -329,7 +297,9 @@ function StateTab({ tier, balance, phase, navigate }: {
             ? "bg-destructive/[0.04] border-destructive/10 text-destructive"
             : "bg-muted/20 border-border/15 text-muted-foreground/60"
         )}>
-          {balance < 200 ? "⚠ Sold critic — reîncarcă" : "Sold scăzut — planifică reîncărcarea"}
+          {balance < 200
+            ? t("pages:home.context.warn_critical", { defaultValue: "⚠ Critical balance — top up" })
+            : t("pages:home.context.warn_low", { defaultValue: "Low balance — plan a top-up" })}
         </div>
       )}
 
@@ -340,7 +310,7 @@ function StateTab({ tier, balance, phase, navigate }: {
           className="w-full h-9 text-xs gap-2 font-semibold rounded-xl shadow-sm shadow-primary/10"
           onClick={() => navigate("/credits")}
         >
-          <SigilNeuron size={14} /> Cumpără NEURONS
+          <SigilNeuron size={14} /> {t("pages:home.context.buy_neurons", { defaultValue: "Buy NEURONS" })}
         </Button>
         {tier !== "vip" && tier !== "pro" && (
           <Button
@@ -349,7 +319,7 @@ function StateTab({ tier, balance, phase, navigate }: {
             className="w-full h-8 text-dense gap-2 text-muted-foreground/60 hover:text-foreground rounded-xl"
             onClick={() => navigate("/credits")}
           >
-            <SigilRocket size={13} /> Upgrade plan
+            <SigilRocket size={13} /> {t("pages:home.context.upgrade_plan", { defaultValue: "Upgrade plan" })}
           </Button>
         )}
       </div>
@@ -365,12 +335,13 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
   consumedCredits: number; totalCredits: number;
   navigate: (path: string) => void;
 }) {
+  const { t } = useTranslation(["pages", "common"]);
   if (phase === "idle") {
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilBolt size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-dense text-muted-foreground/25 font-medium">No active execution</p>
-        <p className="text-nano text-muted-foreground/15 mt-1">Run a command to see progress here</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">{t("pages:home.context.runs_empty_title", { defaultValue: "No active execution" })}</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">{t("pages:home.context.runs_empty_body", { defaultValue: "Run a command to see progress here" })}</p>
       </div>
     );
   }
@@ -452,12 +423,13 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
 
 // ═══ TAB: ASSETS ═══
 function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOutputs: () => void }) {
+  const { t } = useTranslation(["pages", "common"]);
   if (outputs.length === 0) {
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilCrystal size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-dense text-muted-foreground/25 font-medium">No assets yet</p>
-        <p className="text-nano text-muted-foreground/15 mt-1">Execute a service to generate outputs</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">{t("pages:home.context.assets_empty_title", { defaultValue: "No assets yet" })}</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">{t("pages:home.context.assets_empty_body", { defaultValue: "Execute a service to generate outputs" })}</p>
       </div>
     );
   }
@@ -466,10 +438,10 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
     <div className="p-4 space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">
-          {outputs.length} asset{outputs.length !== 1 ? "s" : ""}
+          {t("pages:home.context.assets_count", { count: outputs.length, defaultValue: "{{count}} assets" })}
         </span>
         <button onClick={onViewOutputs} className="text-micro text-primary/60 hover:text-primary font-medium transition-colors">
-          View all →
+          {t("pages:home.context.view_all", { defaultValue: "View all" })} →
         </button>
       </div>
 
@@ -493,10 +465,55 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
       {outputs.length > 3 && (
         <p className="text-micro text-muted-foreground/30 px-3 flex items-center gap-1.5">
           <SigilLock size={11} className="text-muted-foreground/15" />
-          {outputs.length - 3} locked — unlock with NEURONS
+          {t("pages:home.context.assets_locked", { count: outputs.length - 3, defaultValue: "{{count}} locked — unlock with NEURONS" })}
         </p>
       )}
     </div>
   );
 }
 
+// ═══ TabPill — shared tab button with icon + label + optional count badge ═══
+interface TabPillProps {
+  tab: {
+    id: RightTab;
+    label: string;
+    icon: React.FC<{ className?: string; size?: number }>;
+    badge?: boolean;
+    count?: number;
+  };
+  active: boolean;
+  onClick: () => void;
+}
+
+function TabPill({ tab, active, onClick }: TabPillProps) {
+  const Icon = tab.icon;
+  return (
+    <button
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex-1 flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
+        active
+          ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
+          : "text-muted-foreground/45 hover:text-muted-foreground hover:bg-muted/20"
+      )}
+    >
+      <Icon size={13} className={active ? "text-primary" : ""} />
+      <span className="uppercase tracking-widest text-[10px]">{tab.label}</span>
+      {typeof tab.count === "number" && tab.count > 0 && (
+        <span className={cn(
+          "ml-0.5 inline-flex items-center justify-center min-w-[16px] h-[15px] px-1 rounded-full text-[9px] tabular-nums font-bold",
+          active ? "bg-primary/15 text-primary" : "bg-muted/60 text-muted-foreground/70"
+        )}>
+          {tab.count > 99 ? "99+" : tab.count}
+        </span>
+      )}
+      {tab.badge && (
+        <span className={cn(
+          "absolute top-1 right-1 h-1.5 w-1.5 rounded-full",
+          tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+        )} />
+      )}
+    </button>
+  );
+}
