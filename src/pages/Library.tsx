@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { NeuronGrid, type NeuronItem } from "@/components/library/NeuronGrid";
 import { ArtifactGrid, type Artifact } from "@/components/library/ArtifactGrid";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
@@ -330,16 +331,17 @@ export default function Library() {
         {activeTab === "bundles" && (
           <>
             {bundles.length === 0 ? (
-              <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
-                <Package className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                <h2 className="text-base font-bold mb-1">Niciun pachet</h2>
-                <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-                  Pachetele se creează automat când un serviciu generează mai multe livrabile simultan.
-                </p>
-                <Button size="sm" onClick={() => navigate("/services")} className="gap-2">
-                  Rulează un serviciu <FileText className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+              <EmptyState
+                tone="active"
+                icon={Package}
+                title={t("library.no_bundles", { defaultValue: "No bundles yet" })}
+                description={t("library.no_bundles_hint", {
+                  defaultValue:
+                    "Bundles are created automatically when a service generates multiple deliverables at once.",
+                })}
+                actionLabel={t("library.run_a_service", { defaultValue: "Run a service" })}
+                onAction={() => navigate("/services")}
+              />
             ) : (
               <div className="space-y-4">
                 {bundles.map(([key, items]) => {

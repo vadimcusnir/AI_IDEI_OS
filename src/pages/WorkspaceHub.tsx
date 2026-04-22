@@ -18,6 +18,7 @@ import {
   Loader2, RefreshCw, Layers, Sparkles, Shield,
 } from "lucide-react";
 import { VisibilityControls } from "@/components/workspace/VisibilityControls";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface WorkspaceStats {
   totalNeurons: number;
@@ -128,9 +129,14 @@ export default function WorkspaceHub() {
             <TabsContent value="overview">
               <div className="space-y-1">
                 {artifacts.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-12">
-                    No artifacts yet. Use the Command Center to generate your first deliverable.
-                  </p>
+                  <EmptyState
+                    tone="active"
+                    icon={FileText}
+                    title="No artifacts yet"
+                    description="Use the Command Center to generate your first deliverable from your knowledge."
+                    actionLabel="Open Command Center"
+                    onAction={() => (window.location.href = "/home")}
+                  />
                 ) : (
                   artifacts.map(a => (
                     <div key={a.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card transition-colors">
