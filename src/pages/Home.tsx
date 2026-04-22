@@ -7,7 +7,7 @@
  * No hardcoded height calc — purely flex-driven.
  */
 import { useRef, useEffect } from "react";
-import { Sparkles, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
