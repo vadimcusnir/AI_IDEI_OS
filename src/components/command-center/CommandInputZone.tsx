@@ -133,9 +133,9 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
         </AnimatePresence>
 
         <div className="max-w-3xl mx-auto px-2 sm:px-4 pb-1 sm:pb-2 pt-1 sm:pt-2">
-          {/* Attached commands (non-editable tags) + files */}
+          {/* Attached commands (non-editable tags) + files + cost preview */}
           {(commands.length > 0 || files.length > 0) && (
-            <div className="flex gap-1.5 flex-wrap pb-2">
+            <div className="flex gap-1.5 flex-wrap items-center pb-2">
               {commands.map((cmd, i) => (
                 <div
                   key={`cmd-${i}`}
@@ -164,6 +164,14 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   </button>
                 </div>
               ))}
+              {/* Inline cost estimate — appears when ≥1 command/file is staged */}
+              <div className="ml-auto">
+                <CostPreviewBadge
+                  estimatedCredits={cost.estimatedCredits}
+                  balance={balance}
+                  visible={cost.visible}
+                />
+              </div>
             </div>
           )}
 
