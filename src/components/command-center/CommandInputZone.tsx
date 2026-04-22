@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Paperclip, X, Square, ArrowUp, Terminal } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { InputAttachMenu } from "./InputAttachMenu";
+import { CostPreviewBadge } from "./CostPreviewBadge";
+import { useCostEstimate } from "@/hooks/command-center/useCostEstimate";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,13 +35,16 @@ interface CommandInputZoneProps {
   onSlashSelect: (cmd: string) => void;
   onAttachAction?: (action: string) => void;
   inputHistory?: string[];
+  /** Optional NEURONS balance — enables inline cost-vs-balance hint. */
+  balance?: number;
 }
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
       commands = [], onRemoveCommand,
-      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
+      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [],
+      balance = 0 },
     ref,
   ) {
     const { t } = useTranslation(["pages", "common"]);
@@ -47,6 +52,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [historyIdx, setHistoryIdx] = useState(-1);
+    const cost = useCostEstimate({ commands, files, input });
 
     useImperativeHandle(ref, () => ({
       focus: () => inputRef.current?.focus(),
