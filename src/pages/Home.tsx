@@ -144,7 +144,9 @@ export default function Home() {
                     />
                   )}
                   {/* Knowledge gap analysis */}
-                  <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
+                  <Suspense fallback={null}>
+                    <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
+                  </Suspense>
                 </div>
               ) : (
                 /* ── Conversation feed (ChatGPT-style: generous spacing, centered) ── */
@@ -189,23 +191,27 @@ export default function Home() {
 
                   {/* Execution summary */}
                   {(cc.execState.phase === "completed" || cc.execState.phase === "failed") && (
-                    <ExecutionSummary
-                      phase={cc.execState.phase} intent={cc.execState.intent}
-                      planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
-                      stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
-                      totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
-                      durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
-                      onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
-                      onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
-                    />
+                    <Suspense fallback={null}>
+                      <ExecutionSummary
+                        phase={cc.execState.phase} intent={cc.execState.intent}
+                        planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
+                        stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
+                        totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
+                        durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
+                        onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
+                        onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Post-execution upsell */}
                   {cc.execState.phase === "completed" && cc.execState.totalCredits > 0 && (
-                    <NeuronBundleUpsell
-                      balance={cc.balance}
-                      creditsJustSpent={cc.execState.totalCredits}
-                    />
+                    <Suspense fallback={null}>
+                      <NeuronBundleUpsell
+                        balance={cc.balance}
+                        creditsJustSpent={cc.execState.totalCredits}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Inline panels */}
@@ -230,31 +236,37 @@ export default function Home() {
 
                   <AnimatePresence>
                     {cc.showEconomicGate && cc.execState.phase === "confirming" && (
-                      <EconomicGate
-                        balance={cc.balance} estimatedCost={cc.execState.totalCredits}
-                        tierDiscount={cc.tierDiscount} tier={cc.tier}
-                        onProceed={cc.handleEconomicProceed}
-                        onCancel={cc.handleEconomicCancel}
-                      />
+                      <Suspense fallback={null}>
+                        <EconomicGate
+                          balance={cc.balance} estimatedCost={cc.execState.totalCredits}
+                          tierDiscount={cc.tierDiscount} tier={cc.tier}
+                          onProceed={cc.handleEconomicProceed}
+                          onCancel={cc.handleEconomicCancel}
+                        />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
                   {/* Outputs flow inline as the assistant's reply — auto-shown when execution completes */}
                   <AnimatePresence>
                     {cc.execState.phase === "completed" && cc.outputs.length > 0 && (
-                      <OutputPanel outputs={cc.outputs} visible={true} onRerun={cc.handleRerun}
-                        onClose={() => cc.setShowOutputs(false)} onSaveAll={cc.handleSaveAllOutputs} savingAll={cc.savingAllOutputs} />
+                      <Suspense fallback={null}>
+                        <OutputPanel outputs={cc.outputs} visible={true} onRerun={cc.handleRerun}
+                          onClose={() => cc.setShowOutputs(false)} onSaveAll={cc.handleSaveAllOutputs} savingAll={cc.savingAllOutputs} />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
                   <AnimatePresence>
                     {cc.execState.phase === "completed" && cc.showPostExecution && (
-                      <PostExecutionPanel
-                        intent={cc.execState.intent as any} creditsSpent={cc.execState.totalCredits}
-                        outputCount={cc.outputs.length}
-                        onAction={(prompt) => { cc.setInput(prompt); cc.setShowPostExecution(false); cc.inputZoneRef.current?.focus(); }}
-                        onSaveTemplate={cc.handleSaveTemplate} onDismiss={() => cc.setShowPostExecution(false)} userTier={cc.tier}
-                      />
+                      <Suspense fallback={null}>
+                        <PostExecutionPanel
+                          intent={cc.execState.intent as any} creditsSpent={cc.execState.totalCredits}
+                          outputCount={cc.outputs.length}
+                          onAction={(prompt) => { cc.setInput(prompt); cc.setShowPostExecution(false); cc.inputZoneRef.current?.focus(); }}
+                          onSaveTemplate={cc.handleSaveTemplate} onDismiss={() => cc.setShowPostExecution(false)} userTier={cc.tier}
+                        />
+                      </Suspense>
                     )}
                   </AnimatePresence>
 
@@ -306,20 +318,24 @@ export default function Home() {
         </div>
 
         {/* ═══ RIGHT: Context Drawer (desktop only, self-managing) ═══ */}
-        <ContextDrawer
-          execution={cc.execState}
-          outputs={cc.outputs}
-          balance={cc.balance}
-          onSaveTemplate={cc.handleSaveTemplate}
-          onViewOutputs={() => cc.setShowOutputs(true)}
-          onRerun={cc.handleRerun}
-        />
+        <Suspense fallback={null}>
+          <ContextDrawer
+            execution={cc.execState}
+            outputs={cc.outputs}
+            balance={cc.balance}
+            onSaveTemplate={cc.handleSaveTemplate}
+            onViewOutputs={() => cc.setShowOutputs(true)}
+            onRerun={cc.handleRerun}
+          />
+        </Suspense>
       </div>
 
       {/* Low balance gate */}
       <AnimatePresence>
         {cc.showLowBalance && (
-          <LowBalanceGate balance={cc.balance} onDismiss={() => cc.setShowLowBalance(false)} />
+          <Suspense fallback={null}>
+            <LowBalanceGate balance={cc.balance} onDismiss={() => cc.setShowLowBalance(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </>
