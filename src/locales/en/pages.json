@@ -215,11 +215,43 @@
     "progress": "Progress",
     "completed": "completed",
     "step": "Step {{number}}",
+    "step_of_total": "Step {{current}} of {{total}}",
     "step_completed": "✓ Completed",
     "created_suffix": "created",
+    "badge_3_steps": "3 Steps to Knowledge Assets",
+    "tutorial_cta": "Interactive Tutorial (+50 NEURONS)",
+    "instant_title": "Try It Now — Instant Analysis",
+    "instant_desc": "Paste any text or URL and get structured intelligence in under 60 seconds. No setup needed.",
+    "previous": "← Previous",
+    "next": "Next →",
+    "upload_more": "Upload More",
     "pipeline_active_title": "Your pipeline is active! 🎉",
     "pipeline_active_desc": "You've completed all steps. Continue uploading content and running services to maximize your intellectual capital.",
     "back_to_cockpit": "Back to Cockpit",
+    "step_source": {
+      "title": "Add Your Source",
+      "subtitle": "Upload or paste content",
+      "desc": "Drop an MP3, paste a YouTube link, or type text directly. AI transcribes and structures everything automatically.",
+      "action": "Open Extractor",
+      "reward": "+25 XP",
+      "tip": "Tip: YouTube links get auto-transcribed with speaker detection."
+    },
+    "step_extract": {
+      "title": "Extract Knowledge",
+      "subtitle": "AI finds patterns & insights",
+      "desc": "Our AI analyzes your content and extracts frameworks, insights, patterns, and reusable neurons — all automatically.",
+      "action": "View Neurons",
+      "reward": "+25 XP per neuron",
+      "tip": "One episode typically yields 5-15 unique neurons."
+    },
+    "step_produce": {
+      "title": "Generate Assets",
+      "subtitle": "Transform into deliverables",
+      "desc": "Run AI services to transform neurons into articles, strategies, reports, and professional assets — saved in your Library.",
+      "action": "Explore Services",
+      "reward": "+15 XP per asset",
+      "tip": "Start with 'Quick Extract' — it's the fastest way to see results."
+    },
     "steps": {
       "upload_title": "Upload Content",
       "upload_desc": "Add a podcast, text, or video. The platform will transcribe and prepare the content for extraction.",

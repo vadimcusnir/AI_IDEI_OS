@@ -29,42 +29,27 @@ interface StepStatus {
 const STEPS = [
   {
     key: "source",
-    title: "Add Your Source",
-    subtitle: "Upload or paste content",
-    desc: "Drop an MP3, paste a YouTube link, or type text directly. AI transcribes and structures everything automatically.",
+    i18nKey: "step_source",
     icon: Upload,
     action: "/extractor",
-    actionLabel: "Open Extractor",
     checkField: "episodes" as keyof StepStatus,
-    reward: "+25 XP",
     gradient: "from-primary/20 to-primary/5",
-    tip: "Tip: YouTube links get auto-transcribed with speaker detection.",
   },
   {
     key: "extract",
-    title: "Extract Knowledge",
-    subtitle: "AI finds patterns & insights",
-    desc: "Our AI analyzes your content and extracts frameworks, insights, patterns, and reusable neurons — all automatically.",
+    i18nKey: "step_extract",
     icon: Brain,
     action: "/neurons",
-    actionLabel: "View Neurons",
     checkField: "neurons" as keyof StepStatus,
-    reward: "+25 XP per neuron",
     gradient: "from-ai-accent/20 to-ai-accent/5",
-    tip: "One episode typically yields 5-15 unique neurons.",
   },
   {
     key: "produce",
-    title: "Generate Assets",
-    subtitle: "Transform into deliverables",
-    desc: "Run AI services to transform neurons into articles, strategies, reports, and professional assets — saved in your Library.",
+    i18nKey: "step_produce",
     icon: Sparkles,
     action: "/services",
-    actionLabel: "Explore Services",
     checkField: "artifacts" as keyof StepStatus,
-    reward: "+15 XP per asset",
     gradient: "from-status-validated/20 to-status-validated/5",
-    tip: "Start with 'Quick Extract' — it's the fastest way to see results.",
   },
 ];
 
@@ -132,7 +117,7 @@ export default function Onboarding() {
     <PageTransition>
     <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
-       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 3 steps." />
+       <SEOHead title={`${t("onboarding.title")} — AI-IDEI`} description={t("onboarding.subtitle")} />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* Hero Header */}
@@ -143,7 +128,7 @@ export default function Onboarding() {
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-micro font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
-            3 Steps to Knowledge Assets
+            {t("onboarding.badge_3_steps")}
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
@@ -153,7 +138,7 @@ export default function Onboarding() {
           </p>
           <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs border-border/50 hover:border-[hsl(var(--gold-oxide)/0.3)]">
             <BookOpen className="h-3.5 w-3.5" />
-            Interactive Tutorial (+50 NEURONS)
+            {t("onboarding.tutorial_cta")}
           </Button>
         </motion.div>
 
@@ -197,7 +182,7 @@ export default function Onboarding() {
                       "text-nano sm:text-micro font-semibold tracking-wide",
                       isActive ? "text-[hsl(var(--gold-oxide))]" : isCompleted ? "text-foreground" : "text-muted-foreground/50"
                     )}>
-                      {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
+                      {t(`onboarding.${step.i18nKey}.title`)}
                     </span>
                   </button>
                   {idx < STEPS.length - 1 && (
@@ -237,10 +222,10 @@ export default function Onboarding() {
           <div className="rounded-2xl border border-[hsl(var(--gold-oxide)/0.15)] bg-[hsl(var(--gold-oxide)/0.02)] p-5 sm:p-6">
             <div className="flex items-center gap-2 mb-1.5">
               <Sparkles className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
-              <h2 className="text-sm font-bold">Try It Now — Instant Analysis</h2>
+              <h2 className="text-sm font-bold">{t("onboarding.instant_title")}</h2>
             </div>
             <p className="text-xs text-muted-foreground mb-4">
-              Paste any text or URL and get structured intelligence in under 60 seconds. No setup needed.
+              {t("onboarding.instant_desc")}
             </p>
             <InstantAnalysisFlow />
           </div>
@@ -270,7 +255,7 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-nano font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
+                        {t("onboarding.step_of_total", { current: activeStep + 1, total: STEPS.length })}
                       </span>
                       {isCompleted && (
                         <span className="text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
@@ -280,7 +265,7 @@ export default function Onboarding() {
                     </div>
                     <div className="flex items-center gap-1 text-nano font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
                       <Gift className="h-3 w-3" />
-                      {step.reward}
+                      {t(`onboarding.${step.i18nKey}.reward`)}
                     </div>
                   </div>
 
@@ -293,18 +278,18 @@ export default function Onboarding() {
                       <Icon className={cn("h-6 w-6", isCompleted ? "text-[hsl(var(--gold-oxide))]" : "text-foreground")} />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{step.title}</h2>
-                      <p className="text-micro text-muted-foreground font-medium">{step.subtitle}</p>
+                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{t(`onboarding.${step.i18nKey}.title`)}</h2>
+                      <p className="text-micro text-muted-foreground font-medium">{t(`onboarding.${step.i18nKey}.subtitle`)}</p>
                     </div>
                   </div>
 
-                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.desc}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">{t(`onboarding.${step.i18nKey}.desc`)}</p>
 
                   {/* Tip */}
                   <div className="rounded-xl bg-muted/30 border border-border/30 p-3.5 mb-5">
                     <div className="flex items-center gap-1.5">
                       <Play className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
-                      <p className="text-micro text-muted-foreground/70 italic">{step.tip}</p>
+                      <p className="text-micro text-muted-foreground/70 italic">{t(`onboarding.${step.i18nKey}.tip`)}</p>
                     </div>
                   </div>
 
@@ -323,7 +308,7 @@ export default function Onboarding() {
                       className="gap-2 text-xs"
                       onClick={() => navigate(step.action)}
                     >
-                      {step.actionLabel}
+                      {t(`onboarding.${step.i18nKey}.action`)}
                       <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -342,7 +327,7 @@ export default function Onboarding() {
             disabled={activeStep === 0}
             onClick={() => setActiveStep(s => s - 1)}
           >
-            ← Previous
+            {t("onboarding.previous")}
           </Button>
           <Button
             variant="ghost"
@@ -351,7 +336,7 @@ export default function Onboarding() {
             disabled={activeStep === STEPS.length - 1}
             onClick={() => setActiveStep(s => s + 1)}
           >
-            Next →
+            {t("onboarding.next")}
           </Button>
         </div>
 
@@ -378,7 +363,7 @@ export default function Onboarding() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button variant="outline" onClick={() => navigate("/extractor")} className="gap-2 text-xs">
-                Upload More
+                {t("onboarding.upload_more")}
               </Button>
             </div>
           </motion.div>
