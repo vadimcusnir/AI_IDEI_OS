@@ -55,7 +55,8 @@
       "stop": "Stop generation",
       "hint_run": "to run",
       "hint_commands": "for commands",
-      "hint_attach": "to attach"
+      "hint_attach": "to attach",
+      "drop_files": "Drop files here"
     },
     "sessions": {
       "title": "Recent Sessions",

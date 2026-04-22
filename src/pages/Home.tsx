@@ -295,6 +295,7 @@ export default function Home() {
                 showSlashMenu={cc.showSlashMenu} onShowSlashMenuChange={cc.setShowSlashMenu}
                 onSlashSelect={cc.onSlashSelect}
                 onAttachAction={cc.handleAttachAction}
+                balance={cc.balance}
               />
             </div>
           </div>

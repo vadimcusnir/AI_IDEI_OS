@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Paperclip, X, Square, ArrowUp, Terminal } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { InputAttachMenu } from "./InputAttachMenu";
+import { CostPreviewBadge } from "./CostPreviewBadge";
+import { useCostEstimate } from "@/hooks/command-center/useCostEstimate";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,13 +35,16 @@ interface CommandInputZoneProps {
   onSlashSelect: (cmd: string) => void;
   onAttachAction?: (action: string) => void;
   inputHistory?: string[];
+  /** Optional NEURONS balance — enables inline cost-vs-balance hint. */
+  balance?: number;
 }
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
       commands = [], onRemoveCommand,
-      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
+      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [],
+      balance = 0 },
     ref,
   ) {
     const { t } = useTranslation(["pages", "common"]);
@@ -47,6 +52,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [historyIdx, setHistoryIdx] = useState(-1);
+    const cost = useCostEstimate({ commands, files, input });
 
     useImperativeHandle(ref, () => ({
       focus: () => inputRef.current?.focus(),
@@ -121,15 +127,15 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               exit={{ opacity: 0 }}
               className="absolute inset-0 z-50 bg-primary/[0.04] border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center backdrop-blur-sm"
             >
-              <p className="text-sm font-medium text-primary">Trage fișierele aici</p>
+              <p className="text-sm font-medium text-primary">{t("pages:home.cmd.drop_files", { defaultValue: "Drop files here" })}</p>
             </motion.div>
           )}
         </AnimatePresence>
 
         <div className="max-w-3xl mx-auto px-2 sm:px-4 pb-1 sm:pb-2 pt-1 sm:pt-2">
-          {/* Attached commands (non-editable tags) + files */}
+          {/* Attached commands (non-editable tags) + files + cost preview */}
           {(commands.length > 0 || files.length > 0) && (
-            <div className="flex gap-1.5 flex-wrap pb-2">
+            <div className="flex gap-1.5 flex-wrap items-center pb-2">
               {commands.map((cmd, i) => (
                 <div
                   key={`cmd-${i}`}
@@ -158,6 +164,14 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   </button>
                 </div>
               ))}
+              {/* Inline cost estimate — appears when ≥1 command/file is staged */}
+              <div className="ml-auto">
+                <CostPreviewBadge
+                  estimatedCredits={cost.estimatedCredits}
+                  balance={balance}
+                  visible={cost.visible}
+                />
+              </div>
             </div>
           )}
 
